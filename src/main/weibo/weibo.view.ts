@@ -1,5 +1,5 @@
-import { GET, Inject, View, POST } from '@rester/core';
-import { CODE, TOKEN, PUBLIC_TIMELINE } from './data';
+import { GET, Inject, POST, View } from '@rester/core';
+import { CODE, TOKEN } from './data';
 import { WeiboController } from './weibo.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -33,7 +33,7 @@ export class WeiboView {
 
   @GET('2/statuses/public_timeline.json')
   async getPublicTimeline() {
-    return PUBLIC_TIMELINE;
+    return this.controller.generateRandomPosts();
   }
 
 }
