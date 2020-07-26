@@ -1,4 +1,5 @@
-import { GET, Inject, POST, View } from '@rester/core';
+import { GET, Handler, Inject, PathQuery, POST, View } from '@rester/core';
+import { RedirectToCallback } from '../handler/redirect';
 import { CODE, TOKEN } from './data';
 import { WeiboController } from './weibo.controller';
 
@@ -21,9 +22,15 @@ export class WeiboView {
     };
   }
 
+  @Handler(RedirectToCallback)
   @GET('oauth2/authorize')
-  async getCode() {
-    return { code: CODE };
+  async getCode(
+    // @PathQuery('client_id') id: string,
+    // @PathQuery('response_type') type: 'code',
+    @PathQuery('redirect_uri') uri: string
+  ) {
+    uri = decodeURIComponent(uri);
+    return { url: uri, code: CODE };
   }
 
   @POST('oauth2/access_token')
