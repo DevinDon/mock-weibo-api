@@ -2,7 +2,21 @@
 
 一个模拟的微博开放平台服务器，实现了一部分可能需要的功能。
 
-部署在 `https://mock.don.red/weibo` 上，模拟路径与原路径相同。
+部署在 `http://mock.don.red/weibo` 上，模拟路径与原路径相同。
+
+# Usage
+
+将请求地址中的 `https://api.weibo.com` 替换为 `http://mock.don.red/weibo` 即可，如：
+
+```
+https://api.weibo.com/2/statuses/public_timeline.json
+```
+
+替换后：
+
+```
+http://mock.don.red/weibo/2/statuses/public_timeline.json
+```
 
 # Mock APIs
 
