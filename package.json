@@ -34,7 +34,7 @@
   "private": true,
   "dependencies": {
     "@iinfinity/logger": "^0.3.3",
-    "@rester/core": "^0.10.12"
+    "@rester/core": "^0.10.13"
   },
   "devDependencies": {
     "@types/jasmine": "3.5.11",
