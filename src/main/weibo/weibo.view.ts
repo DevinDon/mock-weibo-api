@@ -30,7 +30,7 @@ export class WeiboView {
     @PathQuery('redirect_uri') uri: string
   ) {
     uri = decodeURIComponent(uri);
-    return { url: uri, code: CODE };
+    return { location: uri, code: CODE };
   }
 
   @POST('oauth2/access_token')
