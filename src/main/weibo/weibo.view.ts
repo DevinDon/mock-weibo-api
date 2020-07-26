@@ -39,8 +39,11 @@ export class WeiboView {
   }
 
   @GET('2/statuses/public_timeline.json')
-  async getPublicTimeline() {
-    return this.controller.generateRandomPosts();
+  async getPublicTimeline(
+    @PathQuery('count') count: number = 20
+  ) {
+    count = Math.min(50, +count);
+    return this.controller.generateRandomPosts(count);
   }
 
 }

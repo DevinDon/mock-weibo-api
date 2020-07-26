@@ -13,10 +13,10 @@ export class WeiboController {
     return WeiboEntity.findOne(id);
   }
 
-  async generateRandomPosts() {
+  async generateRandomPosts(count: number) {
     return {
       ...PUBLIC_TIMELINE,
-      statuses: PUBLIC_TIMELINE.statuses.sort(() => Math.random() - 0.5).slice(0, 20)
+      statuses: PUBLIC_TIMELINE.statuses.sort(() => Math.random() - 0.5).slice(0, count)
     };
   }
 
