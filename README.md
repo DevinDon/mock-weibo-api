@@ -1,63 +1,13 @@
-# Rester Template
+# Mock Weibo API Server
 
-Rester Template.
+## API
 
-# Rester Config
-
-## SQLite
-
-```json
+```typescript
 {
-  "database": {
-    "type": "sqlite",
-    "database": "./sqlite.db",
-    "entities": [
-      "**/*.entity.js"
-    ],
-    "logging": false,
-    "synchronize": true
-  }
-}
-```
-
-## PostgreSQL
-
-```json
-{
-  "database": {
-    "type": "mongodb",
-    "database": "dev",
-    "host": "localhost",
-    "port": "27017",
-    "logging": true,
-    "synchronize": true
-  }
-}
-```
-
-## MySQL
-
-```json
-{
-  "database": {
-    "type": "mysql",
-    "host": "localhost",
-    "port": 3306,
-    "username": "test",
-    "password": "test",
-    "database": "test",
-    "synchronize": true,
-    "logging": false,
-    "entities": [
-        "src/entity/**/*.ts"
-    ],
-    "migrations": [
-        "src/migration/**/*.ts"
-    ],
-    "subscribers": [
-        "src/subscriber/**/*.ts"
-    ]
-  }
+  可用功能: '请求方式 对应链接',
+  getCode: 'GET oauth2/authorize',
+  getToken: 'POST oauth2/access_token',
+  getPublicTimeline: 'GET 2/statuses/public_timeline.json'
 }
 ```
 
