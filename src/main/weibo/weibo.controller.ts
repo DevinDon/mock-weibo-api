@@ -1,7 +1,7 @@
 import { Controller } from '@rester/core';
-import { HomeTimelineParam, getHomeTimeline } from './data/home-timeline';
+import { randomSort } from '../util';
+import { getHomeTimeline, HomeTimelineParam } from './data/home-timeline';
 import { getPublicTimeline } from './data/public-timeline';
-import { randomSort } from './util';
 import { WeiboEntity } from './weibo.entity';
 import { Weibo } from './weibo.model';
 
