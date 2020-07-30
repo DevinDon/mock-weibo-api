@@ -1,4 +1,4 @@
-import { getStatus } from "./status";
+import { getStatus } from './status';
 
 /** GET https://api.weibo.com/2/statuses/public_timeline.json */
 export const PUBLIC_TIMELINE = {
