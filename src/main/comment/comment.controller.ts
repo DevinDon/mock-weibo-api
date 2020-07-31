@@ -22,12 +22,6 @@ export class CommentController {
     return result;
   }
 
-  async selectOneByStatusID(id: Comment['id']) {
-    return CommentEntity.find({
-      where: { 'status.id': id }
-    });
-  }
-
   async updateByID({ id }: { id: Comment['id'] }) {
     const comments: Comment[] = await get('https://api.weibo.com/2/comments/show.json?access_token=2.00Limi4D7kdwtC6aa1803987GSmw_D&page=1&count=200')
       .query({ id })

@@ -1,5 +1,6 @@
 import { Controller } from '@rester/core';
-import { randomSort } from '../util';
+import { CommentEntity } from '../comment/comment.entity';
+import { Comment } from '../comment/comment.model';
 import { getHomeTimeline, HomeTimelineParam } from './data/home-timeline';
 import { getPublicTimeline, PublicTimelineParam } from './data/public-timeline';
 import { WeiboEntity } from './weibo.entity';
@@ -13,6 +14,12 @@ export class WeiboController {
 
   async selectOneByID(id: Weibo['id']) {
     return WeiboEntity.findOne(id);
+  }
+
+  async selectOneByStatusID(id: Comment['id']) {
+    return CommentEntity.find({
+      where: { 'status.id': id }
+    });
   }
 
   async getPublicTimeline(param: PublicTimelineParam) {

@@ -1,4 +1,4 @@
-import { GET, HTTP400Exception, Inject, PathVariable, PUT, View, PathQuery } from '@rester/core';
+import { HTTP400Exception, Inject, PathVariable, PUT, View } from '@rester/core';
 import { CommentController } from './comment.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -9,14 +9,6 @@ export class CommentView {
 
   @Inject()
   private controller!: CommentController;
-
-  @GET('show.json')
-  async getOneByID(
-    @PathQuery('id') id: number
-  ) {
-    if (!id) { throw new HTTP400Exception('param id is required'); }
-    return this.controller.selectOneByStatusID(+id);
-  }
 
   @PUT('update/{{id}}')
   async updateByID(

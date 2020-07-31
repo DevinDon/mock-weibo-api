@@ -63,4 +63,13 @@ export class WeiboView {
     return this.controller.getHomeTimeline({ count, page });
   }
 
+  @GET('2/comments/show.json')
+  async showCommentsByStatusID(
+    @PathQuery('id') id: number
+  ) {
+    if (!id) { throw new HTTP400Exception('param id is required'); }
+    return this.controller.selectOneByStatusID(+id);
+  }
+
+
 }
