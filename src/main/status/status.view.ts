@@ -1,4 +1,4 @@
-import { GET, Inject, PathVariable, RequestBody, View } from '@rester/core';
+import { GET, Inject, PathVariable, POST, RequestBody, View } from '@rester/core';
 import { StatusController } from './status.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -17,7 +17,7 @@ export class StatusView {
     return this.controller.selectOneByID(+id);
   }
 
-  @GET('insert')
+  @POST('insert')
   async insert(
     @RequestBody() body: string
   ) {
