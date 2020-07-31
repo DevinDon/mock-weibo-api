@@ -1,6 +1,8 @@
+import { ObjectID } from 'typeorm';
 
 export interface User {
-  id: any;
+  _id: ObjectID;
+  id: number;
   idstr: string;
   class: number;
   screen_name: string;

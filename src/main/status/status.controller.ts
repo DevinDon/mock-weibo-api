@@ -1,7 +1,7 @@
 import { Controller } from '@rester/core';
 import { StatusEntity } from './status.entity';
 import { Status } from './status.model';
-import { get } from 'superagent';
+import { get, put } from 'superagent';
 import { insertOneByOne } from '../util';
 
 // insert, delete, update, select
@@ -19,9 +19,14 @@ export class StatusController {
   }
 
   async fetchNewStatuses() {
-    return get('https://api.weibo.com/2/statuses/public_timeline.json?access_token=2.00Limi4D7kdwtC6aa1803987GSmw_D&page=1&count=200')
+    const statuses = await get('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200')
+      .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
       .send()
       .then(response => response.body.statuses);
+    const results = await this.insertToDatabase({ statuses });
+    await put('http://localhost/weibo/0/comment/update').send();
+    await put('http://localhost/weibo/0/user/update').send();
+    return results;
   }
 
   async test() {

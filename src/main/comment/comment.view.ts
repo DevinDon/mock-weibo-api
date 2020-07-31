@@ -4,7 +4,7 @@ import { CommentController } from './comment.controller';
 // add, remove, modify, find(condition), get(random)
 // one, more
 
-@View('comment')
+@View('weibo/0/comment')
 export class CommentView {
 
   @Inject()

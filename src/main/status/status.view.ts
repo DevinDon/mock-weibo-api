@@ -28,7 +28,7 @@ export class StatusView {
 
   @PUT('update')
   async update() {
-    return this.insert({ statuses: await this.controller.fetchNewStatuses() });
+    return this.controller.fetchNewStatuses();
   }
 
 }
