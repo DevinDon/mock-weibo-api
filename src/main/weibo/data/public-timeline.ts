@@ -1,4 +1,4 @@
-import { getStatus } from './status';
+import { getStatuses } from './status';
 
 /** GET https://api.weibo.com/2/statuses/public_timeline.json */
 export const PUBLIC_TIMELINE = {
@@ -14,12 +14,15 @@ export const PUBLIC_TIMELINE = {
 
 export interface PublicTimelineParam {
   count?: number;
+  page?: number;
 }
 
-export function getPublicTimeline({ count }: PublicTimelineParam) {
+export function getPublicTimeline({ count, page }: PublicTimelineParam) {
+  count = count || 50;
+  page = page || 1, Math.max(0, page - 1);
   return {
     ...PUBLIC_TIMELINE,
-    statuses: getStatus(count),
+    statuses: getStatuses({ count, page }),
     total_number: count
   };
 }

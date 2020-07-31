@@ -1,4 +1,4 @@
-import { getStatus } from "./status";
+import { getStatuses } from './status';
 
 export const HOME_TIMELINE = {
   statuses: [],
@@ -20,16 +20,16 @@ export const HOME_TIMELINE = {
 };
 
 export interface HomeTimelineParam {
-  page?: number;
   count?: number;
+  page?: number;
 }
 
-export function getHomeTimeline({ page, count }: HomeTimelineParam = { page: 1, count: 20 }) {
-  page = page ?? 1;
-  count = count ?? 20;
+export function getHomeTimeline({ page, count }: HomeTimelineParam) {
+  count = count || 20;
+  page = page || 1, Math.max(0, page - 1);
   return {
     ...HOME_TIMELINE,
-    statuses: getStatus(count),
+    statuses: getStatuses({ count, page }),
     total_number: count
   };
 }
