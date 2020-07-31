@@ -1,4 +1,4 @@
-import { GET, Inject, PathVariable, POST, RequestBody, View } from '@rester/core';
+import { GET, Inject, PathVariable, PUT, RequestBody, View } from '@rester/core';
 import { StatusController } from './status.controller';
 import { Status } from './status.model';
 
@@ -11,14 +11,14 @@ export class StatusView {
   @Inject()
   private controller!: StatusController;
 
-  @GET('{{id}}')
-  async getOneByID(
-    @PathVariable('id') id: number
-  ) {
-    return this.controller.selectOneByID(+id);
-  }
+  // @GET('{{id}}')
+  // async getOneByID(
+  //   @PathVariable('id') id: number
+  // ) {
+  //   return this.controller.selectOneByID(+id);
+  // }
 
-  @POST('insert')
+  @PUT('insert')
   async insert(
     @RequestBody() { statuses }: { statuses: Status[] }
   ) {
@@ -29,6 +29,11 @@ export class StatusView {
       success: results.filter(result => !Object.prototype.hasOwnProperty.call(result, 'failed')).length,
       results
     };
+  }
+
+  @PUT('update')
+  async update() {
+    return this.insert({ statuses: await this.controller.fetchNewStatuses() });
   }
 
 }
