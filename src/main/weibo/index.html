@@ -1661,7 +1661,7 @@
         </tr>
         <tr>
           <td><span>请求参数</span></td>
-          <td><code>redirect_uri</code><span> 授权回调地址，必选</span></td>
+          <td><code>redirect_uri</code><span> 授权回调地址，必填</span></td>
         </tr>
         <tr>
           <td><span>返回内容</span></td>
@@ -1690,7 +1690,7 @@
         </tr>
         <tr>
           <td><span>请求参数</span></td>
-          <td><span>无</span></td>
+          <td><code>code</code><span> 用户 Code，必填</span></td>
         </tr>
         <tr>
           <td><span>返回内容</span></td>
@@ -1720,6 +1720,10 @@
         <tr>
           <td><span>请求参数</span></td>
           <td><code>count</code><span> 单页返回的记录条数，可选，默认为 20</span></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td><code>page</code><span> 分页，可选，默认为 1</span></td>
         </tr>
         <tr>
           <td><span>返回内容</span></td>
@@ -1752,8 +1756,41 @@
           <td><code>count</code><span> 单页返回的记录条数，可选，默认为 20</span></td>
         </tr>
         <tr>
+          <td>&nbsp;</td>
+          <td><code>page</code><span> 分页，可选，默认为 1</span></td>
+        </tr>
+        <tr>
           <td><span>返回内容</span></td>
           <td><span>见</span><a href='https://open.weibo.com/wiki/2/statuses/home_timeline'><span>微博开放平台</span></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </figure>
+  <h2><a name="show-comments" class="md-header-anchor"></a><span>Show Comments</span></h2>
+  <figure>
+    <table>
+      <thead>
+        <tr>
+          <th><span>请求说明</span></th>
+          <th><span>根据微博ID返回某条微博的评论列表</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span>请求方式</span></td>
+          <td><span>GET</span></td>
+        </tr>
+        <tr>
+          <td><span>请求路径</span></td>
+          <td><span>2/comments/show.json</span></td>
+        </tr>
+        <tr>
+          <td><span>请求参数</span></td>
+          <td><code>id</code><span> 指定的微博 ID</span></td>
+        </tr>
+        <tr>
+          <td><span>返回内容</span></td>
+          <td><span>见</span><a href='https://open.weibo.com/wiki/2/comments/show'><span>微博开放平台</span></a></td>
         </tr>
       </tbody>
     </table>

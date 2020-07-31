@@ -26,7 +26,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | -------- | --------------------------------------- |
 | 请求方式 | GET                                     |
 | 请求路径 | oauth2/authorize                        |
-| 请求参数 | `redirect_uri` 授权回调地址，必选       |
+| 请求参数 | `redirect_uri` 授权回调地址，必填       |
 | 返回内容 | 302 跳转至 redirect_uri 并携带参数 code |
 
 ## Token
@@ -35,26 +35,37 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | -------- | --------------------------- |
 | 请求方式 | POST                        |
 | 请求路径 | oauth2/access_token         |
-| 请求参数 | 无                          |
+| 请求参数 | `code` 用户 Code，必填      |
 | 返回内容 | `{ access_token: 'token' }` |
 
 ## Public Timeline
 
-| 请求说明 | 返回最新的公共微博                                                       |
-| -------- | ------------------------------------------------------------------------ |
-| 请求方式 | GET                                                                      |
-| 请求路径 | 2/statuses/public_timeline.json                                          |
-| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20                              |
+| 请求说明 | 返回最新的公共微博                                           |
+| -------- | ------------------------------------------------------------ |
+| 请求方式 | GET                                                          |
+| 请求路径 | 2/statuses/public_timeline.json                              |
+| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20                  |
+|          | `page` 分页，可选，默认为 1                                  |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/public_timeline) |
 
 ## Home Timeline
 
-| 请求说明 | 获取当前登录用户及其所关注（授权）用户的最新微博                       |
-| -------- | ---------------------------------------------------------------------- |
-| 请求方式 | GET                                                                    |
-| 请求路径 | 2/statuses/home_timeline.json                                          |
-| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20                            |
+| 请求说明 | 获取当前登录用户及其所关注（授权）用户的最新微博             |
+| -------- | ------------------------------------------------------------ |
+| 请求方式 | GET                                                          |
+| 请求路径 | 2/statuses/home_timeline.json                                |
+| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20                  |
+|          | `page` 分页，可选，默认为 1                                  |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/home_timeline) |
+
+## Show Comments
+
+| 请求说明 | 根据微博ID返回某条微博的评论列表                             |
+| -------- | ------------------------------------------------------------ |
+| 请求方式 | GET                                                          |
+| 请求路径 | 2/comments/show.json                                         |
+| 请求参数 | `id` 指定的微博 ID                                           |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/show) |
 
 ## 其他接口正在筹划中
 
