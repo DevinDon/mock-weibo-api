@@ -5,7 +5,7 @@ import { Status } from './status.model';
 // add, remove, modify, find(condition), get(random)
 // one, more
 
-@View('status')
+@View('weibo/0/status')
 export class StatusView {
 
   @Inject()
