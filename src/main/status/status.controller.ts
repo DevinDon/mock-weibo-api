@@ -13,7 +13,13 @@ export class StatusController {
   }
 
   async insertToDatabase({ statuses }: { statuses: Status[] }) {
-    return StatusEntity.insert(statuses);
+    const pending = statuses.map(
+      status => StatusEntity
+        .insert(status)
+        .then(result => ({ id: status.id }))
+        .catch(reason => ({ id: status.id, failed: true }))
+    );
+    return Promise.all(pending);
   }
 
 }
