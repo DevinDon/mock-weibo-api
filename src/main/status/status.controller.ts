@@ -12,7 +12,7 @@ export class StatusController {
     return StatusEntity.findOne(id);
   }
 
-  async insertToDatabase({ statuses }: any) {
+  async insertToDatabase({ statuses }: { statuses: Status[] }) {
     return StatusEntity.insert(statuses);
   }
 
