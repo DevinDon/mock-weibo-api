@@ -13,13 +13,11 @@ export const PUBLIC_TIMELINE = {
 };
 
 export interface PublicTimelineParam {
-  count?: number;
-  page?: number;
+  count: number;
+  page: number;
 }
 
 export function getPublicTimeline({ count, page }: PublicTimelineParam) {
-  count = count || 50;
-  page = page || 1;
   return {
     ...PUBLIC_TIMELINE,
     statuses: getStatuses({ take: count, skip: Math.max(0, page - 1) * count }),

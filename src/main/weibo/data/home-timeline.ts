@@ -20,13 +20,11 @@ export const HOME_TIMELINE = {
 };
 
 export interface HomeTimelineParam {
-  count?: number;
-  page?: number;
+  count: number;
+  page: number;
 }
 
 export function getHomeTimeline({ page, count }: HomeTimelineParam) {
-  count = count || 20;
-  page = page || 1;
   return {
     ...HOME_TIMELINE,
     statuses: getStatuses({ take: count, skip: Math.max(0, page - 1) * count }),
