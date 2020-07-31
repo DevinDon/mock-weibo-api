@@ -1,7 +1,7 @@
 import { Controller } from '@rester/core';
 import { randomSort } from '../util';
 import { getHomeTimeline, HomeTimelineParam } from './data/home-timeline';
-import { getPublicTimeline } from './data/public-timeline';
+import { getPublicTimeline, PublicTimelineParam } from './data/public-timeline';
 import { WeiboEntity } from './weibo.entity';
 import { Weibo } from './weibo.model';
 
@@ -11,26 +11,16 @@ import { Weibo } from './weibo.model';
 @Controller()
 export class WeiboController {
 
-  private statuses: any[] = [];
-
   async selectOneByID(id: Weibo['id']) {
     return WeiboEntity.findOne(id);
   }
 
-  async generateRandomPublicTimelinePosts(count: number) {
-    const timeline = getPublicTimeline({ count });
-    return {
-      ...timeline,
-      statuses: timeline.statuses.sort(randomSort)
-    };
+  async getPublicTimeline(param: PublicTimelineParam) {
+    return getPublicTimeline(param);
   }
 
-  async generateRandomHomeTimelinePosts({ page, count }: HomeTimelineParam) {
-    const timeline = getHomeTimeline({ page, count });
-    return {
-      ...timeline,
-      statuses: timeline.statuses.sort(randomSort)
-    };
+  async getHomeTimeline(param: HomeTimelineParam) {
+    return getHomeTimeline(param);
   }
 
 }

@@ -1,4 +1,4 @@
-import { GET, Handler, Inject, PathQuery, POST, View } from '@rester/core';
+import { GET, Handler, Inject, PathQuery, POST, View, HTTP400Exception } from '@rester/core';
 import { readFileSync } from 'fs';
 import { HTMLHandler } from '../handler/html.handler';
 import { RedirectToCallback } from '../handler/redirect.handler';
@@ -34,26 +34,33 @@ export class WeiboView {
   }
 
   @POST('oauth2/access_token')
-  async getToken() {
+  async getToken(
+    @PathQuery('code') code: string
+  ) {
+    if (!code) {
+      throw new HTTP400Exception('param code is required');
+    }
     return TOKEN;
   }
 
   @GET('2/statuses/public_timeline.json')
   async getPublicTimeline(
-    @PathQuery('count') count: number = 20
+    @PathQuery('count') count: number = 20,
+    @PathQuery('page') page: number = 1
   ) {
     count = Math.min(50, +count);
-    return this.controller.generateRandomPublicTimelinePosts(count);
+    page = +page || 1;
+    return this.controller.getPublicTimeline({ count, page });
   }
 
   @GET('2/statuses/home_timeline.json')
   async getHomeTimeline(
-    @PathQuery('page') page: number = 1,
-    @PathQuery('count') count: number = 20
+    @PathQuery('count') count: number = 20,
+    @PathQuery('page') page: number = 1
   ) {
+    count = Math.min(20, +count);
     page = +page || 1;
-    count = Math.min(50, +count);
-    return this.controller.generateRandomHomeTimelinePosts({ page, count });
+    return this.controller.getHomeTimeline({ count, page });
   }
 
 }
