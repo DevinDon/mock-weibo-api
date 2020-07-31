@@ -1,4 +1,5 @@
 import { CORSHandler, Rester } from '@rester/core';
+import { AccessHandler } from './handler/access.handler';
 import { StatusView } from './status/status.view';
 import { WeiboView } from './weibo/weibo.view';
 
@@ -7,6 +8,6 @@ const rester = new Rester()
   .add(StatusView, WeiboView)
   .end()
   .configHandlers
-  .add(CORSHandler)
+  .add(AccessHandler, CORSHandler)
   .end()
   .listen();
