@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn, Index } from 'typeorm';
 import { User } from '../user/user.model';
 import { AlchemyParams, Annotation, CommentManageInfo, ExtendInfo, Geo, NumberDisplayStrategy, PicUrl, Status, Visible } from './status.model';
 
@@ -9,6 +9,7 @@ export class StatusEntity extends BaseEntity implements Status {
   _id!: ObjectID;
 
   @Column()
+  @Index({ unique: true })
   id!: number;
 
   @Column()
