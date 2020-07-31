@@ -23,12 +23,7 @@ export class StatusView {
     @RequestBody() { statuses }: { statuses: Status[] }
   ) {
     statuses = statuses || [];
-    const results = await this.controller.insertToDatabase({ statuses });
-    return {
-      total: results.length,
-      success: results.filter(result => !Object.prototype.hasOwnProperty.call(result, 'failed')).length,
-      results
-    };
+    return this.controller.insertToDatabase({ statuses });
   }
 
   @PUT('update')

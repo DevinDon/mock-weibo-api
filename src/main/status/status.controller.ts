@@ -2,6 +2,7 @@ import { Controller } from '@rester/core';
 import { StatusEntity } from './status.entity';
 import { Status } from './status.model';
 import { get } from 'superagent';
+import { insertOneByOne } from '../util';
 
 // insert, delete, update, select
 // one, more
@@ -14,13 +15,7 @@ export class StatusController {
   }
 
   async insertToDatabase({ statuses }: { statuses: Status[] }) {
-    const pending = statuses.map(
-      status => StatusEntity
-        .insert(status)
-        .then(result => ({ id: status.id }))
-        .catch(reason => ({ id: status.id, failed: true }))
-    );
-    return Promise.all(pending);
+    return insertOneByOne(statuses, StatusEntity.insert.bind(StatusEntity));
   }
 
   async fetchNewStatuses() {
