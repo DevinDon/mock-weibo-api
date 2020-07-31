@@ -6,5 +6,5 @@ export interface ParamGetStatuses {
 }
 
 export async function getStatuses(param: ParamGetStatuses) {
-  return StatusEntity.find(param);
+  return StatusEntity.find({ ...param, order: { created_at: 'DESC' } });
 }
