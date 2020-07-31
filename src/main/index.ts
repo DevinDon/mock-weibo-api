@@ -1,10 +1,10 @@
 import { CORSHandler, Rester } from '@rester/core';
-import { MottoView } from './motto/motto.view';
+import { StatusView } from './status/status.view';
 import { WeiboView } from './weibo/weibo.view';
 
 const rester = new Rester()
   .configViews
-  .add(MottoView, WeiboView)
+  .add(StatusView, WeiboView)
   .end()
   .configHandlers
   .add(CORSHandler)
