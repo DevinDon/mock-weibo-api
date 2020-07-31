@@ -1,5 +1,6 @@
 import { GET, Inject, PathVariable, POST, RequestBody, View } from '@rester/core';
 import { StatusController } from './status.controller';
+import { Status } from './status.model';
 
 // add, remove, modify, find(condition), get(random)
 // one, more
@@ -19,10 +20,15 @@ export class StatusView {
 
   @POST('insert')
   async insert(
-    @RequestBody() body: string
+    @RequestBody() { statuses }: { statuses: Status[] }
   ) {
-    const statuses = JSON.parse(body).statuses;
-    return this.controller.insertToDatabase({ statuses });
+    statuses = statuses || [];
+    const results = await this.controller.insertToDatabase({ statuses });
+    return {
+      total: results.length,
+      success: results.filter(result => !Object.prototype.hasOwnProperty.call(result, 'failed')).length,
+      results
+    };
   }
 
 }
