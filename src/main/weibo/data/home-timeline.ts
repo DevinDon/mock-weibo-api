@@ -24,10 +24,10 @@ export interface HomeTimelineParam {
   page: number;
 }
 
-export function getHomeTimeline({ page, count }: HomeTimelineParam) {
+export async function getHomeTimeline({ page, count }: HomeTimelineParam) {
   return {
     ...HOME_TIMELINE,
-    statuses: getStatuses({ take: count, skip: Math.max(0, page - 1) * count }),
+    statuses: await getStatuses({ take: count, skip: Math.max(0, page - 1) * count }),
     total_number: count
   };
 }

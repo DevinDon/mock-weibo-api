@@ -17,10 +17,10 @@ export interface PublicTimelineParam {
   page: number;
 }
 
-export function getPublicTimeline({ count, page }: PublicTimelineParam) {
+export async function getPublicTimeline({ count, page }: PublicTimelineParam) {
   return {
     ...PUBLIC_TIMELINE,
-    statuses: getStatuses({ take: count, skip: Math.max(0, page - 1) * count }),
+    statuses: await getStatuses({ take: count, skip: Math.max(0, page - 1) * count }),
     total_number: count
   };
 }
