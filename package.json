@@ -34,7 +34,8 @@
   "private": true,
   "dependencies": {
     "@iinfinity/logger": "^0.3.3",
-    "@rester/core": "^0.10.14"
+    "@rester/core": "^0.10.14",
+    "mongodb": "^3.5.9"
   },
   "devDependencies": {
     "@types/jasmine": "3.5.11",
@@ -59,7 +60,5 @@
     "url": "https://github.com/DevinDon/template/issues"
   },
   "homepage": "https://github.com/DevinDon/template/tree/typescript",
-  "optionalDependencies": {
-    "sqlite3": "^5.0.0"
-  }
+  "optionalDependencies": {}
 }
