@@ -10,7 +10,7 @@ import { WeiboController } from './weibo.controller';
 
 const INDEX = readFileSync('src/main/weibo/index.html');
 
-@View('weibo/2')
+@View('weibo')
 export class WeiboView {
 
   @Inject()
@@ -43,7 +43,7 @@ export class WeiboView {
     return TOKEN;
   }
 
-  @GET('statuses/public_timeline.json')
+  @GET('2/statuses/public_timeline.json')
   async getPublicTimeline(
     @PathQuery('count') count: number = 20,
     @PathQuery('page') page: number = 1
@@ -53,7 +53,7 @@ export class WeiboView {
     return this.controller.getPublicTimeline({ count, page });
   }
 
-  @GET('statuses/home_timeline.json')
+  @GET('2/statuses/home_timeline.json')
   async getHomeTimeline(
     @PathQuery('count') count: number = 20,
     @PathQuery('page') page: number = 1
@@ -63,7 +63,7 @@ export class WeiboView {
     return this.controller.getHomeTimeline({ count, page });
   }
 
-  @GET('comments/show.json')
+  @GET('2/comments/show.json')
   async showCommentsByStatusID(
     @PathQuery('id') id: number
   ) {
