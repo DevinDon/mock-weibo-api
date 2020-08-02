@@ -23,7 +23,7 @@ export class WeiboView {
   }
 
   @Handler(RedirectToCallback)
-  @GET('oauth2/authorize')
+  @POST('oauth2/authorize')
   async getCode(
     // @PathQuery('client_id') id: string,
     // @PathQuery('response_type') type: 'code',
