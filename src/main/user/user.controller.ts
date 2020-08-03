@@ -36,6 +36,7 @@ export class UserController {
 
     return {
       total: results.length,
+      success: results.filter(result => !result['failed']).length,
       failed: results.filter(result => result['failed']).length,
       results
     };

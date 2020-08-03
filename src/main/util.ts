@@ -12,7 +12,7 @@ export async function insertOneByOne<T>(data: T[], fn: (...args: any) => Promise
   );
   return {
     total: results.length,
-    success: results.length - results.filter(result => result['failed']).length,
+    success: results.filter(result => !result['failed']).length,
     failed: results.filter(result => result['failed']).length,
     results
   };
