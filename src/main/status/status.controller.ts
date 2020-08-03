@@ -1,8 +1,9 @@
+import { logger } from '@iinfinity/logger';
 import { Controller } from '@rester/core';
-import { StatusEntity } from './status.entity';
-import { Status } from './status.model';
 import { get, put } from 'superagent';
 import { insertOneByOne } from '../util';
+import { StatusEntity } from './status.entity';
+import { Status } from './status.model';
 
 // insert, delete, update, select
 // one, more
@@ -31,6 +32,7 @@ export class StatusController {
       home: await this.insertToDatabase({ statuses: homeStatuses }),
       public: await this.insertToDatabase({ statuses: publicStatuses })
     };
+    logger.debug(`Fetch new data: ${results.home.success + results.public.success} ${results.home.total + results.home.total}`);
     await put('http://localhost/weibo/0/user/update').send();
     await put('http://localhost/weibo/0/comment/update').send();
     return results;

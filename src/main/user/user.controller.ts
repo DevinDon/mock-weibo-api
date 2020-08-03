@@ -21,7 +21,7 @@ export class UserController {
         .then(() => ({ id: status.user.id }))
         .catch(() => ({ id: status.user.id, failed: true }));
       results.push(result);
-      logger.debug('User from status:', result);
+      logger.debug(`User from status: ${JSON.stringify(result)}`);
     }
 
     const commentCursor = getMongoRepository(CommentEntity).createCursor();
@@ -31,7 +31,7 @@ export class UserController {
         .then(() => ({ id: comment.user.id }))
         .catch(() => ({ id: comment.user.id, failed: true }));
       results.push(result);
-      logger.debug('User from comment:', result);
+      logger.debug(`User from comment: ${JSON.stringify(result)}`);
     }
 
     return {
