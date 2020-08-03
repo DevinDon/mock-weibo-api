@@ -5,6 +5,7 @@ import { Comment } from '../comment/comment.model';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { UserEntity } from './user.entity';
+import { logger } from '@iinfinity/logger';
 
 @Controller()
 export class UserController {
@@ -20,6 +21,7 @@ export class UserController {
         .then(() => ({ id: status.user.id }))
         .catch(() => ({ id: status.user.id, failed: true }));
       results.push(result);
+      logger.debug('User from status:', result);
     }
 
     const commentCursor = getMongoRepository(CommentEntity).createCursor();
@@ -29,6 +31,7 @@ export class UserController {
         .then(() => ({ id: comment.user.id }))
         .catch(() => ({ id: comment.user.id, failed: true }));
       results.push(result);
+      logger.debug('User from comment:', result);
     }
 
     return {

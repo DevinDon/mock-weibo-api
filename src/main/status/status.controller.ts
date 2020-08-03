@@ -19,13 +19,20 @@ export class StatusController {
   }
 
   async fetchNewStatuses() {
-    const statuses = await get('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200')
+    const homeStatuses = await get('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200')
       .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
       .send()
       .then(response => response.body.statuses);
-    const results = await this.insertToDatabase({ statuses });
-    await put('http://localhost/weibo/0/comment/update').send();
+    const publicStatuses = await get('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200')
+      .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
+      .send()
+      .then(response => response.body.statuses);
+    const results = {
+      home: await this.insertToDatabase({ statuses: homeStatuses }),
+      public: await this.insertToDatabase({ statuses: publicStatuses })
+    };
     await put('http://localhost/weibo/0/user/update').send();
+    await put('http://localhost/weibo/0/comment/update').send();
     return results;
   }
 
