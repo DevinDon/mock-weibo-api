@@ -23,6 +23,7 @@ export class CommentController {
   }
 
   async updateByID({ id }: { id: Comment['id'] }) {
+    logger.debug(`Fetch new comments of comment.id: ${id}`);
     const comments: Comment[] = await get('https://api.weibo.com/2/comments/show.json?access_token=2.00Limi4D7kdwtC6aa1803987GSmw_D&page=1&count=200')
       .query({ id })
       .send()
@@ -37,7 +38,10 @@ export class CommentController {
       .createCursor();
     while (await cursor.hasNext()) {
       const status: Status = await cursor.next();
-      if (status.comments_count === 0 || this.hasComments(status.id)) { continue; }
+      if (status.comments_count === 0 || this.hasComments(status.id)) {
+        logger.debug(`${status.id} already saved comments.`);
+        continue;
+      }
       results[status.id] = await this.updateByID({ id: status.id });
       logger.debug(`${status.id}: ${results[status.id].failed} / ${results[status.id].total}`);
     }
