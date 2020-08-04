@@ -1,8 +1,8 @@
 import { Controller } from '@rester/core';
-import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
 import { getHomeTimeline, HomeTimelineParam } from './data/home-timeline';
 import { getPublicTimeline, PublicTimelineParam } from './data/public-timeline';
+import { showComments } from './data/show-comment';
 import { WeiboEntity } from './weibo.entity';
 import { Weibo } from './weibo.model';
 
@@ -17,9 +17,7 @@ export class WeiboController {
   }
 
   async selectOneByStatusID(id: Comment['id']) {
-    return CommentEntity.find({
-      where: { 'status.id': id }
-    });
+    return showComments({ id, count: 20, page: 1 });
   }
 
   async getPublicTimeline(param: PublicTimelineParam) {
