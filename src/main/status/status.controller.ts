@@ -50,4 +50,8 @@ export class StatusController {
     };
   }
 
+  async selectStatusByID(id: number) {
+    return StatusEntity.findOne({ id });
+  }
+
 }

@@ -1,4 +1,4 @@
-import { GET, Inject, PathQuery, View } from '@rester/core';
+import { GET, HTTP400Exception, Inject, PathQuery, View } from '@rester/core';
 import { PaginationParam, StatusController } from './status.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -36,6 +36,14 @@ export class StatusView {
       take: count
     };
     return this.controller.selectStatusesWithPublicTimeline(param);
+  }
+
+  @GET('show.json')
+  async show(
+    @PathQuery('id') id: number
+  ) {
+    if (!id) { throw new HTTP400Exception('query param `id` is required'); }
+    return this.controller.selectStatusByID(+id);
   }
 
 }
