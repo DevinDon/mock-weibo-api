@@ -8,11 +8,6 @@ import { Manage } from './manage.model';
 @View('weibo/manage')
 export class ManageView {
 
-  private process = {
-    all: false,
-    new: false
-  };
-
   @Inject()
   private controller!: ManageController;
 
@@ -27,22 +22,17 @@ export class ManageView {
 
   @PUT('comment/all')
   async fetchCommentsForAllStatuses() {
-    if (this.process.all) {
-      return { processing: true };
-    } else {
-      this.process.all = true;
-      return this.controller.fetchCommentsForAllStatus().then(results => (this.process.all = false) || results);
-    }
+    return this.controller.fetchCommentsForAllStatus();
   }
 
   @PUT('comment/new')
   async fetchCommentsForNewStatuses() {
-    if (this.process.new) {
-      return { processing: true };
-    } else {
-      this.process.new = true;
-      return this.controller.fetchCommentsForNewStatus().then(results => (this.process.new = false) || results);
-    }
+    return this.controller.fetchCommentsForNewStatus();
+  }
+
+  @PUT('status/new')
+  async fetchNewStatuses() {
+    return this.controller.fetchNewStatuses();
   }
 
 }
