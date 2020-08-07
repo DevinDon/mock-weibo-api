@@ -73,7 +73,7 @@ export class WeiboView {
     id = +id;
     count = +count || 20;
     page = +page || 1;
-    return this.controller.selectOneByStatusID({ id, count, page });
+    return this.controller.showComments({ id, count, page });
   }
 
 }

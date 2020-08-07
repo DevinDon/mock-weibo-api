@@ -15,7 +15,7 @@ export class WeiboController {
     return WeiboEntity.findOne(id);
   }
 
-  async selectOneByStatusID(param: ShowCommentsParam) {
+  async showComments(param: ShowCommentsParam) {
     return showComments(param);
   }
 
