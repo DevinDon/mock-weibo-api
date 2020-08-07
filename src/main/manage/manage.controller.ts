@@ -5,7 +5,7 @@ import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
-import { insertOneByOne, Information } from '../util';
+import { insertOneByOne, Result, concatResult } from '../util';
 import { logger } from '../util/logger';
 
 // insert, delete, update, select
@@ -88,24 +88,23 @@ export class ManageController {
 
   async fetchNewStatuses() {
     logger.debug('Fetch new statuses');
-    const homeStatuses: Status[] = await get('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200')
-      .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
-      .send()
-      .then(response => response.body.statuses);
-    const publicStatuses: Status[] = await get('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200')
-      .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
-      .send()
-      .then(response => response.body.statuses);
-    const homeResult = await insertOneByOne(homeStatuses, StatusEntity.insert.bind(StatusEntity));
-    const publicResult = await insertOneByOne(publicStatuses, StatusEntity.insert.bind(StatusEntity));
-    const result: Information = {
-      total: homeResult.total + publicResult.total,
-      success: homeResult.success + publicResult.success,
-      failed: homeResult.failed + publicResult.success,
-      results: homeResult.results.concat(publicResult.results)
+    const status = {
+      home: await get('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200')
+        .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
+        .send()
+        .then(response => response.body.statuses),
+      public: await get('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200')
+        .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
+        .send()
+        .then(response => response.body.statuses)
     };
+    const results = {
+      home: await insertOneByOne(status.home, StatusEntity.insert.bind(StatusEntity)),
+      public: await insertOneByOne(status.public, StatusEntity.insert.bind(StatusEntity))
+    };
+    const result: Result = concatResult(results.home, results.public);
     logger.debug(`Fetch new status: ${result.success} / ${result.total}`);
-
+    return result;
   }
 
 }

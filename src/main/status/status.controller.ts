@@ -1,7 +1,7 @@
 import { logger } from '@iinfinity/logger';
 import { Controller } from '@rester/core';
 import { get, put } from 'superagent';
-import { Information, insertOneByOne } from '../util';
+import { Result, insertOneByOne } from '../util';
 import { StatusEntity } from './status.entity';
 import { Status } from './status.model';
 
@@ -10,10 +10,10 @@ import { Status } from './status.model';
 
 export interface Processed {
   ing: boolean;
-  home: Information;
-  public: Information;
-  user: Information;
-  comment: Information;
+  home: Result;
+  public: Result;
+  user: Result;
+  comment: Result;
 }
 
 @Controller()
