@@ -51,10 +51,11 @@ export class StatusController {
     };
     this.processed.home = await this.insertToDatabase({ statuses: homeStatuses });
     this.processed.public = await this.insertToDatabase({ statuses: publicStatuses });
+    logger.debug(`Fetch new data: ${results.home.success + results.public.success} / ${results.home.total + results.home.total}`);
     this.processed.user = await put('http://localhost/weibo/0/user/update').send() as any;
     this.processed.comment = await put('http://localhost/weibo/0/comment/update').send() as any;
-    logger.debug(`Fetch new data: ${results.home.success + results.public.success} / ${results.home.total + results.home.total}`);
     this.processed.ing = false;
+    logger.debug('Update complete');
   }
 
   async test() {
