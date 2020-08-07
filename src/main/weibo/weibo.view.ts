@@ -1,7 +1,7 @@
 import { GET, Handler, Inject, PathQuery, POST, View, HTTP400Exception } from '@rester/core';
 import { readFileSync } from 'fs';
-import { HTMLHandler } from '../handler/html.handler';
-import { RedirectToCallback } from '../handler/redirect.handler';
+import { HTMLHandler } from '../@handler/html.handler';
+import { RedirectToCallback } from '../@handler/redirect.handler';
 import { CODE, TOKEN } from './data';
 import { WeiboController } from './weibo.controller';
 

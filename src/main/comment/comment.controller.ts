@@ -4,7 +4,7 @@ import { get } from 'superagent';
 import { getMongoRepository } from 'typeorm';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
-import { insertOneByOne } from '../util';
+import { insertOneByOne } from '../@util';
 import { CommentEntity } from './comment.entity';
 import { Comment } from './comment.model';
 

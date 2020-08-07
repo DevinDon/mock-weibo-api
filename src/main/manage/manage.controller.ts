@@ -5,8 +5,8 @@ import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
-import { concatResult, insertOneByOne, Result } from '../util';
-import { logger } from '../util/logger';
+import { concatResult, insertOneByOne, Result } from '../@util';
+import { logger } from '../@util/logger';
 import { UserEntity } from '../user/user.entity';
 import { User } from '../user/user.model';
 

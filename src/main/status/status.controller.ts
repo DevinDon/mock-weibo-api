@@ -1,7 +1,7 @@
 import { logger } from '@iinfinity/logger';
 import { Controller } from '@rester/core';
 import { get, put } from 'superagent';
-import { Result, insertOneByOne } from '../util';
+import { Result, insertOneByOne } from '../@util';
 import { StatusEntity } from './status.entity';
 import { Status } from './status.model';
 
