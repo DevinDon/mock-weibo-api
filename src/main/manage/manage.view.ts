@@ -30,17 +30,17 @@ export class ManageView {
     return this.controller.fetchCommentsForNewStatus();
   }
 
-  @PUT('status/new')
-  async fetchNewStatuses() {
-    return this.controller.fetchNewStatuses();
-  }
-
   @PUT('status')
   async fetchNewStatusesByIDs(
     @RequestBody() { ids }: { ids: number[] } = { ids: [] }
   ) {
     if (!ids || !ids.length) { throw new HTTP400Exception('request body ids is required'); }
     return this.controller.fetchNewStatusesByIDs(ids);
+  }
+
+  @PUT('status/new')
+  async fetchNewStatuses() {
+    return this.controller.fetchNewStatuses();
   }
 
 }
