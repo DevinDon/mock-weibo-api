@@ -30,7 +30,11 @@ export class StatusController {
   }
 
   async fetchNewStatuses() {
-    if (this.processed.ing) { return; }
+    if (this.processed.ing) {
+      return;
+    } else {
+      this.processed.ing = true;
+    }
     const homeStatuses = await get('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200')
       .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
       .send()
