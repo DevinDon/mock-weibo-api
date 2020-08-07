@@ -40,8 +40,8 @@ export class ManageController {
     return results;
   }
 
-  async fetchNewCommentsForAllStatus() {
-    logger.debug('Fetch new comments for all status ID');
+  async fetchCommentsForAllStatus() {
+    logger.debug('Fetch comments for all statuses');
     const results = [];
     const cursor = getMongoRepository(StatusEntity).createCursor();
     logger.debug('Got cursor of database status');
@@ -56,6 +56,31 @@ export class ManageController {
       logger.debug(`Got comments: ${comments.length}`);
       const result = await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
       logger.debug(`Got result: ${result.success} / ${result.total}`);
+      results.push(result);
+    }
+    return results;
+  }
+
+  async fetchCommentsForNewStatus() {
+    logger.debug('Fetch comments for new statuses');
+    const results = [];
+    const cursor = getMongoRepository(StatusEntity).createCursor();
+    logger.debug('Got cursor of database status');
+    while (await cursor.hasNext()) {
+      const status: Status = await cursor.next();
+      if (status.comments_count === 0) {
+        logger.debug(`Status ${status.id} has no comment`);
+        continue;
+      }
+      if (await CommentEntity.findOne({ where: { 'status.id': status.id } })) {
+        logger.debug(`Status ${status.id} already has comments`);
+        continue;
+      }
+      logger.debug(`Got status: ${status.id}`);
+      const comments = await this.fetchCommentsByStatusID(status.id);
+      logger.debug(`Got comments: ${comments.length}`);
+      const result = await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
+      logger.debug(`Insert result: ${result.success} / ${result.total}`);
       results.push(result);
     }
     return results;
