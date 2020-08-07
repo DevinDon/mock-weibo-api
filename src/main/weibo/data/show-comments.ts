@@ -1,7 +1,7 @@
 import { CommentEntity } from '../../comment/comment.entity';
 import { StatusEntity } from '../../status/status.entity';
 
-export const SHOW_COMMENT = {
+export const SHOW_COMMENTS = {
   comments: [],
   marks: [],
   hasvisible: false,
@@ -27,7 +27,7 @@ export async function showComments({ id, count, page }: ShowCommentsParam) {
   const skip = Math.max(0, (page - 1)) * count;
   const take = Math.min(200, count);
   const result = {
-    ...SHOW_COMMENT,
+    ...SHOW_COMMENTS,
     comments: await CommentEntity.find({ where: { 'status.id': id }, skip, take }),
     status: await StatusEntity.findOne({ id })
   };
