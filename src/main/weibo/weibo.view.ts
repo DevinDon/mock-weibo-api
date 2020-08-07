@@ -65,10 +65,14 @@ export class WeiboView {
 
   @GET('2/comments/show.json')
   async showCommentsByStatusID(
-    @PathQuery('id') id: number
+    @PathQuery('id') id: number,
+    @PathQuery('count') count: number = 20,
+    @PathQuery('page') page: number = 1
   ) {
     if (!id) { throw new HTTP400Exception('param id is required'); }
-    return this.controller.selectOneByStatusID(+id);
+    count = +count || 20;
+    page = +page || 1;
+    return this.controller.selectOneByStatusID({ id, count, page });
   }
 
 }

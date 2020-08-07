@@ -17,16 +17,18 @@ export const SHOW_COMMENT = {
   status: {}
 };
 
-export interface ShowCommentParams {
+export interface ShowCommentsParam {
   id: number;
   count: number;
   page: number;
 }
 
-export async function showComments({ id, count, page }: ShowCommentParams) {
+export async function showComments({ id, count, page }: ShowCommentsParam) {
+  const skip = Math.max(0, (page - 1)) * count;
+  const take = Math.min(200, count);
   const result = {
     ...SHOW_COMMENT,
-    comments: await CommentEntity.find({ where: { 'status.id': id } }),
+    comments: await CommentEntity.find({ where: { 'status.id': id }, skip, take }),
     status: await StatusEntity.findOne({ id })
   };
   result.total_number = result.comments.length;
