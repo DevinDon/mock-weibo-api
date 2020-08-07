@@ -14,9 +14,7 @@ export class CommentView {
   async updateByID(
     @PathVariable('id') id: number
   ) {
-    if (!id) {
-      throw new HTTP400Exception('path variable id is required.');
-    }
+    if (!id) { throw new HTTP400Exception('path variable `id` is required.'); }
     id = +id;
     return this.controller.updateByID({ id });
   }
