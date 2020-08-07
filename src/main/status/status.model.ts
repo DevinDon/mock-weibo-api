@@ -73,7 +73,7 @@ export interface ExtendInfo {
 export interface Status {
   visible: Visible;
   created_at: string;
-  id: any;
+  id: number;
   idstr: string;
   mid: string;
   can_edit: boolean;
