@@ -65,6 +65,8 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求方式 | GET                                                          |
 | 请求路径 | 2/comments/show.json                                         |
 | 请求参数 | `id` 指定的微博 ID                                           |
+|          | `count` 单页返回的记录条数，可选，默认为 20                  |
+|          | `page` 分页，可选，默认为 1                                  |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/show) |
 
 ## 其他接口正在筹划中
