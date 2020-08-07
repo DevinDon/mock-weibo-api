@@ -5,7 +5,7 @@ import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
-import { insertOneByOne, Result, concatResult } from '../util';
+import { concatResult, insertOneByOne, Result } from '../util';
 import { logger } from '../util/logger';
 
 // insert, delete, update, select
@@ -104,6 +104,21 @@ export class ManageController {
     };
     const result: Result = concatResult(results.home, results.public);
     logger.debug(`Fetch new status: ${result.success} / ${result.total}`);
+    return result;
+  }
+
+  async fetchNewStatusesByIDs(ids: number[]) {
+    logger.debug(`Fetch statuses by IDs ${ids}`);
+    const pending = ids.map(
+      id => get('https://api.weibo.com/2/statuses/show.json')
+        .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
+        .query({ id })
+        .send()
+        .catch(reason => logger.warn(`Fetch status ${id} failed, ${JSON.stringify(reason)}`))
+    );
+    const statuses: Status[] = (await Promise.all(pending)).filter(status => status) as any;
+    const result = await insertOneByOne(statuses, StatusEntity.insert.bind(StatusEntity));
+    logger.debug(`Fetch new statuses: ${result.success} / ${result.total}`);
     return result;
   }
 

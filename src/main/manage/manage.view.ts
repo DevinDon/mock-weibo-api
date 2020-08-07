@@ -13,7 +13,7 @@ export class ManageView {
 
   @PUT('comment')
   async fetchCommentsByStatusIDs(
-    @RequestBody() { ids }: { ids: number[] }
+    @RequestBody() { ids }: { ids: number[] } = { ids: [] }
   ) {
     if (!ids || !ids.length) { throw new HTTP400Exception('request body ids is required'); }
     ids = ids.map(id => +id).filter(id => id);
@@ -33,6 +33,14 @@ export class ManageView {
   @PUT('status/new')
   async fetchNewStatuses() {
     return this.controller.fetchNewStatuses();
+  }
+
+  @PUT('status')
+  async fetchNewStatusesByIDs(
+    @RequestBody() { ids }: { ids: number[] } = { ids: [] }
+  ) {
+    if (!ids || !ids.length) { throw new HTTP400Exception('request body ids is required'); }
+    return this.controller.fetchNewStatusesByIDs(ids);
   }
 
 }
