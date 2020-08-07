@@ -4,7 +4,6 @@ import { getPublicTimeline, PublicTimelineParam } from './data/public-timeline';
 import { showComments, ShowCommentsParam } from './data/show-comments';
 import { WeiboEntity } from './weibo.entity';
 import { Weibo } from './weibo.model';
-import { logger } from '@iinfinity/logger';
 
 // insert, delete, update, select
 // one, more
@@ -17,7 +16,6 @@ export class WeiboController {
   }
 
   async selectOneByStatusID(param: ShowCommentsParam) {
-    logger.debug(JSON.stringify(param));
     return showComments(param);
   }
 
