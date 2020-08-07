@@ -75,7 +75,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 
 # Open Source
 
-项目开源在 [Github: DevinDon/mock-weibo-server](https://github.com/DevinDon/mock-weibo-server)，服务器框架 [Rester](https://github.com/DevinDon/rester-core)，欢迎 star。
+项目开源在 [Github: DevinDon/mock-weibo-api](https://github.com/DevinDon/mock-weibo-api)，服务器框架 [Rester](https://github.com/DevinDon/rester-core)，欢迎 star。
 
 # [THE MIT LICENSE](https://raw.githubusercontent.com/DevinDon/license/master/THE%20MIT%20LICENSE)
 
