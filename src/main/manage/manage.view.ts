@@ -17,17 +17,17 @@ export class ManageView {
   ) {
     if (!ids || !ids.length) { throw new HTTP400Exception('request body ids is required'); }
     ids = ids.map(id => +id).filter(id => id);
-    return this.controller.fetchCommentsByStatusIDsAndSaveSafe(ids);
+    return this.controller.insertCommentsByStatusIDs(ids);
   }
 
   @PUT('comment/all')
   async fetchCommentsForAllStatuses() {
-    return this.controller.fetchCommentsForAllStatus();
+    return this.controller.insertCommentsFromAllStatus();
   }
 
   @PUT('comment/new')
   async fetchCommentsForNewStatuses() {
-    return this.controller.fetchCommentsForNewStatus();
+    return this.controller.insertCommentsFromNewStatus();
   }
 
   @PUT('status')
@@ -35,17 +35,17 @@ export class ManageView {
     @RequestBody() { ids }: { ids: number[] } = { ids: [] }
   ) {
     if (!ids || !ids.length) { throw new HTTP400Exception('request body ids is required'); }
-    return this.controller.fetchNewStatusesByIDs(ids);
+    return this.controller.insertNewStatusesByIDs(ids);
   }
 
   @PUT('status/new')
   async fetchNewStatuses() {
-    return this.controller.fetchNewStatuses();
+    return this.controller.insertNewStatuses();
   }
 
   @PUT('user/all')
   async fetchAllUsersFromLocal() {
-    return this.controller.fetchAllUsers();
+    return this.controller.insertAllUsers();
   }
 
 }

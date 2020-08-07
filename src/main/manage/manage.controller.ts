@@ -25,14 +25,7 @@ export class ManageController {
       .catch(reason => (logger.warn(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`), []));
   }
 
-  async fetchCommentsByStatusIDsAndSaveFast(ids: number[]) {
-    logger.debug(`Fast fetch comments by status IDs ${ids}`);
-    const pending = ids.map(id => this.fetchCommentsByStatusID(id));
-    const comments = (await Promise.all(pending)).flat();
-    return insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
-  }
-
-  async fetchCommentsByStatusIDsAndSaveSafe(ids: number[]) {
+  async insertCommentsByStatusIDs(ids: number[]) {
     logger.debug(`Save fetch comments by status IDs ${ids}`);
     const results = [];
     for (const id of ids) {
@@ -42,7 +35,7 @@ export class ManageController {
     return results;
   }
 
-  async fetchCommentsForAllStatus() {
+  async insertCommentsFromAllStatus() {
     logger.debug('Fetch comments for all statuses');
     const results = [];
     const cursor = getMongoRepository(StatusEntity).createCursor();
@@ -63,7 +56,7 @@ export class ManageController {
     return results;
   }
 
-  async fetchCommentsForNewStatus() {
+  async insertCommentsFromNewStatus() {
     logger.debug('Fetch comments for new statuses');
     const results = [];
     const cursor = getMongoRepository(StatusEntity).createCursor();
@@ -88,7 +81,7 @@ export class ManageController {
     return results;
   }
 
-  async fetchNewStatuses() {
+  async insertNewStatuses() {
     logger.debug('Fetch new statuses');
     const status = {
       home: await get('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200')
@@ -109,7 +102,7 @@ export class ManageController {
     return result;
   }
 
-  async fetchNewStatusesByIDs(ids: number[]) {
+  async insertNewStatusesByIDs(ids: number[]) {
     logger.debug(`Fetch statuses by IDs ${ids}`);
     const pending = ids.map(
       id => get('https://api.weibo.com/2/statuses/show.json')
@@ -124,7 +117,7 @@ export class ManageController {
     return result;
   }
 
-  async fetchUsersFromComments() {
+  async insertUsersFromComments() {
     logger.debug('Fetch users from comments');
     const users: User[] = [];
     const cursor = getMongoRepository(CommentEntity).createCursor();
@@ -138,7 +131,7 @@ export class ManageController {
     return result;
   }
 
-  async fetchUsersFromStatuses() {
+  async insertUsersFromStatuses() {
     logger.debug('Fetch users from statuses');
     const users: User[] = [];
     const cursor = getMongoRepository(StatusEntity).createCursor();
@@ -152,8 +145,8 @@ export class ManageController {
     return result;
   }
 
-  async fetchAllUsers() {
-    const result = concatResult(await this.fetchUsersFromComments(), await this.fetchUsersFromStatuses());
+  async insertAllUsers() {
+    const result = concatResult(await this.insertUsersFromComments(), await this.insertUsersFromStatuses());
     logger.debug(`Fetch all users: ${result.success} / ${result.total}`);
     return result;
   }
