@@ -5,7 +5,7 @@ import { Manage } from './manage.model';
 // add, remove, modify, find(condition), get(random)
 // one, more
 
-@View('manage')
+@View('weibo/manage')
 export class ManageView {
 
   @Inject()

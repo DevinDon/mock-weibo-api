@@ -5,6 +5,7 @@ import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
+import { insertOneByOne } from '../util';
 import { logger } from '../util/logger';
 
 // insert, delete, update, select
@@ -26,8 +27,7 @@ export class ManageController {
     logger.debug(`Fast fetch comments by status IDs ${ids}`);
     const pending = ids.map(id => this.fetchCommentsByStatusID(id));
     const comments = (await Promise.all(pending)).flat();
-    // return insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
-    return CommentEntity.insert(comments);
+    return insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
   }
 
   async fetchCommentsByStatusIDsAndSaveSafe(ids: number[]) {
@@ -35,7 +35,7 @@ export class ManageController {
     const results = [];
     for (const id of ids) {
       const comments = await this.fetchCommentsByStatusID(id);
-      results.push(await CommentEntity.insert(comments));
+      results.push(await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity)));
     }
     return results;
   }
@@ -44,10 +44,19 @@ export class ManageController {
     logger.debug('Fetch new comments for all status ID');
     const results = [];
     const cursor = getMongoRepository(StatusEntity).createCursor();
-    while (cursor.hasNext()) {
+    logger.debug('Got cursor of database status');
+    while (await cursor.hasNext()) {
       const status: Status = await cursor.next();
+      if (status.comments_count === 0) {
+        logger.debug(`Status ${status.id} has no comment`);
+        continue;
+      }
+      logger.debug(`Got status: ${status.id}`);
       const comments = await this.fetchCommentsByStatusID(status.id);
-      results.push(await CommentEntity.insert(comments));
+      logger.debug(`Got comments: ${comments.length}`);
+      const result = await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
+      logger.debug(`Got result: ${result.success} / ${result.total}`);
+      results.push(result);
     }
     return results;
   }
