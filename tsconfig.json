@@ -75,7 +75,7 @@
     "strictPropertyInitialization": true,
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": true,
-    "target": "ES2018",
+    "target": "ESNext",
     "traceResolution": false,
     // "tsBuildInfoFile": "",
     // "typeRoots": [],
