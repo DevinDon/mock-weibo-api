@@ -38,7 +38,7 @@ export class ManageController {
   async insertCommentsFromAllStatus() {
     logger.debug('Fetch comments for all statuses');
     const results = [];
-    const cursor = getMongoRepository(StatusEntity).createCursor();
+    const cursor = getMongoRepository(StatusEntity).createCursor().sort({ $natural: -1 });
     logger.debug('Got cursor of database status');
     while (await cursor.hasNext()) {
       const status: Status = await cursor.next();
@@ -59,7 +59,7 @@ export class ManageController {
   async insertCommentsFromNewStatus() {
     logger.debug('Fetch comments for new statuses');
     const results = [];
-    const cursor = getMongoRepository(StatusEntity).createCursor();
+    const cursor = getMongoRepository(StatusEntity).createCursor().sort({ $natural: -1 });
     logger.debug('Got cursor of database status');
     while (await cursor.hasNext()) {
       const status: Status = await cursor.next();
@@ -120,7 +120,7 @@ export class ManageController {
   async insertUsersFromComments() {
     logger.debug('Fetch users from comments');
     const users: User[] = [];
-    const cursor = getMongoRepository(CommentEntity).createCursor();
+    const cursor = getMongoRepository(CommentEntity).createCursor().sort({ $natural: -1 });
     while (await cursor.hasNext()) {
       const comment: Comment = await cursor.next();
       users.push(comment.user);
@@ -134,7 +134,7 @@ export class ManageController {
   async insertUsersFromStatuses() {
     logger.debug('Fetch users from statuses');
     const users: User[] = [];
-    const cursor = getMongoRepository(StatusEntity).createCursor();
+    const cursor = getMongoRepository(StatusEntity).createCursor().sort({ $natural: -1 });
     while (await cursor.hasNext()) {
       const status: Status = await cursor.next();
       users.push(status.user);
