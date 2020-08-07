@@ -43,15 +43,9 @@ export class StatusController {
       .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
       .send()
       .then(response => response.body.statuses);
-    const results = {
-      home: await this.insertToDatabase({ statuses: homeStatuses }),
-      public: await this.insertToDatabase({ statuses: publicStatuses }),
-      user: await put('http://localhost/weibo/0/user/update').send(),
-      comment: await put('http://localhost/weibo/0/comment/update').send()
-    };
     this.processed.home = await this.insertToDatabase({ statuses: homeStatuses });
     this.processed.public = await this.insertToDatabase({ statuses: publicStatuses });
-    logger.debug(`Fetch new data: ${results.home.success + results.public.success} / ${results.home.total + results.home.total}`);
+    logger.debug(`Fetch new data: ${this.processed.home.success + this.processed.public.success} / ${this.processed.home.total + this.processed.home.total}`);
     this.processed.user = await put('http://localhost/weibo/0/user/update').send() as any;
     this.processed.comment = await put('http://localhost/weibo/0/comment/update').send() as any;
     this.processed.ing = false;
