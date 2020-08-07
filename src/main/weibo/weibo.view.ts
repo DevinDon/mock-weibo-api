@@ -1,4 +1,4 @@
-import { GET, Handler, Inject, PathQuery, POST, View, HTTP400Exception } from '@rester/core';
+import { GET, Handler, HTTP400Exception, Inject, PathQuery, POST, View } from '@rester/core';
 import { readFileSync } from 'fs';
 import { HTMLHandler } from '../@handler/html.handler';
 import { RedirectToCallback } from '../@handler/redirect.handler';
@@ -8,7 +8,7 @@ import { WeiboController } from './weibo.controller';
 // add, remove, modify, find(condition), get(random)
 // one, more
 
-const INDEX = readFileSync('src/main/weibo/index.html');
+const INDEX = readFileSync('src/main/@public/index.html');
 
 @View('weibo')
 export class WeiboView {
