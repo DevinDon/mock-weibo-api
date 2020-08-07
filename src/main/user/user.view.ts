@@ -7,9 +7,4 @@ export class UserView {
   @Inject()
   private controller!: UserController;
 
-  @PUT('update')
-  async updateAll() {
-    return this.controller.updateAll();
-  }
-
 }

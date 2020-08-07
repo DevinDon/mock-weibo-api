@@ -11,25 +11,4 @@ export class StatusView {
   @Inject()
   private controller!: StatusController;
 
-  // @GET('{{id}}')
-  // async getOneByID(
-  //   @PathVariable('id') id: number
-  // ) {
-  //   return this.controller.selectOneByID(+id);
-  // }
-
-  @PUT('insert')
-  async insert(
-    @RequestBody() { statuses }: { statuses: Status[] }
-  ) {
-    statuses = statuses || [];
-    return this.controller.insertToDatabase({ statuses });
-  }
-
-  @PUT('update')
-  async update() {
-    this.controller.fetchNewStatuses();
-    return this.controller.processed;
-  }
-
 }

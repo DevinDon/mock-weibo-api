@@ -10,39 +10,4 @@ import { UserEntity } from './user.entity';
 @Controller()
 export class UserController {
 
-  async updateAll() {
-
-    const results = [];
-
-    const statusCursor = getMongoRepository(StatusEntity).createCursor();
-    while (await statusCursor.hasNext()) {
-      const status: Status = await statusCursor.next().catch();
-      if (!status) { continue; }
-      const result = await UserEntity.insert(status.user)
-        .then(() => ({ id: status.user.id }))
-        .catch(() => ({ id: status.user.id, failed: true }));
-      results.push(result);
-      logger.debug(`User from status: ${JSON.stringify(result)}`);
-    }
-
-    const commentCursor = getMongoRepository(CommentEntity).createCursor();
-    while (await commentCursor.hasNext()) {
-      const comment: Comment = await commentCursor.next().catch();
-      if (!comment) { continue; }
-      const result = await UserEntity.insert(comment.user)
-        .then(() => ({ id: comment.user.id }))
-        .catch(() => ({ id: comment.user.id, failed: true }));
-      results.push(result);
-      logger.debug(`User from comment: ${JSON.stringify(result)}`);
-    }
-
-    return {
-      total: results.length,
-      success: results.filter(result => !result['failed']).length,
-      failed: results.filter(result => result['failed']).length,
-      results
-    };
-
-  }
-
 }
