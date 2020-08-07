@@ -1,10 +1,18 @@
-import { Inject, View, PUT } from '@rester/core';
+import { GET, HTTP400Exception, Inject, PathQuery, View } from '@rester/core';
 import { UserController } from './user.controller';
 
-@View('weibo/0/user')
+@View('weibo/2/user')
 export class UserView {
 
   @Inject()
   private controller!: UserController;
+
+  @GET('show.json')
+  async show(
+    @PathQuery('uid') id: number
+  ) {
+    if (!id) { throw new HTTP400Exception('query param `id` is required'); }
+    return this.controller.selectUserByID(+id);
+  }
 
 }
