@@ -43,4 +43,9 @@ export class ManageView {
     return this.controller.fetchNewStatuses();
   }
 
+  @PUT('user/all')
+  async fetchAllUsersFromLocal() {
+    return this.controller.fetchAllUsers();
+  }
+
 }

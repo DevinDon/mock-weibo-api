@@ -7,6 +7,8 @@ import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { concatResult, insertOneByOne, Result } from '../util';
 import { logger } from '../util/logger';
+import { UserEntity } from '../user/user.entity';
+import { User } from '../user/user.model';
 
 // insert, delete, update, select
 // one, more
@@ -119,6 +121,40 @@ export class ManageController {
     const statuses: Status[] = (await Promise.all(pending)).filter(status => status) as any;
     const result = await insertOneByOne(statuses, StatusEntity.insert.bind(StatusEntity));
     logger.debug(`Fetch new statuses: ${result.success} / ${result.total}`);
+    return result;
+  }
+
+  async fetchUsersFromComments() {
+    logger.debug('Fetch users from comments');
+    const users: User[] = [];
+    const cursor = getMongoRepository(CommentEntity).createCursor();
+    while (await cursor.hasNext()) {
+      const comment: Comment = await cursor.next();
+      users.push(comment.user);
+      logger.debug(`Fetch new user: ${comment.user.id}`);
+    }
+    const result = await insertOneByOne(users, UserEntity.insert.bind(UserEntity));
+    logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
+    return result;
+  }
+
+  async fetchUsersFromStatuses() {
+    logger.debug('Fetch users from statuses');
+    const users: User[] = [];
+    const cursor = getMongoRepository(StatusEntity).createCursor();
+    while (await cursor.hasNext()) {
+      const status: Status = await cursor.next();
+      users.push(status.user);
+      logger.debug(`Fetch new user: ${status.user.id}`);
+    }
+    const result = await insertOneByOne(users, UserEntity.insert.bind(UserEntity));
+    logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
+    return result;
+  }
+
+  async fetchAllUsers() {
+    const result = concatResult(await this.fetchUsersFromComments(), await this.fetchUsersFromStatuses());
+    logger.debug(`Fetch all users: ${result.success} / ${result.total}`);
     return result;
   }
 
