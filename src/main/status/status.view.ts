@@ -28,7 +28,8 @@ export class StatusView {
 
   @PUT('update')
   async update() {
-    return this.controller.fetchNewStatuses();
+    this.controller.fetchNewStatuses();
+    return this.controller.processed;
   }
 
 }
