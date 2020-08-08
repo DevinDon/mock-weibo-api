@@ -39,7 +39,7 @@ export class CommentView {
   ) {
     if (!id) { throw new HTTP400Exception('param id is required'); }
     if (!comment) { throw new HTTP400Exception('param id is required'); }
-    return this.controller.insertCommentByStatusID({ id: +id, comment, user });
+    return this.controller.insertCommentByStatusID({ id: +id, comment: comment.slice(0, 140), user });
   }
 
   @Handler(AuthHandler)
@@ -56,7 +56,7 @@ export class CommentView {
     return this.controller.insertCommentByCommentID({
       id: +id,
       cid: +cid,
-      comment: encodeURIComponent(comment),
+      comment: encodeURIComponent(comment.slice(0, 140)),
       user
     });
   }
