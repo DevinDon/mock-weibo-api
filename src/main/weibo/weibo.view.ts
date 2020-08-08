@@ -1,8 +1,10 @@
-import { GET, Handler, HTTP400Exception, Inject, PathQuery, POST, View } from '@rester/core';
+import { GET, Handler, HandlerZone, HTTP400Exception, Inject, PathQuery, POST, View } from '@rester/core';
 import { readFileSync } from 'fs';
+import { getCode, getToken } from '../@constant';
+import { AuthHandler } from '../@handler/auth.handler';
 import { HTMLHandler } from '../@handler/html.handler';
 import { RedirectToCallback } from '../@handler/redirect.handler';
-import { CODE, TOKEN } from '../@constant';
+import { User } from '../user/user.model';
 import { WeiboController } from './weibo.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -34,24 +36,23 @@ export class WeiboView {
     @PathQuery('redirect_uri') uri: string
   ) {
     uri = decodeURIComponent(uri);
-    return { location: uri, code: CODE };
+    return { location: uri, code: getCode() };
   }
 
   @POST('oauth2/access_token')
   async getToken(
     @PathQuery('code') code: string
   ) {
-    if (!code) {
-      throw new HTTP400Exception('param code is required');
-    }
-    return TOKEN;
+    if (!code) { throw new HTTP400Exception('param code is required'); }
+    return getToken();
   }
 
+  @Handler(AuthHandler)
   @GET('2/account/get_uid.json')
-  async getUID() {
-    return {
-      uid: 123
-    };
+  async getUID(
+    @HandlerZone() { user }: { user: User }
+  ) {
+    return { uid: user.id };
   }
 
 }

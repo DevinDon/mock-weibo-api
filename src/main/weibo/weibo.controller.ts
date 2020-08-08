@@ -10,17 +10,4 @@ import { WeiboEntity } from './weibo.entity';
 @Controller()
 export class WeiboController {
 
-  async selectUserByToken({ token }: { token: string }) {
-    const userInside = await WeiboEntity.findOne({ token });
-    if (!userInside) {
-      const userRandom: User = await getMongoRepository(UserEntity)
-        .createCursor({ $sample: { size: 1 } })
-        .limit(1)
-        .next();
-      const result = await WeiboEntity.insert({ id: userRandom.id, token });
-      return { uid: userRandom.id };
-    }
-    return { uid: userInside.id };
-  }
-
 }
