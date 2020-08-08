@@ -1,7 +1,11 @@
+import { ObjectID } from 'typeorm';
+
 export interface Weibo {
+
+  _id: ObjectID;
 
   id: number;
 
-  content?: string;
+  token: string;
 
 }

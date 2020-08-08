@@ -47,4 +47,11 @@ export class WeiboView {
     return TOKEN;
   }
 
+  @GET('2/account/get_uid.json')
+  async getUID() {
+    return {
+      uid: 123
+    };
+  }
+
 }

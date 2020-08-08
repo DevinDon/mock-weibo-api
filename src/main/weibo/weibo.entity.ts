@@ -1,13 +1,16 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import { Weibo } from './weibo.model';
 
 @Entity('weibo')
 export class WeiboEntity extends BaseEntity implements Weibo {
 
-  @PrimaryGeneratedColumn()
+  @ObjectIdColumn()
+  _id!: ObjectID;
+
+  @Column()
   id!: number;
 
-  @Column({ nullable: true })
-  content?: string;
+  @Column({ unique: true })
+  token!: string;
 
 }
