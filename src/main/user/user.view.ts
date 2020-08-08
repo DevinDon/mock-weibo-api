@@ -1,7 +1,7 @@
 import { GET, HTTP400Exception, Inject, PathQuery, View } from '@rester/core';
 import { UserController } from './user.controller';
 
-@View('weibo/2/user')
+@View('weibo/2/users')
 export class UserView {
 
   @Inject()
