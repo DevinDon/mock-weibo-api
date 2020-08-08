@@ -53,7 +53,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求说明 | 获取当前用户的 UID       |
 | -------- | ------------------------ |
 | 请求方式 | GET                      |
-| 请求路径 | oauth2/access_token      |
+| 请求路径 | 2/account/get_uid.json   |
 | 请求参数 |                          |
 | 返回内容 | `{ uid: 1231231312321 }` |
 
