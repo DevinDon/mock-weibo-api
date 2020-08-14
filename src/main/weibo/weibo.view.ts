@@ -4,6 +4,7 @@ import { getCode, getToken } from '../@constant';
 import { AuthHandler } from '../@handler/auth.handler';
 import { HTMLHandler } from '../@handler/html.handler';
 import { RedirectToCallback } from '../@handler/redirect.handler';
+import { isValidURL } from '../@util';
 import { User } from '../user/user.model';
 import { WeiboController } from './weibo.controller';
 
@@ -35,7 +36,9 @@ export class WeiboView {
     // @PathQuery('response_type') type: 'code',
     @PathQuery('redirect_uri') uri: string
   ) {
+    if (!uri) { throw new HTTP400Exception('param redirect_uri is required'); }
     uri = decodeURIComponent(uri);
+    if (!isValidURL(uri)) { throw new HTTP400Exception('param redirect_uri is invalid'); }
     return { location: uri, code: getCode() };
   }
 
