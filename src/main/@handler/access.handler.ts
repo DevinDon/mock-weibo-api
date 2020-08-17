@@ -15,9 +15,9 @@ export class AccessHandler extends BaseHandler {
       headers: this.request.headers as any || [],
       statusCode: this.response.statusCode,
       statusMessage: this.response.statusMessage
-    }).catch(reason => {
-      logger.warn(`Access log insert failed: ${reason}`);
-      this.rester.connectDatabase();
+    }).catch(error => {
+      logger.warn(`Access log insert failed: ${error}`);
+      this.rester.connectDatabase().catch(reason => logger.warn(reason));
     });
     return result;
   }
