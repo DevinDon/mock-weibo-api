@@ -10,8 +10,8 @@ export class AccessHandler extends BaseHandler {
 
     const result = await next()
       .catch(async error => {
-        logger.warn(typeof error, JSON.stringify(error), error.code === 11600);
-        if (error.code === 11600) {
+        logger.warn(typeof error, JSON.stringify(error), error.code === 11600, error.name === 'MongoError');
+        if (error.name === 'MongoError') {
           logger.error(`Database down: ${error}`);
           await this.rester.connectDatabase(Infinity).catch(reason => logger.warn(reason));
         }
