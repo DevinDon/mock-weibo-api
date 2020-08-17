@@ -2,17 +2,19 @@ import { BaseHandler } from '@rester/core';
 import { AccessEntity } from './access.entity';
 import { logger } from '@iinfinity/logger';
 
+// const log = { ok: 0, code: 11600, codeName: 'InterruptedAtShutdown', name: 'MongoError' };
+
 export class AccessHandler extends BaseHandler {
 
   async handle(next: () => Promise<any>): Promise<any> {
 
     const result = await next()
-      .catch(error => {
-        logger.warn(typeof error, JSON.stringify(error), JSON.stringify(error).includes('pool is draining'));
-        // if (JSON.stringify(error).includes('pool is draining')) {
-        //   logger.error(`Database down: ${error}`);
-        //   this.rester.connectDatabase().catch(reason => logger.warn(reason));
-        // }
+      .catch(async error => {
+        logger.warn(typeof error, JSON.stringify(error), error.code === 11600);
+        if (error.code === 11600) {
+          logger.error(`Database down: ${error}`);
+          await this.rester.connectDatabase().catch(reason => logger.warn(reason));
+        }
         throw error;
       });
     AccessEntity.insert({
