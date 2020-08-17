@@ -34,7 +34,7 @@
   "private": true,
   "dependencies": {
     "@iinfinity/logger": "^0.3.4",
-    "@rester/core": "^0.10.19",
+    "@rester/core": "^0.10.20",
     "mongodb": "^3.6.0"
   },
   "devDependencies": {
