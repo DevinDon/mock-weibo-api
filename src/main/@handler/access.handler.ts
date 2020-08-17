@@ -13,7 +13,7 @@ export class AccessHandler extends BaseHandler {
         logger.warn(typeof error, JSON.stringify(error), error.code === 11600, error.name === 'MongoError');
         if (error.name === 'MongoError' || error.code === 11600) {
           logger.error(`Database down: ${error}`);
-          await this.rester.connectDatabase(Infinity).catch(reason => logger.warn(reason));
+          await this.rester.connectDatabase(1000).catch(reason => logger.warn(reason));
         }
         throw error;
       });
