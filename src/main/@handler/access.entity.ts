@@ -4,7 +4,7 @@ import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 export class AccessEntity extends BaseEntity {
 
   @ObjectIdColumn()
-  id!: ObjectID;
+  _id!: ObjectID;
 
   @Column()
   date!: Date;

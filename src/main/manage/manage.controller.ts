@@ -158,7 +158,7 @@ export class ManageController {
     while (await cursor.hasNext()) {
       const access: AccessEntity = await cursor.next();
       access.date = new Date(access.date || 0);
-      await access.save();
+      await AccessEntity.update({ _id: access._id }, access);
       logger.debug(`Access IP is ${access.address}`);
       results.add(access.address);
     }
