@@ -10,6 +10,7 @@ import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { UserEntity } from '../user/user.entity';
 import { User } from '../user/user.model';
+import { URL } from 'url';
 
 // insert, delete, update, select
 // one, more
@@ -158,8 +159,12 @@ export class ManageController {
     while (await cursor.hasNext()) {
       const access: AccessEntity = await cursor.next();
       access.date = new Date(access.date || 0);
+      const url = new URL('http://mock.don.red' + access.url);
+      access.path = url.pathname;
+      access.query = Object.fromEntries(url.searchParams.entries());
       await AccessEntity.update({ _id: access._id }, access);
       logger.debug(`Access IP is ${access.address}`);
+      logger.debug(JSON.stringify(access));
       results.push(access.address);
     }
     return results;

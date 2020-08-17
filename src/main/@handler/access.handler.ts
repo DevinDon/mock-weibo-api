@@ -9,6 +9,8 @@ export class AccessHandler extends BaseHandler {
       date: new Date(),
       address: JSON.stringify(this.request.headers['x-real-ip']) || this.request.connection.remoteAddress || '',
       url: this.request.url,
+      path: this.route.mapping.path,
+      query: this.route.mapping.queryObject,
       headers: this.request.headers as any || [],
       statusCode: this.response.statusCode,
       statusMessage: this.response.statusMessage

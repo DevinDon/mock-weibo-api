@@ -15,6 +15,12 @@ export class AccessEntity extends BaseEntity {
   @Column()
   url!: string;
 
+  @Column({ default: '' })
+  path!: string;
+
+  @Column({ default: {} })
+  query!: { [index: string]: string };
+
   @Column()
   headers!: { [index: string]: string }[];
 
