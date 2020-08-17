@@ -48,4 +48,9 @@ export class ManageView {
     return this.controller.insertAllUsers();
   }
 
+  @PUT('access')
+  async formatAccessLog() {
+    return this.controller.formatAccessLog();
+  }
+
 }

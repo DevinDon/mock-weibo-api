@@ -1,12 +1,13 @@
 import { Controller } from '@rester/core';
 import { get } from 'superagent';
 import { getMongoRepository } from 'typeorm';
+import { AccessEntity } from '../@handler/access.entity';
+import { concatResult, insertOneByOne, Result } from '../@util';
+import { logger } from '../@util/logger';
 import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
-import { concatResult, insertOneByOne, Result } from '../@util';
-import { logger } from '../@util/logger';
 import { UserEntity } from '../user/user.entity';
 import { User } from '../user/user.model';
 
@@ -149,6 +150,19 @@ export class ManageController {
     const result = concatResult(await this.insertUsersFromComments(), await this.insertUsersFromStatuses());
     logger.debug(`Fetch all users: ${result.success} / ${result.total}`);
     return result;
+  }
+
+  async formatAccessLog() {
+    const cursor = getMongoRepository(AccessEntity).createCursor();
+    const results = new Set<string>();
+    while (await cursor.hasNext()) {
+      const access: AccessEntity = await cursor.next();
+      access.date = new Date(access.date || 0);
+      await access.save();
+      logger.debug(`Access IP is ${access.address}`);
+      results.add(access.address);
+    }
+    return results;
   }
 
 }
