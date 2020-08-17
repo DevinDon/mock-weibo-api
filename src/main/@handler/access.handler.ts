@@ -9,7 +9,7 @@ export class AccessHandler extends BaseHandler {
     const result = await next()
       .catch(error => {
         logger.warn(error);
-        if (error === 'MongoError pool is draining, new operations prohibited') {
+        if ((error as string).includes('pool is draining')) {
           logger.error(`Database down: ${error}`);
           this.rester.connectDatabase().catch(reason => logger.warn(reason));
         }
