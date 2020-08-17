@@ -1,5 +1,6 @@
 import { BaseHandler } from '@rester/core';
 import { AccessEntity } from './access.entity';
+import { logger } from '@iinfinity/logger';
 
 export class AccessHandler extends BaseHandler {
 
@@ -14,6 +15,9 @@ export class AccessHandler extends BaseHandler {
       headers: this.request.headers as any || [],
       statusCode: this.response.statusCode,
       statusMessage: this.response.statusMessage
+    }).catch(reason => {
+      logger.warn(`Access log insert failed: ${reason}`);
+      this.rester.connectDatabase();
     });
     return result;
   }
