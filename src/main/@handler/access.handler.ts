@@ -8,10 +8,11 @@ export class AccessHandler extends BaseHandler {
 
     const result = await next()
       .catch(error => {
-        if (JSON.stringify(error).includes('pool is draining')) {
-          logger.error(`Database down: ${error}`);
-          this.rester.connectDatabase().catch(reason => logger.warn(reason));
-        }
+        logger.warn(typeof error, JSON.stringify(error), JSON.stringify(error).includes('pool is draining'));
+        // if (JSON.stringify(error).includes('pool is draining')) {
+        //   logger.error(`Database down: ${error}`);
+        //   this.rester.connectDatabase().catch(reason => logger.warn(reason));
+        // }
         throw error;
       });
     AccessEntity.insert({
