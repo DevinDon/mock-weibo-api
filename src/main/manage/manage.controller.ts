@@ -164,9 +164,9 @@ export class ManageController {
       access.query = Object.fromEntries(url.searchParams.entries());
       await AccessEntity.update({ _id: access._id }, access);
       logger.debug(`Access IP is ${access.address}`);
-      logger.debug(JSON.stringify(access));
       results.push(access.address);
     }
+    logger.info('Format all done.');
     return results;
   }
 
