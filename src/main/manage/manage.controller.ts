@@ -154,13 +154,13 @@ export class ManageController {
 
   async formatAccessLog() {
     const cursor = getMongoRepository(AccessEntity).createCursor();
-    const results = new Set<string>();
+    const results = [];
     while (await cursor.hasNext()) {
       const access: AccessEntity = await cursor.next();
       access.date = new Date(access.date || 0);
       await AccessEntity.update({ _id: access._id }, access);
       logger.debug(`Access IP is ${access.address}`);
-      results.add(access.address);
+      results.push(access.address);
     }
     return results;
   }
