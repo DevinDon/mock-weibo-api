@@ -112,7 +112,7 @@ export class ManageController {
     });
     const result = concatResult(...results);
     logger.debug(`Insert result: ${result.success} / ${result.total}`);
-    return results;
+    return result;
   }
 
   async insertNewStatuses() {
@@ -198,7 +198,7 @@ export class ManageController {
   }
 
   async updateFormatAccessLog() {
-    const results: { total: number, addresses: string[] } = { total: 0, addresses: [] };
+    const result: { total: number, addresses: string[] } = { total: 0, addresses: [] };
     await traversingCursorWithStep({
       createCursor: () => getMongoRepository(AccessEntity).createCursor(),
       loop: async cursor => {
@@ -210,13 +210,13 @@ export class ManageController {
           access.query = Object.fromEntries(url.searchParams.entries());
           AccessEntity.update({ _id: access._id }, access);
           logger.debug(`Access IP is ${access.address}`);
-          results.addresses.push(access.address);
+          result.addresses.push(access.address);
         }
       }
     });
     logger.info('Format all done.');
-    results.total = results.addresses.length;
-    return results;
+    result.total = result.addresses.length;
+    return result;
   }
 
 }
