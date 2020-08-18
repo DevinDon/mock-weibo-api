@@ -197,25 +197,23 @@ export class ManageController {
     return result;
   }
 
-  async formatAccessLog() {
+  async updateFormatAccessLog() {
     const results: { total: number, addresses: string[] } = { total: 0, addresses: [] };
-    let skip = 0;
-    while (skip <= await AccessEntity.count()) {
-      const cursor = getMongoRepository(AccessEntity).createCursor().skip(skip).limit(STEP);
-      skip += STEP;
-      while (await cursor.hasNext()) {
-        const access: AccessEntity = await cursor.next();
-        access.date = new Date(access.date || 0);
-        const url = new URL('http://mock.don.red' + access.url);
-        access.path = url.pathname;
-        access.query = Object.fromEntries(url.searchParams.entries());
-        AccessEntity.update({ _id: access._id }, access);
-        logger.debug(`Access IP is ${access.address}`);
-        results.addresses.push(access.address);
+    await traversingCursorWithStep({
+      createCursor: () => getMongoRepository(AccessEntity).createCursor(),
+      loop: async cursor => {
+        while (await cursor.hasNext()) {
+          const access: AccessEntity = await cursor.next();
+          access.date = new Date(access.date || 0);
+          const url = new URL('http://mock.don.red' + access.url);
+          access.path = url.pathname;
+          access.query = Object.fromEntries(url.searchParams.entries());
+          AccessEntity.update({ _id: access._id }, access);
+          logger.debug(`Access IP is ${access.address}`);
+          results.addresses.push(access.address);
+        }
       }
-      logger.info(`Cursor step done: ${skip}.`);
-      await cursor.close();
-    }
+    });
     logger.info('Format all done.');
     results.total = results.addresses.length;
     return results;

@@ -1,6 +1,5 @@
-import { DELETE, GET, Inject, PathVariable, POST, PUT, RequestBody, View, HTTP400Exception } from '@rester/core';
+import { GET, HTTP400Exception, Inject, PUT, RequestBody, View } from '@rester/core';
 import { ManageController } from './manage.controller';
-import { Manage } from './manage.model';
 
 // add, remove, modify, find(condition), get(random)
 // one, more
@@ -50,7 +49,7 @@ export class ManageView {
 
   @PUT('access')
   async formatAccessLog() {
-    return this.controller.formatAccessLog();
+    return this.controller.updateFormatAccessLog();
   }
 
   @GET('test')
