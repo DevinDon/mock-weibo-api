@@ -1,16 +1,18 @@
 {
   "address": {
     "host": "0.0.0.0",
-    "port": 8080,
+    "port": 80,
     "porxy": true
   },
+  "debug": false,
   "database": {
-    "type": "sqlite",
-    "database": "/db/sqlite.db",
-    "entities": [
-      "**/*.entity.js"
-    ],
+    "type": "mongodb",
+    "url": "mongodb://username:password@host.com:27017/database",
+    "authSource": "admin",
     "logging": false,
-    "synchronize": true
+    "synchronize": false,
+    "entities": [
+      "dist/**/*.entity.js"
+    ]
   }
 }
