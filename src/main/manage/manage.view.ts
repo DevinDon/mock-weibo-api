@@ -21,7 +21,7 @@ export class ManageView {
 
   @PUT('comment/all')
   async fetchCommentsForAllStatuses() {
-    return this.controller.insertCommentsForStatuses({ update: true, reverse: false });
+    return this.controller.insertCommentsForStatuses({ overwrite: true, reverse: false });
   }
 
   @PUT('comment/new')

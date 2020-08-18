@@ -17,7 +17,7 @@ import { User } from '../user/user.model';
 
 export interface ParamInsertCommentsForStatuses {
   slow?: boolean;
-  update?: boolean;
+  overwrite?: boolean;
   reverse?: boolean;
 }
 
@@ -55,7 +55,7 @@ export class ManageController {
   async insertCommentsForStatuses(
     {
       slow = false,
-      update = false,
+      overwrite = false,
       reverse = false
     }: ParamInsertCommentsForStatuses
   ) {
@@ -75,8 +75,8 @@ export class ManageController {
             continue;
           }
 
-          // if not update && status already has comments, continue
-          if (update && await CommentEntity.findOne({ where: { 'status.id': status.id } })) {
+          // if not overwrite && status already has comments, continue
+          if (overwrite && await CommentEntity.findOne({ where: { 'status.id': status.id } })) {
             logger.debug(`Status ${status.id} already has comments`);
             continue;
           }
