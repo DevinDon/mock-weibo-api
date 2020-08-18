@@ -1,6 +1,5 @@
 import { BaseHandler } from '@rester/core';
 import { AccessEntity } from './access.entity';
-import { logger } from '@iinfinity/logger';
 
 // const log = { ok: 0, code: 11600, codeName: 'InterruptedAtShutdown', name: 'MongoError' };
 
@@ -8,7 +7,6 @@ export class AccessHandler extends BaseHandler {
 
   async handle(next: () => Promise<any>): Promise<any> {
 
-    const result = await next();
     const url = new URL('http://mock.don.red' + this.request.url || 'http://wrong');
     AccessEntity.insert({
       date: new Date(),
@@ -20,7 +18,7 @@ export class AccessHandler extends BaseHandler {
       statusCode: this.response.statusCode,
       statusMessage: this.response.statusMessage
     });
-    return result;
+    return next();
   }
 
 }
