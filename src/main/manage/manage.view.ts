@@ -53,4 +53,9 @@ export class ManageView {
     return this.controller.formatAccessLog();
   }
 
+  @GET('test')
+  async test() {
+    return '';
+  }
+
 }

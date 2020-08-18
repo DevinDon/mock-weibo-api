@@ -5,6 +5,7 @@ import { URL } from 'url';
 import { STEP } from '../@constant';
 import { AccessEntity } from '../@handler/access.entity';
 import { concatResult, insertOneByOne, Result } from '../@util';
+import { traversingCursorWithStep } from '../@util/cursor';
 import { logger } from '../@util/logger';
 import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
@@ -12,6 +13,7 @@ import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { UserEntity } from '../user/user.entity';
 import { User } from '../user/user.model';
+import { WeiboEntity } from '../weibo/weibo.entity';
 
 // insert, delete, update, select
 // one, more
@@ -122,14 +124,34 @@ export class ManageController {
 
   async insertUsersFromComments() {
     logger.debug('Fetch users from comments');
-    const users: User[] = [];
-    const cursor = getMongoRepository(CommentEntity).createCursor().sort({ $natural: -1 });
-    while (await cursor.hasNext()) {
-      const comment: Comment = await cursor.next();
-      users.push(comment.user);
-      logger.debug(`Fetch new user: ${comment.user.id}`);
-    }
-    const result = await insertOneByOne(users, UserEntity.insert.bind(UserEntity));
+    const results: Result[] = [];
+    // let skip = 0;
+    // while (skip <= await CommentEntity.count()) {
+    //   const users: User[] = [];
+    //   const cursor = getMongoRepository(CommentEntity).createCursor().sort({ $natural: -1 }).skip(skip).limit(STEP);
+    //   skip += STEP;
+    //   while (await cursor.hasNext()) {
+    //     const comment: Comment = await cursor.next();
+    //     users.push(comment.user);
+    //     logger.debug(`Fetch new user: ${comment.user.id}`);
+    //   }
+    //   results.push(await insertOneByOne(users, UserEntity.insert.bind(UserEntity)));
+    //   logger.info(`Cursor step done: ${skip}.`);
+    //   await cursor.close();
+    // }
+    await traversingCursorWithStep({
+      createCursor: () => getMongoRepository(CommentEntity).createCursor().sort({ $natural: -1 }),
+      loop: async cursor => {
+        const users: User[] = [];
+        while (await cursor.hasNext()) {
+          const comment: Comment = await cursor.next();
+          users.push(comment.user);
+          logger.debug(`Fetch new user: ${comment.user.id}`);
+        }
+        results.push(await insertOneByOne(users, UserEntity.insert.bind(UserEntity)));
+      }
+    });
+    const result = concatResult(...results);
     logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
     return result;
   }
@@ -170,8 +192,8 @@ export class ManageController {
         logger.debug(`Access IP is ${access.address}`);
         results.addresses.push(access.address);
       }
-      await cursor.close();
       logger.info(`Cursor step done: ${skip}.`);
+      await cursor.close();
     }
     logger.info('Format all done.');
     results.total = results.addresses.length;
