@@ -22,12 +22,12 @@ export class ManageView {
 
   @PUT('comment/all')
   async fetchCommentsForAllStatuses() {
-    return this.controller.insertCommentsFromAllStatus();
+    return this.controller.insertCommentsForStatuses({ update: true, reverse: false });
   }
 
   @PUT('comment/new')
   async fetchCommentsForNewStatuses() {
-    return this.controller.insertCommentsFromNewStatus();
+    return this.controller.insertCommentsForStatuses({ reverse: true });
   }
 
   @PUT('status')

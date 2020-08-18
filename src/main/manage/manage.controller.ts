@@ -1,3 +1,4 @@
+import { delay } from '@iinfinity/delay';
 import { Controller } from '@rester/core';
 import { get } from 'superagent';
 import { getMongoRepository } from 'typeorm';
@@ -13,7 +14,12 @@ import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { UserEntity } from '../user/user.entity';
 import { User } from '../user/user.model';
-import { WeiboEntity } from '../weibo/weibo.entity';
+
+export interface ParamInsertCommentsForStatuses {
+  slow?: boolean;
+  update?: boolean;
+  reverse?: boolean;
+}
 
 // insert, delete, update, select
 // one, more
@@ -21,68 +27,91 @@ import { WeiboEntity } from '../weibo/weibo.entity';
 @Controller()
 export class ManageController {
 
-  private async fetchCommentsByStatusID(id: number): Promise<Comment[]> {
+  private async fetchCommentsByStatusID(id: number): Promise<Comment[] | false> {
     logger.debug(`Fetch comments by status ID ${id}`);
     return get('https://api.weibo.com/2/comments/show.json?access_token=2.00Limi4D7kdwtC6aa1803987GSmw_D&page=1&count=200')
       .query({ id })
       .send()
       .then(response => response.body.comments)
-      .catch(reason => (logger.warn(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`), []));
+      .catch(reason => {
+        logger.warn(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`);
+        return false;
+      });
   }
 
   async insertCommentsByStatusIDs(ids: number[]) {
     logger.debug(`Save fetch comments by status IDs ${ids}`);
-    const results = [];
+    const results: Result[] = [];
     for (const id of ids) {
       const comments = await this.fetchCommentsByStatusID(id);
+      if (!comments) { continue; }
       results.push(await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity)));
     }
-    return results;
+    const result = concatResult(...results);
+    logger.debug(`Insert result: ${result.success} / ${result.total}`);
+    return result;
   }
 
-  async insertCommentsFromAllStatus() {
-    logger.debug('Fetch comments for all statuses');
-    const results = [];
-    const cursor = getMongoRepository(StatusEntity).createCursor().sort({ $natural: -1 });
-    logger.debug('Got cursor of database status');
-    while (await cursor.hasNext()) {
-      const status: Status = await cursor.next();
-      if (status.comments_count === 0) {
-        logger.debug(`Status ${status.id} has no comment`);
-        continue;
-      }
-      logger.debug(`Got status: ${status.id}`);
-      const comments = await this.fetchCommentsByStatusID(status.id);
-      logger.debug(`Got comments: ${comments.length}`);
-      const result = await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
-      logger.debug(`Got result: ${result.success} / ${result.total}`);
-      results.push(result);
-    }
-    return results;
-  }
-
-  async insertCommentsFromNewStatus() {
+  async insertCommentsForStatuses(
+    {
+      slow = false,
+      update = false,
+      reverse = false
+    }: ParamInsertCommentsForStatuses
+  ) {
     logger.debug('Fetch comments for new statuses');
-    const results = [];
-    const cursor = getMongoRepository(StatusEntity).createCursor().sort({ $natural: -1 });
-    logger.debug('Got cursor of database status');
-    while (await cursor.hasNext()) {
-      const status: Status = await cursor.next();
-      if (status.comments_count === 0) {
-        logger.debug(`Status ${status.id} has no comment`);
-        continue;
+    const results: Result[] = [];
+    await traversingCursorWithStep({
+      createCursor: () => getMongoRepository(StatusEntity).createCursor().sort({ $natural: reverse ? -1 : 1 }),
+      loop: async cursor => {
+        while (await cursor.hasNext()) {
+
+          /** target status */
+          const status: Status = await cursor.next();
+
+          // status has no comment, continue
+          if (status.comments_count === 0) {
+            logger.debug(`Status ${status.id} has no comment`);
+            continue;
+          }
+
+          // if not update && status already has comments, continue
+          if (update && await CommentEntity.findOne({ where: { 'status.id': status.id } })) {
+            logger.debug(`Status ${status.id} already has comments`);
+            continue;
+          }
+          logger.debug(`Got status: ${status.id}`);
+
+          /** fetched comments */
+          const comments = await this.fetchCommentsByStatusID(status.id);
+
+          // weibo 403 limit, stop fetch, return
+          if (comments === false) {
+            logger.debug('Fetch failed, maybe 403 limit, stop fetch.');
+            return;
+          }
+
+          // status has no comment but count is not 0, update it & continue
+          if (comments.length === 0) {
+            await StatusEntity.update({ id: status.id }, { comments_count: 0 });
+            continue;
+          }
+
+          // insert to database
+          logger.debug(`Got comments: ${comments.length}`);
+          const result = await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
+          logger.debug(`Insert result: ${result.success} / ${result.total}`);
+          results.push(result);
+
+          // slowly, random delay 5s +- 10s
+          if (slow) {
+            await delay(5 * 1000 + Math.random() * 10 * 1000);
+          }
+        }
       }
-      if (await CommentEntity.findOne({ where: { 'status.id': status.id } })) {
-        logger.debug(`Status ${status.id} already has comments`);
-        continue;
-      }
-      logger.debug(`Got status: ${status.id}`);
-      const comments = await this.fetchCommentsByStatusID(status.id);
-      logger.debug(`Got comments: ${comments.length}`);
-      const result = await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
-      logger.debug(`Insert result: ${result.success} / ${result.total}`);
-      results.push(result);
-    }
+    });
+    const result = concatResult(...results);
+    logger.debug(`Insert result: ${result.success} / ${result.total}`);
     return results;
   }
 
@@ -125,20 +154,6 @@ export class ManageController {
   async insertUsersFromComments() {
     logger.debug('Fetch users from comments');
     const results: Result[] = [];
-    // let skip = 0;
-    // while (skip <= await CommentEntity.count()) {
-    //   const users: User[] = [];
-    //   const cursor = getMongoRepository(CommentEntity).createCursor().sort({ $natural: -1 }).skip(skip).limit(STEP);
-    //   skip += STEP;
-    //   while (await cursor.hasNext()) {
-    //     const comment: Comment = await cursor.next();
-    //     users.push(comment.user);
-    //     logger.debug(`Fetch new user: ${comment.user.id}`);
-    //   }
-    //   results.push(await insertOneByOne(users, UserEntity.insert.bind(UserEntity)));
-    //   logger.info(`Cursor step done: ${skip}.`);
-    //   await cursor.close();
-    // }
     await traversingCursorWithStep({
       createCursor: () => getMongoRepository(CommentEntity).createCursor().sort({ $natural: -1 }),
       loop: async cursor => {
@@ -158,14 +173,20 @@ export class ManageController {
 
   async insertUsersFromStatuses() {
     logger.debug('Fetch users from statuses');
-    const users: User[] = [];
-    const cursor = getMongoRepository(StatusEntity).createCursor().sort({ $natural: -1 });
-    while (await cursor.hasNext()) {
-      const status: Status = await cursor.next();
-      users.push(status.user);
-      logger.debug(`Fetch new user: ${status.user.id}`);
-    }
-    const result = await insertOneByOne(users, UserEntity.insert.bind(UserEntity));
+    const results: Result[] = [];
+    await traversingCursorWithStep({
+      createCursor: () => getMongoRepository(StatusEntity).createCursor().sort({ $natural: -1 }),
+      loop: async cursor => {
+        const users: User[] = [];
+        while (await cursor.hasNext()) {
+          const status: Status = await cursor.next();
+          users.push(status.user);
+          logger.debug(`Fetch new user: ${status.user.id}`);
+        }
+        results.push(await insertOneByOne(users, UserEntity.insert.bind(UserEntity)));
+      }
+    });
+    const result = concatResult(...results);
     logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
     return result;
   }

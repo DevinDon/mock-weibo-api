@@ -18,6 +18,7 @@ export async function traversingCursorWithStep({ createCursor, skip = 0, step = 
   while (skip <= count) {
     /** cursor skip & limit */
     const cursor = createCursor().skip(skip).limit(step);
+    // add skip
     skip += step;
     // logic
     await loop(cursor);
