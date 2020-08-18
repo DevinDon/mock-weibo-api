@@ -1,4 +1,4 @@
-import { CORSHandler, Rester } from '@rester/core';
+import { CORSHandler, ExceptionHandler, ParameterHandler, Rester, RouterHandler, SchemaHandler } from '@rester/core';
 import { AccessHandler } from './@handler/access.handler';
 import { logger } from './@util/logger';
 import { CommentView } from './comment/comment.view';
@@ -12,7 +12,7 @@ const rester = new Rester()
   .add(CommentView, StatusView, UserView, WeiboView, ManageView)
   .end()
   .configHandlers
-  .add(AccessHandler, CORSHandler)
+  .set(ExceptionHandler, SchemaHandler, RouterHandler, AccessHandler, CORSHandler, ParameterHandler)
   .end()
   .configLogger
   .set(logger)
