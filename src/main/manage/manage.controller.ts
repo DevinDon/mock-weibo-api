@@ -1,6 +1,8 @@
 import { Controller } from '@rester/core';
 import { get } from 'superagent';
 import { getMongoRepository } from 'typeorm';
+import { URL } from 'url';
+import { STEP } from '../@constant';
 import { AccessEntity } from '../@handler/access.entity';
 import { concatResult, insertOneByOne, Result } from '../@util';
 import { logger } from '../@util/logger';
@@ -10,7 +12,6 @@ import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { UserEntity } from '../user/user.entity';
 import { User } from '../user/user.model';
-import { URL } from 'url';
 
 // insert, delete, update, select
 // one, more
@@ -154,19 +155,26 @@ export class ManageController {
   }
 
   async formatAccessLog() {
-    const cursor = getMongoRepository(AccessEntity).createCursor();
-    const results = [];
-    while (await cursor.hasNext()) {
-      const access: AccessEntity = await cursor.next();
-      access.date = new Date(access.date || 0);
-      const url = new URL('http://mock.don.red' + access.url);
-      access.path = url.pathname;
-      access.query = Object.fromEntries(url.searchParams.entries());
-      await AccessEntity.update({ _id: access._id }, access);
-      logger.debug(`Access IP is ${access.address}`);
-      results.push(access.address);
+    const results: { total: number, addresses: string[] } = { total: 0, addresses: [] };
+    let skip = 0;
+    while (skip <= await AccessEntity.count()) {
+      const cursor = getMongoRepository(AccessEntity).createCursor().skip(skip).limit(STEP);
+      skip += STEP;
+      while (await cursor.hasNext()) {
+        const access: AccessEntity = await cursor.next();
+        access.date = new Date(access.date || 0);
+        const url = new URL('http://mock.don.red' + access.url);
+        access.path = url.pathname;
+        access.query = Object.fromEntries(url.searchParams.entries());
+        AccessEntity.update({ _id: access._id }, access);
+        logger.debug(`Access IP is ${access.address}`);
+        results.addresses.push(access.address);
+      }
+      await cursor.close();
+      logger.info(`Cursor step done: ${skip}.`);
     }
     logger.info('Format all done.');
+    results.total = results.addresses.length;
     return results;
   }
 

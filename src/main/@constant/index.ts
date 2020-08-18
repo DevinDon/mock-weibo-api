@@ -72,3 +72,6 @@ export function getToken() {
     isRealName: 'true'
   };
 }
+
+/** Database cursor step. */
+export const STEP = 1000;
