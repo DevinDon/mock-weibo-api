@@ -35,10 +35,10 @@ export class StatusController {
 
   async selectStatusesWithPublicTimeline({ skip, take: limit }: PaginationParam) {
     const cursor = getMongoRepository(StatusEntity)
-      .createCursor()
-      .sort({ $natural: -1 })
-      .skip(skip)
-      .limit(limit);
+      .aggregate([
+        { $sample: { size: limit } },
+        { $sort: { date: -1 } }
+      ]);
     const statuses: Status[] = [];
     for await (const status of cursor) {
       statuses.push(status);
