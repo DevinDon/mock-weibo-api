@@ -6,7 +6,7 @@ import { URL } from 'url';
 import { STEP } from '../@constant';
 import { AccessEntity } from '../@handler/access.entity';
 import { concatResult, insertOneByOne, Result } from '../@util';
-import { traversingCursorWithStep } from '../@util/cursor';
+import { traversingCursorWithStep, traversingCursorWithStepToArray } from '../@util/cursor';
 import { logger } from '../@util/logger';
 import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
@@ -59,15 +59,15 @@ export class ManageController {
       reverse = false
     }: ParamInsertCommentsForStatuses
   ) {
-    logger.debug('Fetch comments for new statuses');
+    logger.debug(`Fetch comments for ${overwrite ? 'all' : 'new'} statuses`);
     const results: Result[] = [];
-    await traversingCursorWithStep({
+    await traversingCursorWithStepToArray<Status>({
       createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, id: true }).sort({ $natural: reverse ? -1 : 1 }),
-      loop: async cursor => {
-        while (await cursor.hasNext()) {
+      loop: async array => {
+        for (let i = 0; i < array.length; i++) {
 
           /** target status */
-          const status: Status = await cursor.next();
+          const status: Status = array[i];
 
           // status has no comment, continue
           if (status.comments_count === 0) {
@@ -155,16 +155,10 @@ export class ManageController {
   async insertUsersFromComments() {
     logger.debug('Fetch users from comments');
     const results: Result[] = [];
-    await traversingCursorWithStep({
+    await traversingCursorWithStepToArray<Comment>({
       createCursor: () => getMongoRepository(CommentEntity).createCursor().project({ _id: false, user: true }).sort({ $natural: -1 }),
-      loop: async cursor => {
-        const users: User[] = [];
-        while (await cursor.hasNext()) {
-          const comment: Comment = await cursor.next();
-          users.push(comment.user);
-          logger.debug(`Fetch new user: ${comment.user.id}`);
-        }
-        results.push(await insertOneByOne(users, UserEntity.insert.bind(UserEntity)));
+      loop: async array => {
+        results.push(await insertOneByOne(array.map(comment => comment.user), UserEntity.insert.bind(UserEntity)));
       }
     });
     const result = concatResult(...results);
@@ -175,16 +169,10 @@ export class ManageController {
   async insertUsersFromStatuses() {
     logger.debug('Fetch users from statuses');
     const results: Result[] = [];
-    await traversingCursorWithStep({
+    await traversingCursorWithStepToArray<Status>({
       createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, user: true }).sort({ $natural: -1 }),
-      loop: async cursor => {
-        const users: User[] = [];
-        while (await cursor.hasNext()) {
-          const status: Status = await cursor.next();
-          users.push(status.user);
-          logger.debug(`Fetch new user: ${status.user.id}`);
-        }
-        results.push(await insertOneByOne(users, UserEntity.insert.bind(UserEntity)));
+      loop: async array => {
+        results.push(await insertOneByOne(array.map(status => status.user), UserEntity.insert.bind(UserEntity)));
       }
     });
     const result = concatResult(...results);
@@ -221,8 +209,8 @@ export class ManageController {
   }
 
   async test() {
-    const cursor = getMongoRepository(StatusEntity).createCursor().limit(2).project({ user: { id: true } });
-    logger.debug(await cursor.next());
+    const cursor = getMongoRepository(StatusEntity).createCursor({ none: 1 }).limit(2).project({ user: { id: true } });
+    logger.debug(JSON.stringify(await cursor.toArray()));
     return JSON.stringify(await cursor.next());
   }
 
