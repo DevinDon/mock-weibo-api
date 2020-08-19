@@ -1,8 +1,19 @@
 import { BaseHandler, HTTPException } from '@rester/core';
 import { AccessEntity } from './access.entity';
-import { logger } from '../@util';
 
 // const log = { ok: 0, code: 11600, codeName: 'InterruptedAtShutdown', name: 'MongoError' };
+
+function safeParams(searchs: IterableIterator<[string, string]>) {
+  const results: any = {};
+  const params = Object.fromEntries(searchs);
+  for (const key in params) {
+    if (Object.prototype.hasOwnProperty.call(params, key)) {
+      const value = params[key];
+      results[key.replace(/\./g, '--dot--')] = value;
+    }
+  }
+  return results;
+}
 
 export class AccessHandler extends BaseHandler {
 
@@ -18,7 +29,7 @@ export class AccessHandler extends BaseHandler {
       address: JSON.stringify(this.request.headers['x-real-ip']) || this.request.connection.remoteAddress || '',
       url: this.request.url,
       path: url.pathname,
-      query: Object.fromEntries(url.searchParams.entries()),
+      query: safeParams(url.searchParams.entries()),
       headers: this.request.headers as any || [],
       statusCode: exception ? (exception.code || 500) : this.response.statusCode,
       statusMessage: this.response.statusMessage
