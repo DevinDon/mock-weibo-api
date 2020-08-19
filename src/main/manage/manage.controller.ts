@@ -59,6 +59,7 @@ export class ManageController {
     }: ParamInsertCommentsForStatuses
   ) {
     logger.debug(`Fetch comments for ${overwrite ? 'all' : 'new'} statuses`);
+    const ids = new Set<number>(await getMongoRepository(CommentEntity).createCursor().project({ _id: false, 'status.id': true }).toArray());
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
       createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, id: true }).sort({ $natural: reverse ? -1 : 1 }),
@@ -75,7 +76,7 @@ export class ManageController {
           }
 
           // if not overwrite && status already has comments, continue
-          if (!overwrite && await CommentEntity.findOne({ where: { 'status.id': status.id } })) {
+          if (!overwrite && ids.has(status.id)) {
             logger.debug(`Status ${status.id} already has comments`);
             continue;
           }
