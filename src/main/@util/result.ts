@@ -1,5 +1,8 @@
+import { getMongoRepository } from 'typeorm';
+
 export interface Detail {
-  id: number;
+  _id?: string;
+  id?: number;
   failed?: boolean;
 }
 
@@ -10,17 +13,38 @@ export interface Result {
   details: Detail[];
 }
 
+export interface InsertResult<E = any> {
+  ok: number;
+  writeErrors: {
+    code: number;
+    index: number;
+    errmsg: string;
+    op: E;
+  }[];
+  writeConcernErrors: any[];
+  insertedIds: {
+    index: number;
+    _id: string;
+  }[];
+  nInserted: number;
+  nUpserted: number;
+  nMatched: number;
+  nModified: number;
+  nRemoved: number;
+  upserted: any[];
+}
+
 export function randomSort() {
   return Math.random() - 0.5;
 }
 
 export async function insertOneByOne<T>(
   data: T[],
-  fn: (...args: any) => Promise<any>
+  insertFn: (...args: any) => Promise<any>
 ): Promise<Result> {
   const details = await Promise.all<Detail>(
     data.map(
-      item => fn(item)
+      item => insertFn(item)
         .then(() => ({ id: item['id'] }))
         .catch(() => ({ id: item['id'], failed: true }))
     )
@@ -29,7 +53,23 @@ export async function insertOneByOne<T>(
     total: details.length,
     success: details.filter(result => !result['failed']).length,
     failed: details.filter(result => result['failed']).length,
-    details: details
+    details
+  };
+}
+
+export async function insertMany<T, E>(
+  data: T[],
+  entity: E
+): Promise<Result> {
+  const result: any = await getMongoRepository(entity as any)
+    .bulkWrite([{ insertMany: data }], { ordered: false })
+    .then(r => r.result)
+    .catch(error => error.result.result);
+  return {
+    total: result.insertedIds.length,
+    success: result.nInserted,
+    failed: result.writeErrors.length,
+    details: result.insertedIds
   };
 }
 

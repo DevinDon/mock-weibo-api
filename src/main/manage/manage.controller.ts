@@ -3,9 +3,8 @@ import { Controller } from '@rester/core';
 import { get } from 'superagent';
 import { getMongoRepository } from 'typeorm';
 import { URL } from 'url';
-import { STEP } from '../@constant';
 import { AccessEntity } from '../@handler/access.entity';
-import { concatResult, insertOneByOne, Result } from '../@util';
+import { concatResult, insertMany, Result } from '../@util';
 import { traversingCursorWithStep, traversingCursorWithStepToArray } from '../@util/cursor';
 import { logger } from '../@util/logger';
 import { CommentEntity } from '../comment/comment.entity';
@@ -13,7 +12,7 @@ import { Comment } from '../comment/comment.model';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { UserEntity } from '../user/user.entity';
-import { User } from '../user/user.model';
+import { WeiboEntity } from '../weibo/weibo.entity';
 
 export interface ParamInsertCommentsForStatuses {
   slow?: boolean;
@@ -45,7 +44,7 @@ export class ManageController {
     for (const id of ids) {
       const comments = await this.fetchCommentsByStatusID(id);
       if (!comments) { continue; }
-      results.push(await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity)));
+      results.push(await insertMany(comments, CommentEntity));
     }
     const result = concatResult(...results);
     logger.debug(`Insert result: ${result.success} / ${result.total}`);
@@ -100,7 +99,7 @@ export class ManageController {
 
           // insert to database
           logger.debug(`Got comments: ${comments.length}`);
-          const result = await insertOneByOne(comments, CommentEntity.insert.bind(CommentEntity));
+          const result = await insertMany(comments, CommentEntity);
           logger.debug(`Insert result: ${result.success} / ${result.total}`);
           results.push(result);
 
@@ -129,8 +128,8 @@ export class ManageController {
         .then(response => response.body.statuses)
     };
     const results = {
-      home: await insertOneByOne(status.home, StatusEntity.insert.bind(StatusEntity)),
-      public: await insertOneByOne(status.public, StatusEntity.insert.bind(StatusEntity))
+      home: await insertMany(status.home, StatusEntity),
+      public: await insertMany(status.public, StatusEntity)
     };
     const result: Result = concatResult(results.home, results.public);
     logger.debug(`Fetch new status: ${result.success} / ${result.total}`);
@@ -147,7 +146,7 @@ export class ManageController {
         .catch(reason => logger.warn(`Fetch status ${id} failed, ${JSON.stringify(reason)}`))
     );
     const statuses: Status[] = (await Promise.all(pending)).filter(status => status) as any;
-    const result = await insertOneByOne(statuses, StatusEntity.insert.bind(StatusEntity));
+    const result = await insertMany(statuses, StatusEntity);
     logger.debug(`Fetch new statuses: ${result.success} / ${result.total}`);
     return result;
   }
@@ -158,7 +157,7 @@ export class ManageController {
     await traversingCursorWithStepToArray<Comment>({
       createCursor: () => getMongoRepository(CommentEntity).createCursor().project({ _id: false, user: true }).sort({ $natural: -1 }),
       loop: async array => {
-        results.push(await insertOneByOne(array.map(comment => comment.user), UserEntity.insert.bind(UserEntity)));
+        results.push(await insertMany(array.map(comment => comment.user), UserEntity));
       }
     });
     const result = concatResult(...results);
@@ -172,7 +171,7 @@ export class ManageController {
     await traversingCursorWithStepToArray<Status>({
       createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, user: true }).sort({ $natural: -1 }),
       loop: async array => {
-        results.push(await insertOneByOne(array.map(status => status.user), UserEntity.insert.bind(UserEntity)));
+        results.push(await insertMany(array.map(status => status.user), UserEntity));
       }
     });
     const result = concatResult(...results);
@@ -209,9 +208,15 @@ export class ManageController {
   }
 
   async test() {
-    const cursor = getMongoRepository(StatusEntity).createCursor({ none: 1 }).limit(2).project({ user: { id: true } });
-    logger.debug(JSON.stringify(await cursor.toArray()));
-    return JSON.stringify(await cursor.next());
+    const result = await insertMany(
+      [
+        { id: 123, token: 'test3' },
+        { id: 123, token: 'test4' },
+      ],
+      WeiboEntity
+    );
+    logger.debug(result);
+    return result;
   }
 
 }
