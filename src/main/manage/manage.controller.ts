@@ -93,6 +93,7 @@ export class ManageController {
 
           // status has no comment but count is not 0, update it & continue
           if (comments.length === 0) {
+            logger.debug('Comments length is 0, update status.');
             await StatusEntity.update({ id: status.id }, { comments_count: 0 });
             continue;
           }
