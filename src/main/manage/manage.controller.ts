@@ -4,7 +4,7 @@ import { get } from 'superagent';
 import { getMongoRepository } from 'typeorm';
 import { URL } from 'url';
 import { AccessEntity } from '../@handler/access.entity';
-import { concatResult, insertMany, Result } from '../@util';
+import { concatResults, insertMany, Result } from '../@util';
 import { traversingCursorWithStep, traversingCursorWithStepToArray } from '../@util/cursor';
 import { logger } from '../@util/logger';
 import { CommentEntity } from '../comment/comment.entity';
@@ -46,7 +46,7 @@ export class ManageController {
       if (!comments) { continue; }
       results.push(await insertMany(comments, CommentEntity));
     }
-    const result = concatResult(...results);
+    const result = concatResults(...results);
     logger.debug(`Insert result: ${result.success} / ${result.total}`);
     return result;
   }
@@ -117,7 +117,7 @@ export class ManageController {
         }
       }
     });
-    const result = concatResult(...results);
+    const result = concatResults(...results);
     logger.debug(`Insert result: ${result.success} / ${result.total}`);
     return result;
   }
@@ -138,7 +138,7 @@ export class ManageController {
       home: await insertMany(status.home, StatusEntity),
       public: await insertMany(status.public, StatusEntity)
     };
-    const result: Result = concatResult(results.home, results.public);
+    const result: Result = concatResults(results.home, results.public);
     logger.debug(`Fetch new status: ${result.success} / ${result.total}`);
     return result;
   }
@@ -167,7 +167,7 @@ export class ManageController {
         results.push(await insertMany(array.map(comment => comment.user), UserEntity));
       }
     });
-    const result = concatResult(...results);
+    const result = concatResults(...results);
     logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
     return result;
   }
@@ -181,13 +181,13 @@ export class ManageController {
         results.push(await insertMany(array.map(status => status.user), UserEntity));
       }
     });
-    const result = concatResult(...results);
+    const result = concatResults(...results);
     logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
     return result;
   }
 
   async insertAllUsers() {
-    const result = concatResult(await this.insertUsersFromComments(), await this.insertUsersFromStatuses());
+    const result = concatResults(await this.insertUsersFromComments(), await this.insertUsersFromStatuses());
     logger.debug(`Fetch all users: ${result.success} / ${result.total}`);
     return result;
   }

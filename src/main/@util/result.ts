@@ -73,7 +73,13 @@ export async function insertMany<T, E>(
   };
 }
 
-export function concatResult(...results: Result[]): Result {
+export function concatResults(...results: Result[]): Result {
+  if (results.length === 0) {
+    return { total: 0, success: 0, failed: 0, details: [] };
+  }
+  if (results.length === 1) {
+    return results[0];
+  }
   return {
     total: results.map(result => result.total).reduce((prev, next) => prev + next),
     success: results.map(result => result.success).reduce((prev, next) => prev + next),
