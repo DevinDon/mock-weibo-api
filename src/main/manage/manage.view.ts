@@ -54,7 +54,7 @@ export class ManageView {
 
   @GET('test')
   async test() {
-    return '';
+    return this.controller.test();
   }
 
 }

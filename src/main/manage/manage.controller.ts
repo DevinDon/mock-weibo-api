@@ -62,7 +62,7 @@ export class ManageController {
     logger.debug('Fetch comments for new statuses');
     const results: Result[] = [];
     await traversingCursorWithStep({
-      createCursor: () => getMongoRepository(StatusEntity).createCursor().sort({ $natural: reverse ? -1 : 1 }),
+      createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, id: true }).sort({ $natural: reverse ? -1 : 1 }),
       loop: async cursor => {
         while (await cursor.hasNext()) {
 
@@ -156,7 +156,7 @@ export class ManageController {
     logger.debug('Fetch users from comments');
     const results: Result[] = [];
     await traversingCursorWithStep({
-      createCursor: () => getMongoRepository(CommentEntity).createCursor().sort({ $natural: -1 }),
+      createCursor: () => getMongoRepository(CommentEntity).createCursor().project({ _id: false, user: true }).sort({ $natural: -1 }),
       loop: async cursor => {
         const users: User[] = [];
         while (await cursor.hasNext()) {
@@ -176,7 +176,7 @@ export class ManageController {
     logger.debug('Fetch users from statuses');
     const results: Result[] = [];
     await traversingCursorWithStep({
-      createCursor: () => getMongoRepository(StatusEntity).createCursor().sort({ $natural: -1 }),
+      createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, user: true }).sort({ $natural: -1 }),
       loop: async cursor => {
         const users: User[] = [];
         while (await cursor.hasNext()) {
@@ -218,6 +218,12 @@ export class ManageController {
     logger.info('Format all done.');
     result.total = result.addresses.length;
     return result;
+  }
+
+  async test() {
+    const cursor = getMongoRepository(StatusEntity).createCursor().limit(2).project({ user: { id: true } });
+    logger.debug(await cursor.next());
+    return JSON.stringify(await cursor.next());
   }
 
 }
