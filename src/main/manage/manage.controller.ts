@@ -59,7 +59,13 @@ export class ManageController {
     }: ParamInsertCommentsForStatuses
   ) {
     logger.debug(`Fetch comments for ${overwrite ? 'all' : 'new'} statuses`);
-    const ids = new Set<number>(await getMongoRepository(CommentEntity).createCursor().project({ _id: false, 'status.id': true }).toArray());
+    const ids = new Set<number>(
+      (await getMongoRepository(CommentEntity)
+        .createCursor()
+        .project({ _id: false, 'status.id': true })
+        .toArray()
+      ).map(v => v.status.id)
+    );
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
       createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, id: true }).sort({ $natural: reverse ? -1 : 1 }),
