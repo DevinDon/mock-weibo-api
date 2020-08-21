@@ -71,7 +71,10 @@ export class ManageController {
     );
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
-      createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, id: true }).sort({ $natural: reverse ? -1 : 1 }),
+      createCursor: () => getMongoRepository(StatusEntity)
+        .createCursor()
+        .project({ _id: false, id: true, comments_count: true })
+        .sort({ $natural: reverse ? -1 : 1 }),
       loop: async array => {
         for (let i = 0; i < array.length; i++) {
 
@@ -165,7 +168,10 @@ export class ManageController {
     logger.debug('Fetch users from comments');
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Comment>({
-      createCursor: () => getMongoRepository(CommentEntity).createCursor().project({ _id: false, user: true }).sort({ $natural: -1 }),
+      createCursor: () => getMongoRepository(CommentEntity)
+        .createCursor()
+        .project({ _id: false, user: true })
+        .sort({ $natural: -1 }),
       loop: async array => {
         results.push(await insertMany(array.map(comment => comment.user), UserEntity));
       }
@@ -179,7 +185,10 @@ export class ManageController {
     logger.debug('Fetch users from statuses');
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
-      createCursor: () => getMongoRepository(StatusEntity).createCursor().project({ _id: false, user: true }).sort({ $natural: -1 }),
+      createCursor: () => getMongoRepository(StatusEntity)
+        .createCursor()
+        .project({ _id: false, user: true })
+        .sort({ $natural: -1 }),
       loop: async array => {
         results.push(await insertMany(array.map(status => status.user), UserEntity));
       }
