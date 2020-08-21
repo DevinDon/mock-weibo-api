@@ -36,7 +36,7 @@ export class ManageController {
       .send()
       .then(response => response.body.comments)
       .catch(reason => {
-        logger.warn(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`);
+        logger.debug(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`);
         return false;
       });
   }
@@ -96,7 +96,7 @@ export class ManageController {
 
           // weibo 403 limit, stop fetch, return
           if (comments === false) {
-            logger.debug('Fetch failed, maybe 403 limit, stop fetch.');
+            logger.warn('Fetch failed, maybe 403 limit, stop fetch.');
             return;
           }
 
@@ -153,7 +153,7 @@ export class ManageController {
         .query({ access_token: this.token })
         .query({ id })
         .send()
-        .catch(reason => logger.warn(`Fetch status ${id} failed, ${JSON.stringify(reason)}`))
+        .catch(reason => logger.debug(`Fetch status ${id} failed, ${JSON.stringify(reason)}`))
     );
     const statuses: Status[] = (await Promise.all(pending)).filter(status => status) as any;
     const result = await insertMany(statuses, StatusEntity);
