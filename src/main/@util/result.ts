@@ -64,13 +64,20 @@ export async function insertMany<T, E>(
   const result: any = await getMongoRepository(entity as any)
     .bulkWrite([{ insertMany: data }], { ordered: false })
     .then(r => r.result)
-    .catch(error => error.result.result);
-  return {
-    total: result.insertedIds.length,
-    success: result.nInserted,
-    failed: result.writeErrors.length,
-    details: result.insertedIds
-  };
+    .catch(error => error.result?.result);
+  return result
+    ? {
+      total: result.insertedIds.length,
+      success: result.nInserted,
+      failed: result.writeErrors.length,
+      details: result.insertedIds
+    }
+    : {
+      total: 0,
+      success: 0,
+      failed: 0,
+      details: []
+    };
 }
 
 export function concatResults(...results: Result[]): Result {
