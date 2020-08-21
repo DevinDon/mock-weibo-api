@@ -47,16 +47,6 @@ export const SHOW_COMMENTS = {
   status: {}
 };
 
-const CODE = 'da010bfad7909e356a9dc57f50ef1e8e';
-
-const TOKEN = {
-  access_token: '2.00Lami4D7kdwtC6cc1898765GSmw_D',
-  remind_in: '157679999',
-  expires_in: 157679999,
-  uid: '3098913980',
-  isRealName: 'true'
-};
-
 /** GET https://api.weibo.com/oauth2/authorize */
 export function getCode() {
   const code = +`${Date.now()}${Math.random().toString().slice(2, 8)}`;
@@ -66,10 +56,10 @@ export function getCode() {
 /** POST https://api.weibo.com/oauth2/access_token */
 export function getToken() {
   return {
-    access_token: `2.00${Math.random().toString().slice(2)}${Date.now()}`,
+    access_token: `0.00${Math.random().toString().slice(2)}${Date.now()}`,
     remind_in: Date.now() + 1000 * 3600 * 24 * 365,
     expires_in: Date.now() + 1000 * 3600 * 24 * 365,
-    isRealName: 'true'
+    isRealName: true
   };
 }
 

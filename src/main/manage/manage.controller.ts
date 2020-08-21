@@ -28,7 +28,8 @@ export class ManageController {
 
   private async fetchCommentsByStatusID(id: number): Promise<Comment[] | false> {
     logger.debug(`Fetch comments by status ID ${id}`);
-    return get('https://api.weibo.com/2/comments/show.json?access_token=2.00Limi4D7kdwtC6aa1803987GSmw_D&page=1&count=200')
+    return get('https://api.weibo.com/2/comments/show.json')
+      .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
       .query({ id })
       .send()
       .then(response => response.body.comments)
