@@ -26,10 +26,12 @@ export interface ParamInsertCommentsForStatuses {
 @Controller()
 export class ManageController {
 
+  token: string = '2.00Limi4DwNCgfEd11accecebGWMpaD';
+
   private async fetchCommentsByStatusID(id: number): Promise<Comment[] | false> {
     logger.debug(`Fetch comments by status ID ${id}`);
     return get('https://api.weibo.com/2/comments/show.json')
-      .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
+      .query({ access_token: this.token })
       .query({ id })
       .send()
       .then(response => response.body.comments)
@@ -127,11 +129,11 @@ export class ManageController {
     logger.debug('Fetch new statuses');
     const status = {
       home: await get('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200')
-        .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
+        .query({ access_token: this.token })
         .send()
         .then(response => response.body.statuses),
       public: await get('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200')
-        .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
+        .query({ access_token: this.token })
         .send()
         .then(response => response.body.statuses)
     };
@@ -148,7 +150,7 @@ export class ManageController {
     logger.debug(`Fetch statuses by IDs ${ids}`);
     const pending = ids.map(
       id => get('https://api.weibo.com/2/statuses/show.json')
-        .query({ access_token: '2.00Limi4DwNCgfEd11accecebGWMpaD' })
+        .query({ access_token: this.token })
         .query({ id })
         .send()
         .catch(reason => logger.warn(`Fetch status ${id} failed, ${JSON.stringify(reason)}`))

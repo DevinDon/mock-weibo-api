@@ -1,4 +1,4 @@
-import { GET, HTTP400Exception, Inject, PUT, RequestBody, View } from '@rester/core';
+import { GET, HTTP400Exception, Inject, PUT, RequestBody, View, PathQuery } from '@rester/core';
 import { ManageController } from './manage.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -50,6 +50,15 @@ export class ManageView {
   @PUT('access')
   async formatAccessLog() {
     return this.controller.updateFormatAccessLog();
+  }
+
+  @PUT('token')
+  async updateAccessToken(
+    @PathQuery('token') token: string
+  ) {
+    // if (!token) { throw new HTTP400Exception('param `token` is required'); }
+    this.controller.token = token || '2.00Limi4DwNCgfEd11accecebGWMpaD';
+    return { token };
   }
 
   @GET('test')
