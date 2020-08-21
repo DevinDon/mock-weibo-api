@@ -21,6 +21,7 @@ export class WeiboView {
 
   constructor() {
     this.HTML.index = readFileSync('src/main/@public/index.html');
+    this.HTML.login = readFileSync('src/main/@public/login.html');
   }
 
   @Handler(HTMLHandler)
@@ -29,11 +30,19 @@ export class WeiboView {
     return this.HTML.index;
   }
 
-  @Handler(RedirectToCallback)
+  @Handler(HTMLHandler)
   @GET('oauth2/authorize')
-  async getCode(
+  async getCodeWithLogin(
     // @PathQuery('client_id') id: string,
     // @PathQuery('response_type') type: 'code',
+    @PathQuery('redirect_uri') uri: string
+  ) {
+    return this.HTML.login;
+  }
+
+  @Handler(RedirectToCallback)
+  @GET('oauth2/authorize/302')
+  async getCode(
     @PathQuery('redirect_uri') uri: string
   ) {
     if (!uri) { throw new HTTP400Exception('param redirect_uri is required'); }
