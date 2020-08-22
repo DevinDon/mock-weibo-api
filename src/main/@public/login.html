@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
 
 <head>
   <meta charset="UTF-8">
@@ -9,25 +9,196 @@
     body {
       margin: 0;
       padding: 0;
+      width: 100% !important;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Fira Code', 'Consolas', monospace, '微软雅黑', sans-serif !important;
+    }
+
+    #container {
+      display: flex;
+    }
+
+    .login>.statistics {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login>footer {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login>footer>.copyright {
+      font-size: x-small;
     }
 
     @media screen and (max-width: 720px) {
       #container {
+        flex-direction: column;
         margin: 0;
+        width: 100%;
+        height: 100vh;
+        box-shadow: none;
+      }
+
+      .picture {
+        background-image: url('https://tva1.sinaimg.cn/large/bfe05ea9ly1fxgvb4kzhtj21hc0u0n0w.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 240px;
+      }
+
+      .login {
+        margin-top: -60px;
+        background-color: white;
+        border-radius: 4px;
+        margin: -60px 1.5rem 0;
+        padding: 3rem 2rem;
+        box-shadow: 0px 0px 45px -5px rgba(158, 158, 158, 0.22),
+          0px 0px 40px -5px rgba(158, 158, 158, 0.22);
       }
     }
 
-    @media screen and (min-width: 721px) {}
+    @media screen and (min-width: 721px) {
+      #container {
+        flex-direction: row;
+        margin: 4rem;
+        width: calc(100% - 4rem * 2);
+      }
+
+    }
   </style>
-  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bulma/0.9.0/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+    integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ=="
+    crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+    integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw=="
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
 
-  <div id="container" class="card">
-    hello
+  <div id="container">
+
+    <section class="picture"></section>
+
+    <section class="login">
+
+      <h2 class="ui center aligned icon header">
+        <i class="dot circle outline icon"></i>
+        Mock Weibo API
+      </h2>
+
+      <br>
+
+      <div class="ui fluid left icon input">
+        <input type="text" placeholder="用户 / Username">
+        <i class="user icon"></i>
+      </div>
+
+      <br>
+
+      <div class="ui fluid left icon input">
+        <input type="password" placeholder="密码 / Passowrd">
+        <i class="lock icon"></i>
+      </div>
+
+      <br>
+
+      <div class="ui fluid animated button" tabindex="0" onclick="login(this)">
+        <div class="visible content">登录 / Login</div>
+        <div class="hidden content">
+          <i class="right arrow icon"></i>
+        </div>
+      </div>
+
+      <hr class="ui divider">
+
+      <!-- <section class="ui mini statistics">
+        <div class="statistic">
+          <div class="value">
+            22
+          </div>
+          <div class="label">
+            Faves
+          </div>
+        </div>
+        <div class="statistic">
+          <div class="value">
+            31,200
+          </div>
+          <div class="label">
+            Views
+          </div>
+        </div>
+        <div class="statistic">
+          <div class="value">
+            22
+          </div>
+          <div class="label">
+            Members
+          </div>
+        </div>
+      </section> -->
+
+      <!-- <br> -->
+
+      <footer>
+
+        <section class="link">
+          <a href="https://github.com/devindon/mock-weibo-api" alt="See source on Github">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+              <path fill="none" d="M0 0h24v24H0z" />
+              <path
+                d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32 0 0 1-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 0 1 .676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 0 1 .63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731 0 0 1 12 3.315c.912 0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 0 1 .616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293 0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492 0 0 1-.012 2.716 1 1 0 0 1-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998 0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66 0-.955-.312-1.744-.913-2.404a1 1 0 0 1-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 0 1-.833.135A9.626 9.626 0 0 0 12 5.315c-.89 0-1.772.119-2.592.35a1 1 0 0 1-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 0 1-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 0 1-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z" />
+            </svg>
+          </a>
+          <a href="https://twitter.com/whattherooftop" alt="twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+              <path fill="none" d="M0 0h24v24H0z" />
+              <path
+                d="M15.3 5.55a2.9 2.9 0 0 0-2.9 2.847l-.028 1.575a.6.6 0 0 1-.68.583l-1.561-.212c-2.054-.28-4.022-1.226-5.91-2.799-.598 3.31.57 5.603 3.383 7.372l1.747 1.098a.6.6 0 0 1 .034.993L7.793 18.17c.947.059 1.846.017 2.592-.131 4.718-.942 7.855-4.492 7.855-10.348 0-.478-1.012-2.141-2.94-2.141zm-4.9 2.81a4.9 4.9 0 0 1 8.385-3.355c.711-.005 1.316.175 2.669-.645-.335 1.64-.5 2.352-1.214 3.331 0 7.642-4.697 11.358-9.463 12.309-3.268.652-8.02-.419-9.382-1.841.694-.054 3.514-.357 5.144-1.55C5.16 15.7-.329 12.47 3.278 3.786c1.693 1.977 3.41 3.323 5.15 4.037 1.158.475 1.442.465 1.973.538z" />
+            </svg>
+          </a>
+          <a href="https://blog.don.red" alt="Blog">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+              <path fill="none" d="M0 0h24v24H0z" />
+              <path
+                d="M3 17a4 4 0 0 1 4 4H3v-4zm0-7c6.075 0 11 4.925 11 11h-2a9 9 0 0 0-9-9v-2zm0-7c9.941 0 18 8.059 18 18h-2c0-8.837-7.163-16-16-16V3z" />
+            </svg>
+          </a>
+        </section>
+
+        <section class="copyright">
+          <strong>Copyright <a href="mailto:i.inf@outlook.com" class="ui link">Devin Don</a></strong> <span>All Right
+            Reverse</span>
+        </section>
+
+      </footer>
+
+    </section>
+
   </div>
 
 </body>
+
+<script>
+  function login(button) {
+    button.classList.add('disabled');
+    button.classList.add('loading');
+    setTimeout(() => window.location.href = '/oauth2/authorize/302', 3000);
+  }
+</script>
 
 </html>
