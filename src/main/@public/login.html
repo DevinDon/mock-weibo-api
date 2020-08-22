@@ -266,7 +266,7 @@
   function login(button) {
     button.classList.add('disabled');
     button.classList.add('loading');
-    setTimeout(() => window.location.href = `/oauth2/authorize/302`, 3000);
+    setTimeout(() => window.location.href = '/oauth2/authorize/302' + location.search, 3000);
   }
 
   function denyPolicy() {
@@ -285,7 +285,7 @@
       $('#policy').modal({ closable: false }).modal('show');
     }
     if (user === 'true') {
-      window.location.href = '/oauth2/authorize/302';
+      window.location.href = '/oauth2/authorize/302' + location.search;
     }
   });
 </script>
