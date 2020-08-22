@@ -263,10 +263,14 @@
 <script>
   $('#loader').dimmer({ closable: false }).dimmer('show');
 
+  function redirect() {
+    return '/oauth2/authorize/302' + location.search;
+  }
+
   function login(button) {
     button.classList.add('disabled');
     button.classList.add('loading');
-    setTimeout(() => window.location.href = '/oauth2/authorize/302' + location.search, 3000);
+    setTimeout(() => location.href = redirect(), 3000);
   }
 
   function denyPolicy() {
@@ -285,7 +289,7 @@
       $('#policy').modal({ closable: false }).modal('show');
     }
     if (user === 'true') {
-      window.location.href = '/oauth2/authorize/302' + location.search;
+      window.location.href = redirect();
     }
   });
 </script>
