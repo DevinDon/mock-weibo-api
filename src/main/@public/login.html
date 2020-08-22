@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="https://cdn.don.red/favicon.ico" type="image/x-icon">
   <title>模拟 API 登录授权页</title>
   <style>
     body {
@@ -11,6 +12,7 @@
       padding: 0;
       width: 100% !important;
       height: 100vh;
+      background-color: #f1f2f6 !important;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -20,6 +22,17 @@
 
     #container {
       display: flex;
+    }
+
+    .picture {
+      background-image: url('https://tva1.sinaimg.cn/large/bfe05ea9ly1fxgvb4kzhtj21hc0u0n0w.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+    }
+
+    .login {
+      background-color: white;
     }
 
     .login>.statistics {
@@ -50,16 +63,12 @@
       }
 
       .picture {
-        background-image: url('https://tva1.sinaimg.cn/large/bfe05ea9ly1fxgvb4kzhtj21hc0u0n0w.jpg');
-        background-size: cover;
-        background-repeat: no-repeat;
         width: 100%;
         height: 240px;
       }
 
       .login {
         margin-top: -60px;
-        background-color: white;
         border-radius: 4px;
         margin: -60px 1.5rem 0;
         padding: 3rem 2rem;
@@ -71,8 +80,26 @@
     @media screen and (min-width: 721px) {
       #container {
         flex-direction: row;
-        margin: 4rem;
-        width: calc(100% - 4rem * 2);
+        margin: 0 auto;
+        width: 80%
+      }
+
+      .picture {
+        flex-grow: 1;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+
+      .login {
+        background-color: white;
+        padding: 0 4rem;
+        width: 420px;
+        height: 85vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
       }
 
     }
@@ -97,7 +124,7 @@
 
       <h2 class="ui center aligned icon header">
         <i class="dot circle outline icon"></i>
-        Mock Weibo API
+        <span>Mock Weibo API</span>
       </h2>
 
       <br>
