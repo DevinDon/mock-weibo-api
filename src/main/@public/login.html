@@ -24,34 +24,36 @@
       display: flex;
     }
 
-    .picture {
+    #picture {
       background-image: url('https://tva1.sinaimg.cn/large/bfe05ea9ly1fxgvb4kzhtj21hc0u0n0w.jpg');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: 50% 50%;
     }
 
-    .login {
+    #login {
       background-color: white;
     }
 
-    .login>.statistics {
+    #login>.statistics {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
     }
 
-    .login>footer {
+    #login>footer {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
     }
 
-    .login>footer>.copyright {
+    #login>footer>.copyright {
       font-size: x-small;
     }
+
+    /* #policy {} */
 
     @media screen and (max-width: 720px) {
       #container {
@@ -62,12 +64,12 @@
         box-shadow: none;
       }
 
-      .picture {
+      #picture {
         width: 100%;
         height: 240px;
       }
 
-      .login {
+      #login {
         margin-top: -60px;
         border-radius: 4px;
         margin: -60px 1.5rem 0;
@@ -84,13 +86,13 @@
         width: 80%
       }
 
-      .picture {
+      #picture {
         flex-grow: 1;
         border-top-left-radius: 4px;
         border-bottom-left-radius: 4px;
       }
 
-      .login {
+      #login {
         background-color: white;
         padding: 0 4rem;
         width: 420px;
@@ -118,9 +120,9 @@
 
   <div id="container">
 
-    <section class="picture"></section>
+    <section id="picture"></section>
 
-    <section class="login">
+    <section id="login">
 
       <h2 class="ui center aligned icon header">
         <i class="dot circle outline icon"></i>
@@ -151,35 +153,6 @@
       </div>
 
       <hr class="ui divider">
-
-      <!-- <section class="ui mini statistics">
-        <div class="statistic">
-          <div class="value">
-            22
-          </div>
-          <div class="label">
-            Faves
-          </div>
-        </div>
-        <div class="statistic">
-          <div class="value">
-            31,200
-          </div>
-          <div class="label">
-            Views
-          </div>
-        </div>
-        <div class="statistic">
-          <div class="value">
-            22
-          </div>
-          <div class="label">
-            Members
-          </div>
-        </div>
-      </section> -->
-
-      <!-- <br> -->
 
       <footer>
 
@@ -214,8 +187,75 @@
 
       </footer>
 
+      <!-- <section class="ui mini statistics" style="align-self: flex-end;">
+        <div class="statistic">
+          <div class="value">
+            22
+          </div>
+          <div class="label">
+            Faves
+          </div>
+        </div>
+        <div class="statistic">
+          <div class="value">
+            31,200
+          </div>
+          <div class="label">
+            Views
+          </div>
+        </div>
+        <div class="statistic">
+          <div class="value">
+            22
+          </div>
+          <div class="label">
+            Members
+          </div>
+        </div>
+      </section> -->
+
     </section>
 
+  </div>
+
+  <section id="policy" class="ui modal">
+    <div class="header">您需要同意使用条款才能继续使用本站</div>
+    <div class="scrolling content">
+      <div class="ui header">别慌，这是个啥也没有的使用条款</div>
+      <div class="ui placeholder">
+        <div class="image header">
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+        <div class="paragraph">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="ui negative right labeled icon button" onclick="denyPolicy()">
+        <span>拒绝并退出</span>
+        <i class="ui close icon"></i>
+      </button>
+      <button class="ui positive right labeled icon button" onclick="acceptPolicy()">
+        <span>同意并继续</span>
+        <i class="ui check icon"></i>
+      </button>
+    </div>
+  </section>
+
+  <div id="dimmer" class="ui page dimmer">
+    <div class="content">
+      您需要<a class="ui link" onclick="location.reload()">同意条款</a>才能继续使用本站
+    </div>
+  </div>
+
+  <div id="loader" class="ui active dimmer">
+    <div class="ui indeterminate text loader">正在准备文件</div>
   </div>
 
 </body>
@@ -226,6 +266,27 @@
     button.classList.add('loading');
     setTimeout(() => window.location.href = '/oauth2/authorize/302', 3000);
   }
+
+  function denyPolicy() {
+    localStorage.setItem('policy', false);
+    $('#loader').removeClass('active');
+    setTimeout(() => $('#dimmer').dimmer('show'), 100);
+  }
+
+  function acceptPolicy() {
+    localStorage.setItem('policy', true);
+    $('#loader').removeClass('active');
+  }
+
+  window.addEventListener('load', event => {
+    const { policy, user } = localStorage;
+    if (policy !== 'true') {
+      $('#policy').modal('show');
+    }
+    if (user === 'true') {
+      window.location.href = '/oauth2/authorize/302';
+    }
+  });
 </script>
 
 </html>
