@@ -254,34 +254,35 @@
     </div>
   </div>
 
-  <div id="loader" class="ui active dimmer">
+  <div id="loader" class="ui dimmer">
     <div class="ui indeterminate text loader">正在准备文件</div>
   </div>
 
 </body>
 
 <script>
+  $('#loader').dimmer({ closable: false }).dimmer('show');
+
   function login(button) {
     button.classList.add('disabled');
     button.classList.add('loading');
-    setTimeout(() => window.location.href = '/oauth2/authorize/302', 3000);
+    setTimeout(() => window.location.href = `/oauth2/authorize/302`, 3000);
   }
 
   function denyPolicy() {
     localStorage.setItem('policy', false);
-    $('#loader').removeClass('active');
-    setTimeout(() => $('#dimmer').dimmer('show'), 100);
+    setTimeout(() => $('#dimmer').dimmer({ closable: false }).dimmer('show'), 100);
   }
 
   function acceptPolicy() {
     localStorage.setItem('policy', true);
-    $('#loader').removeClass('active');
   }
 
   window.addEventListener('load', event => {
+    $('#loader').dimmer('hide');
     const { policy, user } = localStorage;
     if (policy !== 'true') {
-      $('#policy').modal('show');
+      $('#policy').modal({ closable: false }).modal('show');
     }
     if (user === 'true') {
       window.location.href = '/oauth2/authorize/302';
