@@ -232,10 +232,8 @@ export class ManageController {
       createCursor: () => getMongoRepository(CommentEntity)
         .createCursor()
         .project({ _id: false, user: true })
-        .sort({ $natural: -1 }),
-      loop: async array => {
-        results.push(await insertMany(array.map(comment => comment.user), UserEntity));
-      }
+        .map((comment: Comment) => comment.user),
+      loop: async array => results.push(await insertMany(array, UserEntity))
     });
     const result = concatResults(...results);
     logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
@@ -249,10 +247,8 @@ export class ManageController {
       createCursor: () => getMongoRepository(StatusEntity)
         .createCursor()
         .project({ _id: false, user: true })
-        .sort({ $natural: -1 }),
-      loop: async array => {
-        results.push(await insertMany(array.map(status => status.user), UserEntity));
-      }
+        .map((status: Status) => status.user),
+      loop: async array => results.push(await insertMany(array, UserEntity))
     });
     const result = concatResults(...results);
     logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
