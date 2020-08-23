@@ -67,7 +67,7 @@ export class ManageController {
     const comments: Comment[] = [];
     let next = true;
     let result: Comment[] = [];
-    for (let i = 1; i < 1000; i++) {
+    for (let i = 1; i < 100; i++) {
       result = await get('https://api.weibo.com/2/comments/show.json')
         .query({ access_token: this.token })
         .query({ id })
@@ -78,7 +78,7 @@ export class ManageController {
           logger.debug(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`);
           next = false;
           return [];
-        });
+        }) || [];
       if (result.length === 0) {
         break;
       } else {
