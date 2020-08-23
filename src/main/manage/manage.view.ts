@@ -61,6 +61,11 @@ export class ManageView {
     return { token };
   }
 
+  @GET('statistic')
+  async statistic() {
+    return this.controller.countStatistic();
+  }
+
   @GET('test')
   async test() {
     return this.controller.test();

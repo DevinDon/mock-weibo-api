@@ -25,6 +25,14 @@ export interface ParamFetchCommentsResult {
   next: boolean;
 }
 
+export interface Statistic {
+  access: number;
+  user: number;
+  comment: number;
+  status: number;
+  update: number;
+}
+
 // insert, delete, update, select
 // one, more
 
@@ -32,6 +40,14 @@ export interface ParamFetchCommentsResult {
 export class ManageController {
 
   token: string = '2.00Limi4DwNCgfEd11accecebGWMpaD';
+
+  statistic: Statistic = {
+    access: 0,
+    user: 0,
+    comment: 0,
+    status: 0,
+    update: 0
+  };
 
   private async fetchCommentsByStatusID(id: number): Promise<Comment[] | false> {
     logger.debug(`Fetch comments by status ID ${id}`);
@@ -258,6 +274,20 @@ export class ManageController {
     logger.info('Format all done.');
     result.total = result.addresses.length;
     return result;
+  }
+
+  async countStatistic() {
+    if (Date.now() - this.statistic.update > 60 * 1000) {
+      logger.debug('Update statistic');
+      this.statistic = {
+        access: await AccessEntity.count(),
+        user: await UserEntity.count(),
+        comment: await CommentEntity.count(),
+        status: await StatusEntity.count(),
+        update: Date.now()
+      };
+    }
+    return this.statistic;
   }
 
   async test() {
