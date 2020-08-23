@@ -168,6 +168,7 @@ export class ManageController {
             return;
           } else {
             // else update comments count
+            logger.debug(`Update comments count ${status.id}: ${comments.length}`);
             await StatusEntity.update({ id: status.id }, { comments_count: comments.length });
           }
 
