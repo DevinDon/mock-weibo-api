@@ -20,6 +20,11 @@ export interface ParamInsertCommentsForStatuses {
   reverse?: boolean;
 }
 
+export interface ParamFetchCommentsResult {
+  comments: Comment[];
+  next: boolean;
+}
+
 // insert, delete, update, select
 // one, more
 
@@ -39,6 +44,32 @@ export class ManageController {
         logger.debug(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`);
         return false;
       });
+  }
+
+  private async fetchAllCommentsByStatusID(id: number): Promise<ParamFetchCommentsResult> {
+    logger.debug(`Fetch all comments by status ID ${id}`);
+    const comments: Comment[] = [];
+    let next = true;
+    let result: Comment[] = [];
+    for (let i = 1; i < 1000; i++) {
+      result = await get('https://api.weibo.com/2/comments/show.json')
+        .query({ access_token: this.token })
+        .query({ id })
+        .query({ page: i, count: 200 })
+        .send()
+        .then(response => response.body.comments)
+        .catch(reason => {
+          logger.debug(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`);
+          next = false;
+          return [];
+        });
+      if (result.length === 0) {
+        break;
+      } else {
+        comments.push(...result);
+      }
+    }
+    return { comments, next };
   }
 
   async insertCommentsByStatusIDs(ids: number[]) {
@@ -92,29 +123,32 @@ export class ManageController {
             logger.debug(`Status ${status.id} already has comments`);
             continue;
           }
+
+          // got status
           logger.debug(`Got status: ${status.id}`);
 
           /** fetched comments */
-          const comments = await this.fetchCommentsByStatusID(status.id);
-
-          // weibo 403 limit, stop fetch, return
-          if (comments === false) {
-            logger.warn('Fetch failed, maybe 403 limit, stop fetch.');
-            return;
-          }
+          const { comments, next } = await this.fetchAllCommentsByStatusID(status.id);
 
           // status has no comment but count is not 0, update it & continue
           if (comments.length === 0) {
-            logger.debug('Comments length is 0, update status.');
-            await StatusEntity.update({ id: status.id }, { comments_count: 0 });
-            continue;
+            logger.debug('Comments length is 0.');
+          } else {
+            // insert to database
+            logger.debug(`Got comments: ${comments.length}`);
+            const result = await insertMany(comments, CommentEntity);
+            logger.debug(`Insert result: ${result.success} / ${result.total}`);
+            results.push(result);
           }
 
-          // insert to database
-          logger.debug(`Got comments: ${comments.length}`);
-          const result = await insertMany(comments, CommentEntity);
-          logger.debug(`Insert result: ${result.success} / ${result.total}`);
-          results.push(result);
+          // weibo 403 limit, stop fetch, return
+          if (next === false) {
+            logger.warn('Fetch failed, maybe 403 limit, stop fetch.');
+            return;
+          } else {
+            // else update comments count
+            await StatusEntity.update({ id: status.id }, { comments_count: comments.length });
+          }
 
           // slowly, random delay 5s +- 10s
           if (slow) {
