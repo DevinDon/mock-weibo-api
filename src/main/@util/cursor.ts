@@ -34,7 +34,7 @@ export async function traversingCursorWithStep<T = any, F = any>(
     // close cursor
     cursor.close();
     // all done
-    logger.info(`Cursor step done: ${skip}.`);
+    logger.debug(`Cursor step done: ${skip}.`);
   }
 
 }
@@ -57,7 +57,7 @@ export async function traversingCursorWithStepToArray<T = any, F = any>(
     // close cursor
     cursor.close();
     // all done
-    logger.info(`Cursor step done: ${skip}.`);
+    logger.debug(`Cursor step done: ${skip}.`);
   }
 
 }

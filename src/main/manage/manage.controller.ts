@@ -97,7 +97,7 @@ export class ManageController {
       results.push(await insertMany(comments, CommentEntity));
     }
     const result = concatResults(...results);
-    logger.debug(`Insert result: ${result.success} / ${result.total}`);
+    logger.info(`Insert result: ${result.success} / ${result.total}`);
     return result;
   }
 
@@ -181,7 +181,7 @@ export class ManageController {
       }
     });
     const result = concatResults(...results);
-    logger.debug(`Insert result: ${result.success} / ${result.total}`);
+    logger.info(`Insert result: ${result.success} / ${result.total}`);
     return result;
   }
 
@@ -202,7 +202,7 @@ export class ManageController {
       public: await insertMany(status.public, StatusEntity)
     };
     const result: Result = concatResults(results.home, results.public);
-    logger.debug(`Fetch new status: ${result.success} / ${result.total}`);
+    logger.info(`Fetch new status: ${result.success} / ${result.total}`);
     return result;
   }
 
@@ -217,7 +217,7 @@ export class ManageController {
     );
     const statuses: Status[] = (await Promise.all(pending)).filter(status => status) as any;
     const result = await insertMany(statuses, StatusEntity);
-    logger.debug(`Fetch new statuses: ${result.success} / ${result.total}`);
+    logger.info(`Fetch new statuses: ${result.success} / ${result.total}`);
     return result;
   }
 
@@ -257,7 +257,7 @@ export class ManageController {
 
   async insertAllUsers() {
     const result = concatResults(await this.insertUsersFromComments(), await this.insertUsersFromStatuses());
-    logger.debug(`Fetch all users: ${result.success} / ${result.total}`);
+    logger.info(`Fetch all users: ${result.success} / ${result.total}`);
     return result;
   }
 
