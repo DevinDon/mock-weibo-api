@@ -10,7 +10,7 @@ export interface Result {
   total: number;
   success: number;
   failed: number;
-  details: Detail[];
+  details?: Detail[];
 }
 
 export interface InsertResult<E = any> {
@@ -53,7 +53,7 @@ export async function insertOneByOne<T>(
     total: details.length,
     success: details.filter(result => !result['failed']).length,
     failed: details.filter(result => result['failed']).length,
-    details
+    // details
   };
 }
 
@@ -70,19 +70,24 @@ export async function insertMany<T, E>(
       total: result.insertedIds.length,
       success: result.nInserted,
       failed: result.writeErrors.length,
-      details: result.insertedIds
+      // details: result.insertedIds
     }
     : {
       total: 0,
       success: 0,
       failed: 0,
-      details: []
+      // details: []
     };
 }
 
 export function concatResults(...results: Result[]): Result {
   if (results.length === 0) {
-    return { total: 0, success: 0, failed: 0, details: [] };
+    return {
+      total: 0,
+      success: 0,
+      failed: 0,
+      // details: []
+    };
   }
   if (results.length === 1) {
     return results[0];
@@ -91,6 +96,6 @@ export function concatResults(...results: Result[]): Result {
     total: results.map(result => result.total).reduce((prev, next) => prev + next),
     success: results.map(result => result.success).reduce((prev, next) => prev + next),
     failed: results.map(result => result.failed).reduce((prev, next) => prev + next),
-    details: results.map(result => result.details).flat()
+    // details: results.map(result => result.details).flat()
   };
 }
