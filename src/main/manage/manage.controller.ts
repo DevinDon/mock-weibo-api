@@ -113,7 +113,10 @@ export class ManageController {
       .createCursor()
       .project({ _id: false, 'status.id': true })
       .toArray()
-    ).map(v => v.status.id);
+    ).map(v => {
+      logger.debug(v, v.status, v.status?.id);
+      return v.status.id;
+    });
     const idset = new Set<number>(ids);
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
