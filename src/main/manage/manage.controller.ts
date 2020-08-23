@@ -168,8 +168,9 @@ export class ManageController {
             return;
           } else {
             // else update comments count
-            logger.debug(`Update comments count ${status.id}: ${comments.length}`);
-            await StatusEntity.update({ id: status.id }, { comments_count: comments.length });
+            const count = await getMongoRepository(CommentEntity).count({ 'status.id': status.id });
+            logger.debug(`Update comments count ${status.id}: ${count}`);
+            await StatusEntity.update({ id: status.id }, { comments_count: count });
           }
 
           // slowly, random delay 5s +- 10s
