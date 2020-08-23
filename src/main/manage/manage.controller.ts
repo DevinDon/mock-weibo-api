@@ -112,11 +112,10 @@ export class ManageController {
     const ids = (await getMongoRepository(CommentEntity)
       .createCursor()
       .project({ _id: false, 'status.id': true })
+      .map((v: Comment) => v?.status?.id)
+      .filter((v: number | undefined) => v)
       .toArray()
-    ).map(v => {
-      logger.debug(v, v.status, v.status?.id);
-      return v.status.id;
-    });
+    );
     const idset = new Set<number>(ids);
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
