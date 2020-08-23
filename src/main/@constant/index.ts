@@ -64,4 +64,4 @@ export function getToken() {
 }
 
 /** Database cursor step. */
-export const STEP = 1000;
+export const STEP = 10000;
