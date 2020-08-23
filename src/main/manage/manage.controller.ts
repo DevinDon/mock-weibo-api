@@ -133,9 +133,9 @@ export class ManageController {
             continue;
           }
 
-          // count of comments === status.count
-          if (status.comments_count === ids.filter(id => id === status.id).length) {
-            logger.debug('Count of comments is equal to status.count');
+          // count of comments >= status.count
+          if (ids.filter(id => id === status.id).length >= status.comments_count) {
+            logger.debug('Count of comments is large to status.count');
             continue;
           }
 
@@ -168,6 +168,8 @@ export class ManageController {
             return;
           } else {
             // else update comments count
+            // why count from db?
+            // because some comments maybe delete from server but save on local
             const count = await getMongoRepository(CommentEntity).count({ 'status.id': status.id });
             logger.debug(`Update comments count ${status.id}: ${count}`);
             await StatusEntity.update({ id: status.id }, { comments_count: count });
