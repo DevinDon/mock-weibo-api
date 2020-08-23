@@ -109,13 +109,12 @@ export class ManageController {
     }: ParamInsertCommentsForStatuses
   ) {
     logger.debug(`Fetch comments for ${overwrite ? 'all' : 'new'} statuses`);
-    const ids = new Set<number>(
-      (await getMongoRepository(CommentEntity)
-        .createCursor()
-        .project({ _id: false, 'status.id': true })
-        .toArray()
-      ).map(v => v.status.id)
-    );
+    const ids = (await getMongoRepository(CommentEntity)
+      .createCursor()
+      .project({ _id: false, 'status.id': true })
+      .toArray()
+    ).map(v => v.status.id);
+    const idset = new Set<number>(ids);
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
       createCursor: () => getMongoRepository(StatusEntity)
@@ -134,8 +133,14 @@ export class ManageController {
             continue;
           }
 
+          // count of comments === status.count
+          if (status.comments_count === ids.filter(id => id === status.id).length) {
+            logger.debug('Count of comments is equal to status.count');
+            continue;
+          }
+
           // if not overwrite && status already has comments, continue
-          if (!overwrite && ids.has(status.id)) {
+          if (!overwrite && idset.has(status.id)) {
             logger.debug(`Status ${status.id} already has comments`);
             continue;
           }
