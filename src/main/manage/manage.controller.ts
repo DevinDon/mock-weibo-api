@@ -39,7 +39,7 @@ export interface Statistic {
 @Controller()
 export class ManageController {
 
-  token: string = '2.00Limi4DwNCgfEd11accecebGWMpaD';
+  token: string = '';
 
   statistic: Statistic = {
     access: 0,

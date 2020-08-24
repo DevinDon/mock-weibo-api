@@ -56,8 +56,8 @@ export class ManageView {
   async updateAccessToken(
     @PathQuery('token') token: string
   ) {
-    // if (!token) { throw new HTTP400Exception('param `token` is required'); }
-    this.controller.token = token || '2.00Limi4DwNCgfEd11accecebGWMpaD';
+    if (!token) { throw new HTTP400Exception('param `token` is required'); }
+    this.controller.token = token;
     return { token };
   }
 
