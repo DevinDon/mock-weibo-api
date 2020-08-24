@@ -112,8 +112,10 @@ export class ManageController {
     const ids = (await getMongoRepository(CommentEntity)
       .createCursor()
       .project({ _id: false, 'status.id': true })
+      .map((v: Comment) => v?.status?.id)
+      .filter((v: number | undefined) => v)
       .toArray()
-    ).map(v => v.status.id);
+    );
     const idset = new Set<number>(ids);
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
@@ -133,9 +135,9 @@ export class ManageController {
             continue;
           }
 
-          // count of comments === status.count
-          if (status.comments_count === ids.filter(id => id === status.id).length) {
-            logger.debug('Count of comments is equal to status.count');
+          // count of comments >= status.count
+          if (ids.filter(id => id === status.id).length >= status.comments_count) {
+            logger.debug('Count of comments is large to status.count');
             continue;
           }
 
@@ -168,6 +170,8 @@ export class ManageController {
             return;
           } else {
             // else update comments count
+            // why count from db?
+            // because some comments maybe delete from server but save on local
             const count = await getMongoRepository(CommentEntity).count({ 'status.id': status.id });
             logger.debug(`Update comments count ${status.id}: ${count}`);
             await StatusEntity.update({ id: status.id }, { comments_count: count });
@@ -228,10 +232,8 @@ export class ManageController {
       createCursor: () => getMongoRepository(CommentEntity)
         .createCursor()
         .project({ _id: false, user: true })
-        .sort({ $natural: -1 }),
-      loop: async array => {
-        results.push(await insertMany(array.map(comment => comment.user), UserEntity));
-      }
+        .map((comment: Comment) => comment.user),
+      loop: async array => results.push(await insertMany(array, UserEntity))
     });
     const result = concatResults(...results);
     logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
@@ -245,10 +247,8 @@ export class ManageController {
       createCursor: () => getMongoRepository(StatusEntity)
         .createCursor()
         .project({ _id: false, user: true })
-        .sort({ $natural: -1 }),
-      loop: async array => {
-        results.push(await insertMany(array.map(status => status.user), UserEntity));
-      }
+        .map((status: Status) => status.user),
+      loop: async array => results.push(await insertMany(array, UserEntity))
     });
     const result = concatResults(...results);
     logger.debug(`Fetch new users: ${result.success} / ${result.total}`);
