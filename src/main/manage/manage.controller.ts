@@ -284,7 +284,7 @@ export class ManageController {
   }
 
   async countStatistic() {
-    if (Date.now() - this.statistic.update > 60 * 1000) {
+    if (Date.now() - this.statistic.update > 1000) {
       logger.debug('Update statistic');
       this.statistic = {
         access: await AccessEntity.count(),
