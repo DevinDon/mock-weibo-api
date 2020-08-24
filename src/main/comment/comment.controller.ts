@@ -62,7 +62,10 @@ export class CommentController {
       user,
       status: status as any
     } as any;
-    const result = await CommentEntity.insert(newComment);
+    // insert comment
+    await CommentEntity.insert(newComment);
+    // update count of status
+    await getMongoRepository(StatusEntity).updateOne({ id }, { $inc: { comments_count: 1 } });
     return newComment;
   }
 
@@ -82,7 +85,10 @@ export class CommentController {
       user,
       status: status as any
     } as any;
-    const result = await CommentEntity.insert(newComment);
+    // insert comment
+    await CommentEntity.insert(newComment);
+    // update count of status
+    await getMongoRepository(StatusEntity).updateOne({ id }, { $inc: { comments_count: 1 } });
     return newComment;
   }
 
@@ -95,8 +101,12 @@ export class CommentController {
     });
     if (!comment) {
       return { status: `comment ${cid} is not exist` };
+    } else {
+      const result = comment.remove();
+      // update count of status
+      await getMongoRepository(StatusEntity).updateOne({ id: comment.status.id }, { $inc: { comments_count: -1 } });
+      return result;
     }
-    return comment.remove();
   }
 
 }
