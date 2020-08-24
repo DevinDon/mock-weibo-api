@@ -36,24 +36,20 @@ export interface DeleteCommentParam {
 @Controller()
 export class CommentController {
 
-  async selectCommentsByStatusID({ id, skip, take: limit }: SelectCommentsParam) {
+  async selectCommentsByStatusID({ id, skip, take }: SelectCommentsParam) {
     // 返回最新的评论
-    const cursor = getMongoRepository(CommentEntity)
+    const comments: Comment[] = await getMongoRepository(CommentEntity)
       .createCursor({ 'status.id': id })
       .sort({ $natural: -1 })
       .skip(skip)
-      .limit(limit);
-    const comments: Comment[] = [];
-    for await (const status of cursor) {
-      comments.push(status);
-    }
-    const result = {
+      .limit(take)
+      .toArray();
+    return {
       ...SHOW_COMMENTS,
       comments,
-      status: await StatusEntity.findOne({ id })
+      status: await StatusEntity.findOne({ id }),
+      total_number: comments.length
     };
-    result.total_number = result.comments.length;
-    return result;
   }
 
   async insertCommentByStatusID({ id, comment, user }: InsertCommentForStatusParam) {
