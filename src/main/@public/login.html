@@ -17,7 +17,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-family: 'Fira Code', 'Consolas', monospace, '微软雅黑', sans-serif !important;
+      font-family: 'Fira Code', 'Consolas', '微软雅黑', sans-serif !important;
     }
 
     #container {
@@ -258,6 +258,10 @@
     <div class="ui indeterminate text loader">正在准备文件</div>
   </div>
 
+  <div id="redirect" class="ui page dimmer">
+    <div class="content">未指定本页的 redirect_uri 参数，无法进行登录验证</div>
+  </div>
+
 </body>
 
 <script>
@@ -283,13 +287,15 @@
   }
 
   window.addEventListener('load', event => {
-    $('#loader').dimmer('hide');
     const { policy, user } = localStorage;
-    if (policy !== 'true') {
-      $('#policy').modal({ closable: false }).modal('show');
-    }
-    if (user === 'true') {
+    const redirectURI = new URLSearchParams(location.search).get('redirect_uri');
+    $('#loader').dimmer('hide');
+    if (!redirectURI) {
+      setTimeout(() => $('#redirect').dimmer({ closable: false }).dimmer('show'), 100);
+    } else if (user === 'true') {
       window.location.href = redirect();
+    } else if (policy !== 'true') {
+      $('#policy').modal({ closable: false }).modal('show');
     }
   });
 </script>
