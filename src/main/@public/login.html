@@ -124,26 +124,28 @@
 
       <br>
 
-      <div class="ui fluid left icon input">
-        <input type="text" placeholder="用户 / Username">
-        <i class="user icon"></i>
-      </div>
-
-      <br>
-
-      <div class="ui fluid left icon input">
-        <input type="password" placeholder="密码 / Passowrd">
-        <i class="lock icon"></i>
-      </div>
-
-      <br>
-
-      <div class="ui fluid animated button" tabindex="0" onclick="login(this)">
-        <div class="visible content">登录 / Login</div>
-        <div class="hidden content">
-          <i class="right arrow icon"></i>
+      <form name="form" action="/weibo/oauth2/authorize/302" method="POST" onsubmit="return login(event)">
+        <div class="ui fluid left icon input">
+          <input name="username" type="text" placeholder="用户 / Username">
+          <i class="user icon"></i>
         </div>
-      </div>
+
+        <br>
+
+        <div class="ui fluid left icon input">
+          <input name="password" type="password" placeholder="密码 / Passowrd">
+          <i class="lock icon"></i>
+        </div>
+
+        <br>
+
+        <input type="hidden" name="redirect">
+
+        <button class="ui fluid animated button" tabindex="0" type="submit" onclick="loginAnimate(true)">
+          <div class="visible content">登录 / Login</div>
+          <div class="hidden content"><i class="right arrow icon"></i></div>
+        </button>
+      </form>
 
       <hr class="ui divider">
 
@@ -275,10 +277,17 @@
     return 'http://mock.don.red/weibo/oauth2/authorize/302' + location.search;
   }
 
-  function login(button) {
-    button.classList.add('disabled');
-    button.classList.add('loading');
-    setTimeout(() => location.href = redirect(), 3000);
+  function login(event) {
+    document.form.redirect.value = redirectURI;
+  }
+
+  function loginAnimate(enable = true) {
+    const button = document.querySelector('[type=submit]');
+    if (enable) {
+      button.classList.add('disabled', 'loading');
+    } else {
+      button.classList.remove('disabled', 'loading');
+    }
   }
 </script>
 
