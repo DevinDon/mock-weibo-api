@@ -53,8 +53,6 @@
       font-size: x-small;
     }
 
-    /* #policy {} */
-
     @media screen and (max-width: 720px) {
       #container {
         flex-direction: column;
@@ -106,9 +104,9 @@
 
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.1.1/dist/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.4.1/dist/semantic.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.4.1/dist/semantic.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.6/dist/semantic.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.6/dist/semantic.min.js"></script>
 </head>
 
 <body>
@@ -182,38 +180,60 @@
 
       </footer>
 
-      <!-- <section class="ui mini statistics" style="align-self: flex-end;">
-        <div class="statistic">
-          <div class="value">
-            22
-          </div>
-          <div class="label">
-            Faves
-          </div>
-        </div>
-        <div class="statistic">
-          <div class="value">
-            31,200
-          </div>
-          <div class="label">
-            Views
-          </div>
-        </div>
-        <div class="statistic">
-          <div class="value">
-            22
-          </div>
-          <div class="label">
-            Members
-          </div>
-        </div>
-      </section> -->
-
     </section>
 
   </div>
 
-  <section id="policy" class="ui modal">
+</body>
+
+<script>
+  async function dimmerShow({ $element, closable = false }) {
+    return new Promise(resolve => {
+      const $body = $(document.body);
+      $body
+        .dimmer('add content', $element)
+        .dimmer({ closable })
+        .dimmer('setting', 'onShow', () => $body.children('.dimmer').one('animationend', resolve))
+        .dimmer('show');
+    });
+  }
+
+  async function dimmerHide() {
+    return new Promise(resolve => {
+      const $body = $(document.body);
+      $body
+        .dimmer('setting', 'onHide', () => $body
+          .children('.dimmer')
+          .one('animationend', event => {
+            $body.children('.dimmer').html('');
+            resolve(event);
+          })
+        )
+        .dimmer('hide');
+    });
+  }
+
+  async function modal({ $element, closable = false }) {
+    return new Promise(resolve => {
+      let result;
+      $(document.body).append($element);
+      $element
+        .modal({ closable })
+        .modal('setting', 'onApprove', () => result = true)
+        .modal('setting', 'onDeny', () => !(result = false))
+        .modal('setting', 'onHidden', () => resolve(result))
+        .modal('show');
+    });
+  }
+
+  async function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, 300));
+  }
+
+  const $loader = $(`<div class="ui indeterminate text loader">正在准备文件</div>`);
+  const $policy = $(`<div class="content">您需要<a class="ui link" onclick="location.reload()">同意条款</a>才能继续使用本站</div>`);
+  const $redirect = $(`<div class="content">未指定本页的 redirect_uri 参数，无法进行登录验证</div>`);
+  const $modal = $(`<section class="ui longer modal">
     <div class="header">您需要同意使用条款才能继续使用本站</div>
     <div class="scrolling content">
       <div class="ui header">别慌，这是个啥也没有的使用条款</div>
@@ -232,35 +252,24 @@
       </div>
     </div>
     <div class="actions">
-      <button class="ui negative right labeled icon button" onclick="denyPolicy()">
+      <button class="ui negative right labeled icon button">
         <span>拒绝并退出</span>
         <i class="ui close icon"></i>
       </button>
-      <button class="ui positive right labeled icon button" onclick="acceptPolicy()">
+      <button class="ui positive right labeled icon button">
         <span>同意并继续</span>
         <i class="ui check icon"></i>
       </button>
     </div>
-  </section>
+  </section>`);
 
-  <div id="dimmer" class="ui page dimmer">
-    <div class="content">
-      您需要<a class="ui link" onclick="location.reload()">同意条款</a>才能继续使用本站
-    </div>
-  </div>
-
-  <div id="loader" class="ui dimmer">
-    <div class="ui indeterminate text loader">正在准备文件</div>
-  </div>
-
-  <div id="redirect" class="ui page dimmer">
-    <div class="content">未指定本页的 redirect_uri 参数，无法进行登录验证</div>
-  </div>
-
-</body>
+  // show loader dimmer
+  dimmerShow({ $element: $loader });
+</script>
 
 <script>
-  $('#loader').dimmer({ closable: false }).dimmer('show');
+  const { policy, user } = localStorage;
+  const redirectURI = new URLSearchParams(location.search).get('redirect_uri');
 
   function redirect() {
     return 'http://mock.don.red/weibo/oauth2/authorize/302' + location.search;
@@ -271,26 +280,23 @@
     button.classList.add('loading');
     setTimeout(() => location.href = redirect(), 3000);
   }
+</script>
 
-  function denyPolicy() {
-    localStorage.setItem('policy', false);
-    setTimeout(() => $('#dimmer').dimmer({ closable: false }).dimmer('show'), 100);
-  }
-
-  function acceptPolicy() {
-    localStorage.setItem('policy', true);
-  }
-
-  window.addEventListener('load', event => {
-    const { policy, user } = localStorage;
-    const redirectURI = new URLSearchParams(location.search).get('redirect_uri');
-    $('#loader').dimmer('hide');
+<script>
+  window.addEventListener('load', async event => {
+    await delay(500);
+    await dimmerHide();
     if (!redirectURI) {
-      setTimeout(() => $('#redirect').dimmer({ closable: false }).dimmer('show'), 100);
+      await dimmerShow({ $element: $redirect });
     } else if (user === 'true') {
       window.location.href = redirect();
-    } else if (policy !== 'true') {
-      $('#policy').modal({ closable: false }).modal('show');
+    } else if (policy !== '0.0.0') {
+      if (await modal({ $element: $modal })) {
+        localStorage.setItem('policy', '0.0.0');
+      } else {
+        await dimmerShow({ $element: $policy });
+        localStorage.setItem('policy', false);
+      }
     }
   });
 </script>
