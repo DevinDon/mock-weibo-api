@@ -1,4 +1,4 @@
-import { GET, Handler, HandlerZone, HTTP400Exception, Inject, PathQuery, POST, View } from '@rester/core';
+import { GET, Handler, HandlerZone, HTTP400Exception, Inject, PathQuery, POST, View, RequestBody } from '@rester/core';
 import { readFileSync } from 'fs';
 import { getCode, getToken } from '../@constant';
 import { AuthHandler } from '../@handler/auth.handler';
@@ -41,14 +41,14 @@ export class WeiboView {
   }
 
   @Handler(RedirectToCallback)
-  @GET('oauth2/authorize/302')
+  @POST('oauth2/authorize/302')
   async getCode(
-    @PathQuery('redirect_uri') uri: string
+    @RequestBody() { redirect }: { redirect: string }
   ) {
-    if (!uri) { throw new HTTP400Exception('param redirect_uri is required'); }
-    uri = decodeURIComponent(uri);
-    if (!isValidURL(uri)) { throw new HTTP400Exception('param redirect_uri is invalid'); }
-    return { location: uri, code: getCode() };
+    if (!redirect) { throw new HTTP400Exception('param redirect_uri is required'); }
+    redirect = decodeURIComponent(redirect);
+    if (!isValidURL(redirect)) { throw new HTTP400Exception('param redirect_uri is invalid'); }
+    return { location: redirect, code: getCode() };
   }
 
   @POST('oauth2/access_token')
