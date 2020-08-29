@@ -1,10 +1,12 @@
-import { GET, HTTP400Exception, Inject, PUT, RequestBody, View, PathQuery } from '@rester/core';
+import { GET, Handler, HTTP400Exception, Inject, PathQuery, PUT, RequestBody, View } from '@rester/core';
+import { ManageAuthHandler } from '../@handler/manage-auth.handler';
 import { ManageController } from './manage.controller';
 
 // add, remove, modify, find(condition), get(random)
 // one, more
 
 @View('weibo/manage')
+@Handler(ManageAuthHandler)
 export class ManageView {
 
   @Inject()
