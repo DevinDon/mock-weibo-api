@@ -53,9 +53,17 @@ export class WeiboView {
 
   @POST('oauth2/access_token')
   async getToken(
-    @RequestBody() parts: Part[]
+    @PathQuery('code') codeInQuery: string,
+    @RequestBody() params: Part[] | { code: string }
   ) {
-    const { code } = partsToObject(parts);
+    let code: string;
+    if (codeInQuery) {
+      code = codeInQuery;
+    } else if (Array.isArray(params)) {
+      code = partsToObject(params);
+    } else {
+      code = params.code;
+    }
     if (!code) { throw new HTTP400Exception('param code is required'); }
     return getToken();
   }
