@@ -1,4 +1,4 @@
-import { GET, Handler, HandlerZone, HTTP400Exception, Inject, PathQuery, POST, View, RequestBody } from '@rester/core';
+import { GET, Handler, HandlerZone, HTTP400Exception, Inject, Part, partsToObject, PathQuery, POST, RequestBody, View } from '@rester/core';
 import { readFileSync } from 'fs';
 import { getCode, getToken } from '../@constant';
 import { AuthHandler } from '../@handler/auth.handler';
@@ -53,8 +53,9 @@ export class WeiboView {
 
   @POST('oauth2/access_token')
   async getToken(
-    @RequestBody() { code }: any
+    @RequestBody() parts: Part[]
   ) {
+    const { code } = partsToObject(parts);
     if (!code) { throw new HTTP400Exception('param code is required'); }
     return getToken();
   }
