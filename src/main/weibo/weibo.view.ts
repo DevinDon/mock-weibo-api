@@ -53,7 +53,7 @@ export class WeiboView {
 
   @POST('oauth2/access_token')
   async getToken(
-    @PathQuery('code') code: string
+    @RequestBody() { code }: any
   ) {
     if (!code) { throw new HTTP400Exception('param code is required'); }
     return getToken();
