@@ -1,5 +1,4 @@
 import { Controller } from '@rester/core';
-import { Tinyurl } from './tinyurl.model';
 import { TinyurlEntity } from './tinyurl.entity';
 
 // insert, delete, update, select
@@ -27,8 +26,9 @@ export class TinyurlController {
           short,
           date: new Date()
         });
-        return short;
       }
+
+      return short;
 
     }
 

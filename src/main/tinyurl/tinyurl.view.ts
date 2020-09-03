@@ -17,7 +17,7 @@ export class TinyurlView {
     if (!url) {
       throw new HTTP400Exception('param url is required');
     }
-    return { url: this.controller.shortenOrRestoreURL({ url }) };
+    return { url: await this.controller.shortenOrRestoreURL({ url }) };
   }
 
 }
