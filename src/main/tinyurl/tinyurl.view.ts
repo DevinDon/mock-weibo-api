@@ -28,8 +28,9 @@ export class TinyurlView {
     @PathVariable('id') id: string,
     @HTTPResponse() response: ServerResponse
   ) {
+    const url = await this.controller.idToURL({ id });
     response.statusCode = 302;
-    response.setHeader('Location', this.prefix + await this.controller.idToURL({ id }));
+    response.setHeader('Location', url!);
   }
 
 }
