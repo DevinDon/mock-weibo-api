@@ -11,8 +11,6 @@ export class TinyurlView {
   @Inject()
   private controller!: TinyurlController;
 
-  private prefix: string = 'http://mock.don.red/tinyurl/s/';
-
   @POST()
   async index(
     @RequestBody() { url }: { url: string } = {} as any
@@ -20,7 +18,7 @@ export class TinyurlView {
     if (!url) {
       throw new HTTP400Exception('param url is required');
     }
-    return { url: this.prefix + await this.controller.shortenOrRestoreURLtoCode({ url }) };
+    return { url: await this.controller.shortenOrRestoreURL({ url }) };
   }
 
   @GET('s/{{id}}')

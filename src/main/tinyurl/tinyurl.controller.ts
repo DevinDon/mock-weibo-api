@@ -9,7 +9,9 @@ export class TinyurlController {
 
   private reg = /http:\/\/mock.don.red\/tinyurl\/s\/(.*)/;
 
-  async shortenOrRestoreURLtoCode({ url }: { url: string }) {
+  private prefix: string = 'http://mock.don.red/tinyurl/s/';
+
+  async shortenOrRestoreURL({ url }: { url: string }) {
 
     const match = url.match(this.reg);
 
@@ -31,7 +33,7 @@ export class TinyurlController {
         });
       }
 
-      return id;
+      return this.prefix + id;
 
     }
 
