@@ -7,31 +7,40 @@ import { TinyurlEntity } from './tinyurl.entity';
 @Controller()
 export class TinyurlController {
 
-  async shortenOrRestoreURL({ url }: { url: string }) {
+  private reg = /http:\/\/mock.don.red\/tinyurl\/s\/(.*)/;
 
-    if (url.includes('don.red')) {
+  async shortenOrRestoreURLtoCode({ url }: { url: string }) {
 
-      return TinyurlEntity.findOne({ short: url })
-        .then(record => record?.origin);
+    const match = url.match(this.reg);
+
+    if (match && match[1]) {
+
+      return this.idToURL({ id: match[1] });
 
     } else {
 
-      let short = await TinyurlEntity.findOne({ origin: url })
-        .then(record => record?.short);
+      let id = await TinyurlEntity.findOne({ origin: url })
+        .then(record => record?.id);
 
-      if (!short) {
-        short = Date.now().toString(36) + Math.round(Math.random() * 1000).toString(36);
+      if (!id) {
+        id = Date.now().toString(36) + Math.round(Math.random() * 1000).toString(36);
         await TinyurlEntity.insert({
           origin: url,
-          short,
+          id,
           date: new Date()
         });
       }
 
-      return short;
+      return id;
 
     }
 
+  }
+
+  async idToURL({ id }: { id: string }) {
+    return TinyurlEntity
+      .findOne({ id })
+      .then(record => record?.origin);
   }
 
 }

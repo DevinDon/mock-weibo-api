@@ -8,7 +8,7 @@ export class TinyurlEntity extends BaseEntity implements Tinyurl {
   _id!: ObjectID;
 
   @Column({ unique: true })
-  short!: string;
+  id!: string;
 
   @Column()
   @Index()

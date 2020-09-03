@@ -1,6 +1,6 @@
 export interface Tinyurl {
 
-  short: string;
+  id: string;
 
   origin: string;
 
