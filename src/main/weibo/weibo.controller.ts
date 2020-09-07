@@ -21,7 +21,8 @@ export class WeiboController {
     await WeiboEntity.insert({ id: user.id, token });
     return {
       access_token: token,
-      uid: user.id,
+      uid: `${user.id}`,
+      id: user.id,
       remind_in: Date.now() + 1000 * 3600 * 24 * 365,
       expires_in: Date.now() + 1000 * 3600 * 24 * 365,
       isRealName: true
