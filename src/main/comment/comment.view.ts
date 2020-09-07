@@ -64,8 +64,8 @@ export class CommentView {
   }
 
   @Handler(AuthHandler)
-  @POST('destory.json')
-  async destory(
+  @POST('destroy.json')
+  async destroy(
     // @PathQuery('cid') cid: number,
     @HandlerZone() { user }: { user: User },
     @RequestBody() { cid }: { cid: number } = {} as any

@@ -111,14 +111,14 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | `comment` 评论内容，最多 140 字，超出会被截取                |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/reply) |
 
-### Destory Comment
+### Destroy Comment
 
 | 请求说明 | 删除某条评论，仅限当前用户                                   |
 | -------- | ------------------------------------------------------------ |
 | 请求方式 | POST                                                         |
-| 请求路径 | 2/comments/destory.json                                      |
+| 请求路径 | 2/comments/destroy.json                                      |
 | 请求参数 | `cid` 需要删除的评论 ID                                      |
-| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/destory) |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/destroy) |
 
 ### Show Comments
 
