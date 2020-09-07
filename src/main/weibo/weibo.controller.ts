@@ -2,8 +2,8 @@ import { Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
 import { getToken } from '../@constant';
 import { UserEntity } from '../user/user.entity';
-import { WeiboEntity } from './weibo.entity';
 import { User } from '../user/user.model';
+import { WeiboEntity } from './weibo.entity';
 
 // insert, delete, update, select
 // one, more
@@ -20,7 +20,7 @@ export class WeiboController {
       .next();
     await WeiboEntity.insert({ id: user.id, token });
     return {
-      access_token: getToken(),
+      access_token: token,
       uid: user.id,
       remind_in: Date.now() + 1000 * 3600 * 24 * 365,
       expires_in: Date.now() + 1000 * 3600 * 24 * 365,
