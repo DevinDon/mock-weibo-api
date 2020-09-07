@@ -1,5 +1,6 @@
 import { BaseHandler, HTTP403Exception } from '@rester/core';
 import { WeiboEntity } from '../weibo/weibo.entity';
+import { UserEntity } from '../user/user.entity';
 
 export class AuthHandler extends BaseHandler {
 
@@ -9,8 +10,9 @@ export class AuthHandler extends BaseHandler {
     // no token, 403
     if (!token) { throw new HTTP403Exception('need access token & login'); }
     // mapped a user
-    const user = await WeiboEntity.findOne({ token });
-    if (!user) { throw new HTTP403Exception('invalid access token'); }
+    const mapped = await WeiboEntity.findOne({ token });
+    if (!mapped) { throw new HTTP403Exception('invalid access token'); }
+    const user = await UserEntity.findOne({ id: mapped.id });
     this.zone.user = user;
     return next();
   }
