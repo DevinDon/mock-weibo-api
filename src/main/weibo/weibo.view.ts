@@ -65,7 +65,7 @@ export class WeiboView {
       code = params.code;
     }
     if (!code) { throw new HTTP400Exception('param code is required'); }
-    return getToken();
+    return this.controller.getToken({ code });
   }
 
   @Handler(AuthHandler)

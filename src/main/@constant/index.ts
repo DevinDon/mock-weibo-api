@@ -55,12 +55,7 @@ export function getCode() {
 
 /** POST https://api.weibo.com/oauth2/access_token */
 export function getToken() {
-  return {
-    access_token: `0.00${Math.random().toString().slice(2)}${Date.now()}`,
-    remind_in: Date.now() + 1000 * 3600 * 24 * 365,
-    expires_in: Date.now() + 1000 * 3600 * 24 * 365,
-    isRealName: true
-  };
+  return `0.00${Math.random().toString().slice(2)}${Date.now()}`;
 }
 
 /** Database cursor step. */
