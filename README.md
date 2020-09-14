@@ -32,21 +32,23 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 
 ### Code
 
-| 请求说明 | 获取用户 Code，用于换取 Token           |
-| -------- | --------------------------------------- |
-| 请求方式 | GET                                     |
-| 请求路径 | oauth2/authorize                        |
-| 请求参数 | `redirect_uri` 授权回调地址，必填       |
-| 返回内容 | 302 跳转至 redirect_uri 并携带参数 code |
+| 请求说明 | 获取用户 Code，用于换取 Token               |
+| -------- | ------------------------------------------- |
+| 请求方式 | GET                                         |
+| 请求路径 | oauth2/authorize                            |
+| 请求参数 | `redirect_uri` 授权回调地址，必填           |
+|          | 数据格式：路径参数                          |
+| 返回内容 | 302 跳转至 redirect_uri 并携带路径参数 code |
 
 ### Token
 
-| 请求说明 | 获取 Token                  |
-| -------- | --------------------------- |
-| 请求方式 | POST                        |
-| 请求路径 | oauth2/access_token         |
-| 请求参数 | `code` 用户 Code，必填      |
-| 返回内容 | `{ access_token: 'token' }` |
+| 请求说明 | 获取 Token                                           |
+| -------- | ---------------------------------------------------- |
+| 请求方式 | POST                                                 |
+| 请求路径 | oauth2/access_token                                  |
+| 请求参数 | `code` 用户 Code，必填                               |
+|          | 数据格式：请求体 JSON / Form Data / Form URL Encoded |
+| 返回内容 | `{ access_token: 'token' }`                          |
 
 ### Get UID
 
@@ -67,6 +69,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求路径 | 2/statuses/public_timeline.json                              |
 | 请求参数 | `count` 单页返回的记录条数，可选，默认为 20，最大 200        |
 |          | `page` 分页，可选，默认为 1                                  |
+|          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/public_timeline) |
 
 ### Home Timeline
@@ -77,6 +80,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求路径 | 2/statuses/home_timeline.json                                |
 | 请求参数 | `count` 单页返回的记录条数，可选，默认为 20，最大 200        |
 |          | `page` 分页，可选，默认为 1                                  |
+|          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/home_timeline) |
 
 ### Show Status
@@ -86,6 +90,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求方式 | GET                                                          |
 | 请求路径 | 2/statuses/show.json                                         |
 | 请求参数 | `id` 指定的微博 ID                                           |
+|          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/show) |
 
 ## Comment
@@ -98,6 +103,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求路径 | 2/comments/create.json                                       |
 | 请求参数 | `id` 需要评论的微博 ID                                       |
 |          | `comment` 评论内容，最多 140 字，超出会被截取                |
+|          | 数据格式：请求体 JSON / Form Data / Form URL Encoded         |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/create) |
 
 ### Reply Comment
@@ -109,6 +115,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求参数 | `id` 对应的微博 ID                                           |
 |          | `cid` 需要回复的微博 ID                                      |
 |          | `comment` 评论内容，最多 140 字，超出会被截取                |
+|          | 数据格式：请求体 JSON / Form Data / Form URL Encoded         |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/reply) |
 
 ### Destroy Comment
@@ -118,6 +125,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求方式 | POST                                                         |
 | 请求路径 | 2/comments/destroy.json                                      |
 | 请求参数 | `cid` 需要删除的评论 ID                                      |
+|          | 数据格式：请求体 JSON / Form Data / Form URL Encoded         |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/destroy) |
 
 ### Show Comments
@@ -129,6 +137,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求参数 | `id` 指定的微博 ID                                           |
 |          | `count` 单页返回的记录条数，可选，默认为 20，最大 200        |
 |          | `page` 分页，可选，默认为 1                                  |
+|          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/show) |
 
 ## User
@@ -140,11 +149,20 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求方式 | GET                                                        |
 | 请求路径 | 2/users/show.json                                          |
 | 请求参数 | `uid` 指定的用户 ID                                        |
+|          | 数据格式：路径参数                                         |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/users/show) |
 
 ## 其他接口正在筹划中
 
 敬请期待。
+
+# Contact
+
+[GitHub: Mock Weibo APIs](https://github.com/DevinDon/mock-weibo-api)
+
+[Email: I.INF@Outlook.com](mailto:I.INF@Outlook.com)
+
+[Blog: What The Rooftop](https://blog.don.red)
 
 # [THE MIT LICENSE](https://raw.githubusercontent.com/DevinDon/license/master/THE%20MIT%20LICENSE)
 
