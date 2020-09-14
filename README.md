@@ -6,7 +6,7 @@
 
 > 本项目仅供学习使用，如有侵权，请[联系作者](mailto:I.INF@Outlook.com)。
 
-# Usage
+## Usage
 
 将请求地址中的 `https://api.weibo.com` 替换为 `http://mock.don.red/weibo` 即可，如：
 
@@ -20,17 +20,19 @@ https://api.weibo.com/2/statuses/public_timeline.json
 http://mock.don.red/weibo/2/statuses/public_timeline.json
 ```
 
-# Contents
+## Contents
 
 [TOC]
 
-# Mock APIs
+## Mock APIs
 
 > 提示：请在所有请求头中加入 `Authorization: OAuth2 ${token}` 字段
 
-## Authorization
+### Authorization
 
-### Code
+#### Code
+
+> 模拟登录界面，用户可以跳转到本页实现模拟登录。
 
 | 请求说明 | 获取用户 Code，用于换取 Token               |
 | -------- | ------------------------------------------- |
@@ -40,7 +42,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：路径参数                          |
 | 返回内容 | 302 跳转至 redirect_uri 并携带路径参数 code |
 
-### Token
+#### Token
 
 | 请求说明 | 获取 Token                                           |
 | -------- | ---------------------------------------------------- |
@@ -50,7 +52,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：请求体 JSON / Form Data / Form URL Encoded |
 | 返回内容 | `{ access_token: 'token' }`                          |
 
-### Get UID
+#### Get UID
 
 | 请求说明 | 获取当前用户的 UID       |
 | -------- | ------------------------ |
@@ -59,9 +61,9 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求参数 |                          |
 | 返回内容 | `{ uid: 1231231312321 }` |
 
-## Status
+### Status
 
-### Public Timeline
+#### Public Timeline
 
 | 请求说明 | 返回最新的公共微博                                           |
 | -------- | ------------------------------------------------------------ |
@@ -72,7 +74,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/public_timeline) |
 
-### Home Timeline
+#### Home Timeline
 
 | 请求说明 | 获取当前登录用户及其所关注（授权）用户的最新微博             |
 | -------- | ------------------------------------------------------------ |
@@ -83,7 +85,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/home_timeline) |
 
-### Show Status
+#### Show Status
 
 | 请求说明 | 根据微博 ID 返回某条微博内容                                 |
 | -------- | ------------------------------------------------------------ |
@@ -93,9 +95,9 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/show) |
 
-## Comment
+### Comment
 
-### Create Comment
+#### Create Comment
 
 | 请求说明 | 评论某条微博                                                 |
 | -------- | ------------------------------------------------------------ |
@@ -106,7 +108,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：请求体 JSON / Form Data / Form URL Encoded         |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/create) |
 
-### Reply Comment
+#### Reply Comment
 
 | 请求说明 | 回复某条评论                                                 |
 | -------- | ------------------------------------------------------------ |
@@ -118,7 +120,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：请求体 JSON / Form Data / Form URL Encoded         |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/reply) |
 
-### Destroy Comment
+#### Destroy Comment
 
 | 请求说明 | 删除某条评论，仅限当前用户                                   |
 | -------- | ------------------------------------------------------------ |
@@ -128,7 +130,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：请求体 JSON / Form Data / Form URL Encoded         |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/destroy) |
 
-### Show Comments
+#### Show Comments
 
 | 请求说明 | 根据微博 ID 返回某条微博的评论列表                           |
 | -------- | ------------------------------------------------------------ |
@@ -140,9 +142,9 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/show) |
 
-## User
+### User
 
-### Show User
+#### Show User
 
 | 请求说明 | 根据用户 ID 返回用户信息                                   |
 | -------- | ---------------------------------------------------------- |
@@ -152,11 +154,11 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | 数据格式：路径参数                                         |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/users/show) |
 
-## 其他接口正在筹划中
+### 其他接口正在筹划中
 
 敬请期待。
 
-# Contact
+## Contact
 
 [GitHub: Mock Weibo APIs](https://github.com/DevinDon/mock-weibo-api)
 
@@ -164,7 +166,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 
 [Blog: What The Rooftop](https://blog.don.red)
 
-# [THE MIT LICENSE](https://raw.githubusercontent.com/DevinDon/license/master/THE%20MIT%20LICENSE)
+## [THE MIT LICENSE](https://raw.githubusercontent.com/DevinDon/license/master/THE%20MIT%20LICENSE)
 
 Copyright © 2018+ Devin Don
 
