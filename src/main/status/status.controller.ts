@@ -26,10 +26,16 @@ export class StatusController {
     return StatusEntity
       .insert({
         id: +id,
-        idstr: id,
         text: comment,
-        textLength: comment.length,
         user,
+        created_at: new Date().toString(),
+        source: '<a href="http://app.weibo.com/t/feed/6vtZb0" rel="nofollow">微博 weibo.com</a>',
+        pic_urls: [],
+        reposts_count: +Math.random().toString().slice(2, 5),
+        attitudes_count: +Math.random().toString().slice(2, 5),
+        comments_count: 0,
+        idstr: id,
+        textLength: comment.length,
         userType: -100
       });
   }
