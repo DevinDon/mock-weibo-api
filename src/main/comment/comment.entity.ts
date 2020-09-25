@@ -46,6 +46,10 @@ export class CommentEntity extends BaseEntity implements Comment {
   status!: Status;
 
   @Column()
+  @Index()
+  status_id!: number;
+
+  @Column()
   readtimetype!: string;
 
 }

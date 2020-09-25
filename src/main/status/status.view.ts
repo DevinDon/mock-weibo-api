@@ -1,4 +1,6 @@
-import { GET, HTTP400Exception, Inject, PathQuery, View } from '@rester/core';
+import { GET, Handler, HandlerZone, HTTP400Exception, Inject, PathQuery, POST, RequestBody, View } from '@rester/core';
+import { AuthHandler } from '../@handler/auth.handler';
+import { User } from '../user/user.model';
 import { PaginationParam, StatusController } from './status.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -9,6 +11,16 @@ export class StatusView {
 
   @Inject()
   private controller!: StatusController;
+
+  @Handler(AuthHandler)
+  @POST('create.json')
+  async create(
+    @HandlerZone() { user }: { user: User },
+    @RequestBody() { comment }: { comment: string; } = {} as any
+  ) {
+    if (!comment) { throw new HTTP400Exception('request body field: comment is required'); }
+    return this.controller.insertStatus({ comment: comment.slice(0, 140), user });
+  }
 
   @GET('home_timeline.json')
   async getHomeTimeline(

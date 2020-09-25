@@ -1,6 +1,7 @@
 import { Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
 import { HOME_TIMELINE, PUBLIC_TIMELINE } from '../@constant';
+import { User } from '../user/user.model';
 import { StatusEntity } from './status.entity';
 import { Status } from './status.model';
 
@@ -12,8 +13,26 @@ export interface PaginationParam {
   take: number;
 }
 
+export interface ParamInsertStatus {
+  comment: string;
+  user: User;
+}
+
 @Controller()
 export class StatusController {
+
+  async insertStatus({ comment, user }: ParamInsertStatus) {
+    const id = Date.now() + Math.random().toString().slice(2, 4);
+    return StatusEntity
+      .insert({
+        id: +id,
+        idstr: id,
+        text: comment,
+        textLength: comment.length,
+        user,
+        userType: -100
+      });
+  }
 
   async selectStatusesWithHomeTimeline({ skip, take: limit }: PaginationParam) {
     // 获取最新的微博
