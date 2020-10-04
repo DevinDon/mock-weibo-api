@@ -17,7 +17,7 @@ https://api.weibo.com/2/statuses/public_timeline.json
 替换后：
 
 ```http
-http://mock.don.red/weibo/2/statuses/public_timeline.json
+https://mock.don.red/weibo/2/statuses/public_timeline.json
 ```
 
 ## Contents
@@ -34,13 +34,14 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 
 > 模拟登录界面，用户可以跳转到本页实现模拟登录。
 
-| 请求说明 | 获取用户 Code，用于换取 Token               |
-| -------- | ------------------------------------------- |
-| 请求方式 | GET                                         |
-| 请求路径 | oauth2/authorize                            |
-| 请求参数 | `redirect_uri` 授权回调地址，必填           |
-|          | 数据格式：路径参数                          |
-| 返回内容 | 302 跳转至 redirect_uri 并携带路径参数 code |
+| 请求说明 | 获取用户 Code，用于换取 Token                                |
+| -------- | ------------------------------------------------------------ |
+| 请求方式 | GET                                                          |
+| 请求路径 | oauth2/authorize                                             |
+| 请求参数 | `redirect_uri` 授权回调地址，必填                            |
+|          | 数据格式：路径参数                                           |
+| 返回内容 | 302 跳转至 redirect_uri 并携带路径参数 code                  |
+| 预览     | [点击预览](https://mock.don.red/weibo/oauth2/authorize?redirect_uri=http://baidu.com) |
 
 #### Token
 
@@ -73,6 +74,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | `page` 分页，可选，默认为 1                                  |
 |          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/public_timeline) |
+| 预览     | [点击预览](http://mock.don.red/weibo/2/statuses/public_timeline.json) |
 
 #### Home Timeline
 
@@ -84,6 +86,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 |          | `page` 分页，可选，默认为 1                                  |
 |          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/home_timeline) |
+| 预览     | [点击预览](http://mock.don.red/weibo/2/statuses/home_timeline.json) |
 
 #### Show Status
 
@@ -94,6 +97,7 @@ http://mock.don.red/weibo/2/statuses/public_timeline.json
 | 请求参数 | `id` 指定的微博 ID                                           |
 |          | 数据格式：路径参数                                           |
 | 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/show) |
+| 预览     | [点击预览](https://mock.don.red/weibo/2/statuses/show.json?id=160126590171282) |
 
 ### Comment
 
