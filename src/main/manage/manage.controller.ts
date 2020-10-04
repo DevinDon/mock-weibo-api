@@ -1,6 +1,6 @@
 import { delay } from '@iinfinity/delay';
-import { Controller } from '@rester/core';
-import { get } from 'superagent';
+import { Controller, HTTP500Exception } from '@rester/core';
+// import { get } from 'superagent';
 import { getMongoRepository } from 'typeorm';
 import { URL } from 'url';
 import { AccessEntity } from '../@handler/access.entity';
@@ -13,6 +13,10 @@ import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { UserEntity } from '../user/user.entity';
 import { WeiboEntity } from '../weibo/weibo.entity';
+
+function get(...args: any): any {
+  throw new HTTP500Exception('not implement.');
+}
 
 export interface ParamInsertCommentsForStatuses {
   slow?: boolean;
@@ -55,8 +59,8 @@ export class ManageController {
       .query({ access_token: this.token })
       .query({ id })
       .send()
-      .then(response => response.body.comments)
-      .catch(reason => {
+      .then((response: { body: { comments: any; }; }) => response.body.comments)
+      .catch((reason: any) => {
         logger.debug(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`);
         return false;
       });
@@ -73,8 +77,8 @@ export class ManageController {
         .query({ id })
         .query({ page: i, count: 200 })
         .send()
-        .then(response => response.body.comments)
-        .catch(reason => {
+        .then((response: { body: { comments: any; }; }) => response.body.comments)
+        .catch((reason: any) => {
           logger.debug(`Fetch comments by status ID ${id} failed: ${JSON.stringify(reason)}`);
           next = false;
           return [];
@@ -195,11 +199,11 @@ export class ManageController {
       home: await get('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200')
         .query({ access_token: this.token })
         .send()
-        .then(response => response.body.statuses),
+        .then((response: { body: { statuses: any; }; }) => response.body.statuses),
       public: await get('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200')
         .query({ access_token: this.token })
         .send()
-        .then(response => response.body.statuses)
+        .then((response: { body: { statuses: any; }; }) => response.body.statuses)
     };
     const results = {
       home: await insertMany(status.home, StatusEntity),
@@ -217,7 +221,7 @@ export class ManageController {
         .query({ access_token: this.token })
         .query({ id })
         .send()
-        .catch(reason => logger.debug(`Fetch status ${id} failed, ${JSON.stringify(reason)}`))
+        .catch((reason: any) => logger.debug(`Fetch status ${id} failed, ${JSON.stringify(reason)}`))
     );
     const statuses: Status[] = (await Promise.all(pending)).filter(status => status) as any;
     const result = await insertMany(statuses, StatusEntity);
