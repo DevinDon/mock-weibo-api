@@ -11,6 +11,10 @@ import { WeiboController } from './weibo.controller';
 // add, remove, modify, find(condition), get(random)
 // one, more
 
+function isProd() {
+  return process.env.MODE === 'PROD';
+}
+
 @View('weibo')
 export class WeiboView {
 
@@ -20,8 +24,8 @@ export class WeiboView {
   private readonly HTML: any = {};
 
   constructor() {
-    this.HTML.index = readFileSync('src/main/@public/index.html');
-    this.HTML.login = readFileSync('src/main/@public/login.html');
+    this.HTML.index = readFileSync(isProd() ? '@public/index.html' : 'src/main/@public/index.html');
+    this.HTML.login = readFileSync(isProd() ? '@public/login.html' : 'src/main/@public/login.html');
   }
 
   @Handler(HTMLHandler)
