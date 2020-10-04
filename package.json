@@ -13,16 +13,14 @@
     "docs"
   ],
   "scripts": {
-    "build": "tsc",
-    "clean": "sh -c 'rm -rf dist out temp'",
+    "build": "npm run pack && node script/build",
+    "clean": "node script/clean",
     "debug": "node --inspect-brk -r ts-node/register src/main/index.ts",
     "demo": "cross-env MODE=DEV node -r ts-node/register src/demo/index.ts",
     "dev": "cross-env MODE=DEV node -r ts-node/register src/main/index.ts",
-    "docker": "docker build -t production/mock-weibo-api .",
-    "pack": "webpack --config webpack.prod.js",
-    "prepublishOnly": "npm run clean && npm run build",
-    "prod": "cross-env MODE=PROD node dist",
-    "start": "node dist",
+    "pack": "webpack --config script/webpack.prod.js",
+    "prepublishOnly": "npm run clean && tsc",
+    "start": "cross-env MODE=PROD node dist",
     "test": "node node_modules/jasmine/bin/jasmine.js --config=src/test/jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register",
     "watch": "tsc -w"
   },

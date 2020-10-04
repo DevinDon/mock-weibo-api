@@ -1,7 +1,7 @@
 const path = require('path');
 
 function _externals() {
-  let manifest = require('./package.json');
+  let manifest = require('../package.json');
   let dependencies = manifest.devDependencies;
   let externals = {};
   for (let p in dependencies) {
@@ -30,7 +30,7 @@ module.exports = {
   },
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, '../dist')
   },
   node: {
     console: false,
