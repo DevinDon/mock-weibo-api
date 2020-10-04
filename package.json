@@ -36,7 +36,8 @@
   "dependencies": {
     "@iinfinity/logger": "^0.3.4",
     "@rester/core": "^0.10.24",
-    "mongodb": "^3.6.2"
+    "mongodb": "^3.6.2",
+    "superagent": "^6.1.0"
   },
   "devDependencies": {
     "@types/jasmine": "3.5.14",
@@ -49,7 +50,6 @@
     "eslint": "7.10.0",
     "jasmine": "3.6.1",
     "jasmine-console-reporter": "3.1.0",
-    "superagent": "^6.1.0",
     "ts-loader": "8.0.4",
     "ts-node": "9.0.0",
     "typescript": "4.0.3",
