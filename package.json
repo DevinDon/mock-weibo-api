@@ -18,6 +18,7 @@
     "debug": "node --inspect-brk -r ts-node/register src/main/index.ts",
     "demo": "cross-env MODE=DEV node -r ts-node/register src/demo/index.ts",
     "dev": "cross-env MODE=DEV node -r ts-node/register src/main/index.ts",
+    "docker": "docker build -t production/mock-weibo-api .",
     "pack": "webpack --config webpack.prod.js",
     "prepublishOnly": "npm run clean && npm run build",
     "prod": "cross-env MODE=PROD node dist",
