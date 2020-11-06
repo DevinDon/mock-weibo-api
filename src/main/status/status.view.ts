@@ -6,7 +6,7 @@ import { PaginationParam, StatusController } from './status.controller';
 // add, remove, modify, find(condition), get(random)
 // one, more
 
-@View('weibo/2/statuses')
+@View('2/statuses')
 export class StatusView {
 
   @Inject()

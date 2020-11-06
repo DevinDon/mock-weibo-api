@@ -6,7 +6,7 @@ import { CommentController, SelectCommentsParam } from './comment.controller';
 // add, remove, modify, find(condition), get(random)
 // one, more
 
-@View('weibo/2/comments')
+@View('2/comments')
 export class CommentView {
 
   @Inject()

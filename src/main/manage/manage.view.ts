@@ -5,7 +5,7 @@ import { ManageController } from './manage.controller';
 // add, remove, modify, find(condition), get(random)
 // one, more
 
-@View('weibo/manage')
+@View('manage')
 @Handler(ManageAuthHandler)
 export class ManageView {
 

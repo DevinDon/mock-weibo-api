@@ -15,7 +15,7 @@ function isProd() {
   return process.env.MODE === 'PROD';
 }
 
-@View('weibo')
+@View()
 export class WeiboView {
 
   @Inject()
