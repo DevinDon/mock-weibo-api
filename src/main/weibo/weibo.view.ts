@@ -1,5 +1,6 @@
-import { GET, Handler, HandlerZone, HTTP400Exception, Inject, Part, partsToObject, PathQuery, POST, RequestBody, View } from '@rester/core';
+import { GET, Handler, HandlerZone, HTTP400Exception, HTTPResponse, Inject, Part, partsToObject, PathQuery, POST, RequestBody, View } from '@rester/core';
 import { readFileSync } from 'fs';
+import { ServerResponse } from 'http';
 import { getCode, getToken } from '../@constant';
 import { AuthHandler } from '../@handler/auth.handler';
 import { HTMLHandler } from '../@handler/html.handler';
@@ -44,15 +45,17 @@ export class WeiboView {
     return this.HTML.login;
   }
 
-  @Handler(RedirectToCallback)
   @POST('oauth2/authorize/302')
   async getCode(
-    @RequestBody() { redirect }: { redirect: string }
+    @RequestBody() { redirect }: { redirect: string },
+    @HTTPResponse() response: ServerResponse
   ) {
     if (!redirect) { throw new HTTP400Exception('param redirect_uri is required'); }
     redirect = decodeURIComponent(redirect);
     if (!isValidURL(redirect)) { throw new HTTP400Exception('param redirect_uri is invalid'); }
-    return { location: redirect, code: getCode() };
+    response.statusCode = 302;
+    response.setHeader('Location', `${redirect}/?code=${getCode()}`);
+    // return { location: redirect, code: getCode() };
   }
 
   @POST('oauth2/access_token')
