@@ -26,10 +26,8 @@ const rester = new Rester()
   .set(logger)
   .end();
 
-if (process.env.MODE === 'PROD') {
-  rester.configDatabase.setEntities([
-    CommentEntity, AccessEntity, ManageEntity, StatusEntity, TinyurlEntity, UserEntity, WeiboEntity
-  ]);
-}
+rester.configDatabase.setEntities([
+  CommentEntity, AccessEntity, ManageEntity, StatusEntity, TinyurlEntity, UserEntity, WeiboEntity
+]);
 
 rester.listen();
