@@ -10,11 +10,12 @@
 
 将请求地址中的 `https://api.weibo.com` 替换为 `https://mock.don.red/weibo` 即可，如：
 
-<https://api.weibo.com/2/statuses/public_timeline.json>
+**替换前：**
 
-替换后：
+[`https://api.weibo.com/2/statuses/public_timeline.json`](https://api.weibo.com/2/statuses/public_timeline.json)
 
-<https://mock.don.red/weibo/2/statuses/public_timeline.json>
+**替换后：**
+[`https://mock.don.red/weibo/2/statuses/public_timeline.json`](https://mock.don.red/weibo/2/statuses/public_timeline.json)
 
 ## Contents
 

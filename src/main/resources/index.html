@@ -14,7 +14,9 @@
     }
 
     #vditor {
-      padding: 0.5rem 1rem;
+      padding: 0 1rem;
+      max-width: 768px;
+      margin: 0 auto;
     }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor@3.7.0/dist/index.css" />
@@ -26,7 +28,7 @@
 </body>
 
 <script>
-  fetch('https://cdn.jsdelivr.net/gh/devindon/mock-weibo-api/README.md')
+  const render = async (url = 'https://cdn.jsdelivr.net/gh/devindon/mock-weibo-api@master/README.md') => fetch(url)
     .then(response => response.text())
     .then(markdown => Vditor.preview(
       document.getElementById('vditor'),
@@ -39,6 +41,8 @@
       }
     ))
     .catch(error => console.error(`Error while fetch README:\n${markdown}`));
+
+  render();
 </script>
 
 </html>
