@@ -1,6 +1,6 @@
 import { BaseHandler, HTTP403Exception } from '@rester/core';
 import { WeiboEntity } from '../weibo/weibo.entity';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../users/user.entity';
 
 export class AuthHandler extends BaseHandler {
 

@@ -1,5 +1,5 @@
 import { ObjectID } from 'typeorm';
-import { User } from '../user/user.model';
+import { User } from '../users/user.model';
 
 export interface Status {
 

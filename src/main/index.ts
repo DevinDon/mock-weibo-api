@@ -1,7 +1,7 @@
 import { CORSHandler, ExceptionHandler, ParameterHandler, Rester, RouterHandler, SchemaHandler } from '@rester/core';
-import { AccessEntity } from './@handler/access.entity';
-import { AccessHandler } from './@handler/access.handler';
-import { logger } from './@util/logger';
+import { AccessEntity } from './handlers/access.entity';
+import { AccessHandler } from './handlers/access.handler';
+import { logger } from './utils/logger';
 import { CommentEntity } from './comment/comment.entity';
 import { CommentView } from './comment/comment.view';
 import { ManageEntity } from './manage/manage.entity';
@@ -10,8 +10,8 @@ import { StatusEntity } from './status/status.entity';
 import { StatusView } from './status/status.view';
 import { TinyurlEntity } from './tinyurl/tinyurl.entity';
 import { TinyurlView } from './tinyurl/tinyurl.view';
-import { UserEntity } from './user/user.entity';
-import { UserView } from './user/user.view';
+import { UserEntity } from './users/user.entity';
+import { UserView } from './users/user.view';
 import { WeiboEntity } from './weibo/weibo.entity';
 import { WeiboView } from './weibo/weibo.view';
 

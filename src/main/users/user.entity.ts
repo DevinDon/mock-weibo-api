@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, Index, ObjectID, ObjectIdColumn } from 'typeorm';
-import { Insecurity, User } from '../user/user.model';
+import { Insecurity, User } from './user.model';
 
 @Entity('user')
 export class UserEntity extends BaseEntity implements User {

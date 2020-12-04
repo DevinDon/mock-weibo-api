@@ -3,15 +3,15 @@ import { Controller, HTTP500Exception } from '@rester/core';
 // import { get } from 'superagent';
 import { getMongoRepository } from 'typeorm';
 import { URL } from 'url';
-import { AccessEntity } from '../@handler/access.entity';
-import { concatResults, insertMany, Result } from '../@util';
-import { traversingCursorWithStep, traversingCursorWithStepToArray } from '../@util/cursor';
-import { logger } from '../@util/logger';
+import { AccessEntity } from '../handlers/access.entity';
+import { concatResults, insertMany, Result } from '../utils';
+import { traversingCursorWithStep, traversingCursorWithStepToArray } from '../utils/cursor';
+import { logger } from '../utils/logger';
 import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../users/user.entity';
 import { WeiboEntity } from '../weibo/weibo.entity';
 
 function get(...args: any): any {

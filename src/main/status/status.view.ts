@@ -1,6 +1,6 @@
 import { GET, Handler, HandlerZone, HTTP400Exception, Inject, PathQuery, POST, RequestBody, View } from '@rester/core';
-import { AuthHandler } from '../@handler/auth.handler';
-import { User } from '../user/user.model';
+import { AuthHandler } from '../handlers/auth.handler';
+import { User } from '../users/user.model';
 import { PaginationParam, StatusController } from './status.controller';
 
 // add, remove, modify, find(condition), get(random)

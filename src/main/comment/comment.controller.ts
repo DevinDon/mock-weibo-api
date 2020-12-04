@@ -1,8 +1,8 @@
 import { Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
-import { SHOW_COMMENTS } from '../@constant';
+import { SHOW_COMMENTS } from '../constants';
 import { StatusEntity } from '../status/status.entity';
-import { User } from '../user/user.model';
+import { User } from '../users/user.model';
 import { CommentEntity } from './comment.entity';
 import { Comment } from './comment.model';
 

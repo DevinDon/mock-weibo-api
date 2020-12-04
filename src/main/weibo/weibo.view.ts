@@ -1,12 +1,12 @@
 import { GET, Handler, HandlerZone, HTTP400Exception, HTTPResponse, Inject, Part, partsToObject, PathQuery, POST, RequestBody, View } from '@rester/core';
 import { readFileSync } from 'fs';
 import { ServerResponse } from 'http';
-import { getCode, getToken } from '../@constant';
-import { AuthHandler } from '../@handler/auth.handler';
-import { HTMLHandler } from '../@handler/html.handler';
-import { RedirectToCallback } from '../@handler/redirect.handler';
-import { isValidURL } from '../@util';
-import { User } from '../user/user.model';
+import { getCode, getToken } from '../constants';
+import { AuthHandler } from '../handlers/auth.handler';
+import { HTMLHandler } from '../handlers/html.handler';
+import { RedirectToCallback } from '../handlers/redirect.handler';
+import { isValidURL } from '../utils';
+import { User } from '../users/user.model';
 import { WeiboController } from './weibo.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -25,8 +25,8 @@ export class WeiboView {
   private readonly HTML: any = {};
 
   constructor() {
-    this.HTML.index = readFileSync(isProd() ? '@public/index.html' : 'src/main/@public/index.html');
-    this.HTML.login = readFileSync(isProd() ? '@public/login.html' : 'src/main/@public/login.html');
+    this.HTML.index = readFileSync(isProd() ? 'resources/index.html' : 'src/main/resources/index.html');
+    this.HTML.login = readFileSync(isProd() ? 'resources/login.html' : 'src/main/resources/login.html');
   }
 
   @Handler(HTMLHandler)

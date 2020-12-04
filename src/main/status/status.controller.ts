@@ -1,7 +1,7 @@
 import { Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
-import { HOME_TIMELINE, PUBLIC_TIMELINE } from '../@constant';
-import { User } from '../user/user.model';
+import { HOME_TIMELINE, PUBLIC_TIMELINE } from '../constants';
+import { User } from '../users/user.model';
 import { StatusEntity } from './status.entity';
 import { Status } from './status.model';
 

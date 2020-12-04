@@ -1,5 +1,5 @@
 import { Cursor } from 'typeorm';
-import { STEP } from '../@constant';
+import { STEP } from '../constants';
 import { logger } from './logger';
 
 interface ParamTraversingCursorWithStep<T = any, F = any> {
