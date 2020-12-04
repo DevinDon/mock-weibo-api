@@ -28,7 +28,7 @@
 </body>
 
 <script>
-  const render = async (url = 'https://cdn.jsdelivr.net/gh/devindon/mock-weibo-api@master/README.md') => fetch(url)
+  const render = async (url = 'https://cdn.jsdelivr.net/gh/devindon/mock-weibo-api/README.md') => fetch(url)
     .then(response => response.text())
     .then(markdown => Vditor.preview(
       document.getElementById('vditor'),
