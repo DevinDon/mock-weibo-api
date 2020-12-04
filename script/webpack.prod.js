@@ -1,4 +1,6 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 function _externals() {
   let manifest = require('../package.json');
@@ -43,7 +45,13 @@ module.exports = {
   },
   target: 'node',
   externals,
-  // plugins: [
-  //   new webpack.optimize.UglifyJsPlugin()
-  // ]
+  plugins: [
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/main/resources', to: 'resources' },
+        { from: 'rester.json' }
+      ]
+    })
+  ]
 };

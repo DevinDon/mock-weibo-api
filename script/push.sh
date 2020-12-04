@@ -7,11 +7,12 @@ cd dist
 tee > ./Dockerfile <<-'EOF'
 FROM iinfinity/node
 
-COPY dist/index.js /app/index.js
-COPY src/main/@public /app/@public
-COPY rester.json /app/rester.json
 WORKDIR /app
 ENV MODE=PROD
+
+COPY index.js /app/index.js
+COPY resources /app/resources
+COPY rester.json /app/rester.json
 
 ENTRYPOINT [ "node", "index.js" ]
 EOF
