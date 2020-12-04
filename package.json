@@ -13,14 +13,14 @@
     "docs"
   ],
   "scripts": {
-    "build": "npm run pack && node script/build",
-    "clean": "node script/clean",
-    "debug": "node --inspect-brk -r ts-node/register src/main/index.ts",
-    "demo": "cross-env MODE=DEV node -r ts-node/register src/demo/index.ts",
-    "dev": "cross-env MODE=DEV node -r ts-node/register src/main/index.ts",
-    "pack": "webpack --config script/webpack.prod.js",
+    "build": "bash script/build.sh",
+    "clean": "bash script/clean.sh",
+    "start": "npm run build && cross-env MODE=PROD node dist",
+    "start:debug": "node --inspect-brk -r ts-node/register src/main/index.ts",
+    "start:demo": "cross-env MODE=DEV node -r ts-node/register src/demo/index.ts",
+    "start:dev": "cross-env MODE=DEV node -r ts-node/register src/main/index.ts",
+    "pack": "npm run build && npm run push",
     "prepublishOnly": "npm run clean && tsc",
-    "start": "cross-env MODE=PROD node dist",
     "test": "node node_modules/jasmine/bin/jasmine.js --config=src/test/jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register",
     "watch": "tsc -w"
   },
