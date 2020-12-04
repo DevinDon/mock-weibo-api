@@ -26,7 +26,7 @@ const rester = new Rester()
   .set(logger)
   .end();
 
-rester.configDatabase.setEntities([
+rester.configDatabases.setEntities([
   CommentEntity, AccessEntity, ManageEntity, StatusEntity, TinyurlEntity, UserEntity, WeiboEntity
 ]);
 
