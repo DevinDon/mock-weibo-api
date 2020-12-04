@@ -15,13 +15,14 @@
   "scripts": {
     "build": "bash script/build.sh",
     "clean": "bash script/clean.sh",
+    "lint": "eslint .",
+    "pack": "npm run build && npm run push",
+    "push": "bash script/push.sh",
+    "prepublishOnly": "npm run clean && tsc",
     "start": "npm run build && cross-env MODE=PROD node dist",
     "start:debug": "node --inspect-brk -r ts-node/register src/main/index.ts",
     "start:demo": "cross-env MODE=DEV node -r ts-node/register src/demo/index.ts",
     "start:dev": "cross-env MODE=DEV node -r ts-node/register src/main/index.ts",
-    "pack": "npm run build && npm run push",
-    "push": "bash script/push.sh",
-    "prepublishOnly": "npm run clean && tsc",
     "test": "node node_modules/jasmine/bin/jasmine.js --config=src/test/jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register",
     "watch": "tsc -w"
   },
