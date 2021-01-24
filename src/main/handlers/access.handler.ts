@@ -1,4 +1,5 @@
 import { BaseHandler, HTTPException } from '@rester/core';
+import { logger } from '../utils';
 import { AccessEntity } from './access.entity';
 
 // const log = { ok: 0, code: 11600, codeName: 'InterruptedAtShutdown', name: 'MongoError' };
@@ -22,7 +23,8 @@ export class AccessHandler extends BaseHandler {
     let exception: HTTPException | undefined;
     const result = await next().catch(error => exception = error);
 
-    const url = new URL('http://mock.don.red' + this.request.url || 'http://wrong');
+    const url = new URL('http://demo.don.red/weibo/api' + this.request.url || 'http://wrong');
+    logger.debug(`${this.request.method} ${this.request.url} ${this.response.statusCode}`);
 
     AccessEntity.insert({
       date: new Date(),
