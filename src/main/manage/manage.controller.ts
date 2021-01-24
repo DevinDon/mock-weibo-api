@@ -273,7 +273,7 @@ export class ManageController {
         while (await cursor.hasNext()) {
           const access: AccessEntity = await cursor.next();
           access.date = new Date(access.date || 0);
-          const url = new URL('http://mock.don.red' + access.url);
+          const url = new URL('http://demo.don.red' + access.url);
           access.path = url.pathname;
           access.query = Object.fromEntries(url.searchParams.entries());
           AccessEntity.update({ _id: access._id }, access);

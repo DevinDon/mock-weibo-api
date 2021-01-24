@@ -1,7 +1,7 @@
 {
-  "name": "mock-weibo-api",
-  "version": "0.0.0",
-  "description": "Mock Weibo API.",
+  "name": "weibo-api",
+  "version": "1.0.0",
+  "description": "Weibo API.",
   "main": "dist/index.js",
   "directories": {
     "doc": "docs",
@@ -58,11 +58,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DevinDon/mock-weibo-api.git"
+    "url": "git+https://github.com/DevinDon/weibo-api.git"
   },
   "bugs": {
-    "url": "https://github.com/DevinDon/mock-weibo-api/issues"
+    "url": "https://github.com/DevinDon/weibo-api/issues"
   },
-  "homepage": "https://github.com/DevinDon/mock-weibo-api",
+  "homepage": "https://github.com/DevinDon/weibo-api",
   "optionalDependencies": {}
 }

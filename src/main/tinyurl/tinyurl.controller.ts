@@ -7,9 +7,9 @@ import { TinyurlEntity } from './tinyurl.entity';
 @Controller()
 export class TinyurlController {
 
-  private reg = /http:\/\/mock.don.red\/tinyurl\/s\/(.*)/;
+  private reg = /http:\/\/demo.don.red\/tinyurl\/api\/s\/(.*)/;
 
-  private prefix: string = 'http://mock.don.red/tinyurl/s/';
+  private prefix: string = 'http://demo.don.red/tinyurl/api/s/';
 
   async shortenOrRestoreURL({ url }: { url: string }) {
 

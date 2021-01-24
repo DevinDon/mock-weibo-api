@@ -119,7 +119,7 @@
 
       <h2 class="ui center aligned icon header">
         <i class="dot circle outline icon"></i>
-        <span>Mock Weibo API</span>
+        <span>Weibo API</span>
       </h2>
 
       <br>
@@ -153,7 +153,7 @@
       <footer>
 
         <section class="link">
-          <a href="https://github.com/devindon/mock-weibo-api" alt="See source on Github">
+          <a href="https://github.com/devindon/weibo-api" alt="See source on Github">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z" />
               <path
@@ -275,7 +275,7 @@
   const redirectURI = new URLSearchParams(location.search).get('redirect_uri');
 
   function redirect() {
-    return 'http://mock.don.red/weibo/oauth2/authorize/302' + location.search;
+    return 'http://demo.don.red/weibo/api/oauth2/authorize/302' + location.search;
   }
 
   function login(event) {
