@@ -18,6 +18,7 @@
         "<node_internals>/**"
       ],
       "outputCapture": "std",
+      "stopOnEntry": false,
     },
     {
       "type": "node",

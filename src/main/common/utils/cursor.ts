@@ -1,6 +1,6 @@
+import { logger } from '@iinfinity/logger';
 import { Cursor } from 'typeorm';
 import { STEP } from '../constants';
-import { logger } from './logger';
 
 interface ParamTraversingCursorWithStep<T = any, F = any> {
   createCursor: () => Cursor<T>;

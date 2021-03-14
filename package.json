@@ -15,7 +15,7 @@
   "scripts": {
     "build": "./script/build.sh",
     "clean": "./script/clean.sh",
-    "debug": "cross-env NODE_ENV=DEV node --inspect-brk -r ts-node/register src/main/main.ts",
+    "debug": "cross-env NODE_ENV=DEV node -r ts-node/register src/main/main.ts",
     "demo": "cross-env NODE_ENV=DEV node -r ts-node/register src/demo/main.ts",
     "init": "./script/init-env.sh",
     "lint": "eslint . --fix",
