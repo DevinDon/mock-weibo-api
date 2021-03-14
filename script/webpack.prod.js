@@ -1,57 +1,43 @@
-const path = require('path');
+const { resolve } = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-function _externals() {
-  let manifest = require('../package.json');
-  let dependencies = manifest.devDependencies;
-  let externals = {};
-  for (let p in dependencies) {
-    externals[p] = 'commonjs ' + p;
-  }
-  return externals;
-}
-
-const externals = _externals();
-
 module.exports = {
-  entry: './src/main/index.ts',
   mode: 'production',
+  entry: resolve('src/main/main.ts'),
   // devtool: 'inline-source-map',
+  output: {
+    path: resolve('dist'),
+    filename: 'main.js',
+  },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/
-      }
-    ]
+        exclude: /node_modules/,
+      },
+    ],
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.js', '.ts'],
   },
-  output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, '../dist')
-  },
-  node: {
-    console: false,
-    global: false,
-    process: false,
-    Buffer: false,
-    __filename: false,
-    __dirname: false,
-    setImmediate: false
-  },
+  externals: (() => {
+    const dependencies = require('../package.json').devDependencies;
+    const externals = {};
+    for (const dependency in dependencies) {
+      externals[dependency] = 'commonjs ' + dependency;
+    }
+    return externals;
+  })(),
   target: 'node',
-  externals,
   plugins: [
     new CleanWebpackPlugin(),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'src/main/resources', to: 'resources' },
-        { from: 'rester.json' }
-      ]
-    })
-  ]
+        { from: 'src/main/resources', to: 'resources', noErrorOnMissing: true },
+        { from: 'rester.yaml' },
+      ],
+    }),
+  ],
 };

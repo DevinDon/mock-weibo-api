@@ -3,6 +3,11 @@
     "es6": true,
     "node": true
   },
+  "ignorePatterns": [
+    "dist/**/*",
+    "out/**/*",
+    "temp/**/*"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended"
@@ -30,6 +35,10 @@
         "before": false,
         "after": true
       }
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
     ],
     "curly": [
       "warn",

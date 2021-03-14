@@ -1,8 +1,8 @@
 {
-  "name": "weibo-api",
-  "version": "1.0.0",
-  "description": "Weibo API.",
-  "main": "dist/index.js",
+  "name": "template.rester",
+  "version": "0.13.1",
+  "description": "Rester Template.",
+  "main": "dist/main.js",
   "directories": {
     "doc": "docs",
     "example": "src/demo",
@@ -13,60 +13,56 @@
     "docs"
   ],
   "scripts": {
-    "build": "bash script/build.sh",
-    "clean": "bash script/clean.sh",
-    "lint": "eslint .",
+    "build": "./script/build.sh",
+    "clean": "./script/clean.sh",
+    "debug": "cross-env NODE_ENV=DEV node --inspect-brk -r ts-node/register src/main/main.ts",
+    "demo": "cross-env NODE_ENV=DEV node -r ts-node/register src/demo/main.ts",
+    "init": "./script/init-env.sh",
+    "lint": "eslint . --fix",
     "pack": "npm run build && npm run push",
-    "push": "bash script/push.sh",
-    "prepublishOnly": "npm run clean && tsc",
-    "start": "npm run build && cross-env MODE=PROD node dist",
-    "start:debug": "node --inspect-brk -r ts-node/register src/main/index.ts",
-    "start:demo": "cross-env MODE=DEV node -r ts-node/register src/demo/index.ts",
-    "start:dev": "cross-env MODE=DEV node -r ts-node/register src/main/index.ts",
+    "push": "./script/push.sh",
+    "start": "npm run start:dev",
+    "start:dev": "cross-env NODE_ENV=DEV node -r ts-node/register src/main/main.ts",
+    "start:prod": "npm run build && cd dist && cross-env NODE_ENV=PROD node main.js",
     "test": "node node_modules/jasmine/bin/jasmine.js --config=src/test/jasmine.json --reporter=jasmine-console-reporter --require=ts-node/register",
     "watch": "tsc -w"
   },
   "keywords": [
     "typescript",
-    "project"
+    "rester",
+    "backend"
   ],
   "author": "IInfinity <I.INF@Outlook.com> (https://blog.don.red/)",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@iinfinity/delay": "^0.1.1",
-    "@iinfinity/logger": "^0.3.4",
-    "@iinfinity/one-api": "^0.2.0",
-    "@rester/core": "^0.12.3",
-    "mongodb": "^3.6.3",
-    "single-line-log": "^1.1.2"
+    "@rester/core": "^0.13.14",
+    "mongodb": "^3.6.4"
   },
   "devDependencies": {
-    "@types/jasmine": "3.5.14",
-    "@types/mongodb": "^3.5.27",
-    "@types/node": "14.11.2",
-    "@types/single-line-log": "^1.1.0",
-    "@typescript-eslint/eslint-plugin": "4.3.0",
-    "@typescript-eslint/parser": "4.3.0",
+    "@types/jasmine": "3.6.6",
+    "@types/mongodb": "^3.6.9",
+    "@types/node": "14.14.34",
+    "@typescript-eslint/eslint-plugin": "4.17.0",
+    "@typescript-eslint/parser": "4.17.0",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.3.2",
-    "cross-env": "7.0.2",
-    "eslint": "7.10.0",
-    "jasmine": "3.6.1",
+    "copy-webpack-plugin": "^8.0.0",
+    "cross-env": "7.0.3",
+    "eslint": "7.22.0",
+    "jasmine": "3.6.4",
     "jasmine-console-reporter": "3.1.0",
-    "ts-loader": "8.0.4",
-    "ts-node": "9.0.0",
-    "typescript": "4.0.3",
-    "webpack": "4.44.2",
-    "webpack-cli": "3.3.12"
+    "ts-loader": "8.0.18",
+    "ts-node": "9.1.1",
+    "typescript": "4.2.3",
+    "webpack": "5.25.0",
+    "webpack-cli": "4.5.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DevinDon/weibo-api.git"
+    "url": "git+https://github.com/DevinDon/template.git"
   },
   "bugs": {
-    "url": "https://github.com/DevinDon/weibo-api/issues"
+    "url": "https://github.com/DevinDon/template/issues"
   },
-  "homepage": "https://github.com/DevinDon/weibo-api",
-  "optionalDependencies": {}
+  "homepage": "https://github.com/DevinDon/template/tree/typescript"
 }

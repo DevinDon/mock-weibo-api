@@ -7,12 +7,38 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Lanuch: Current TS File",
+      "name": "Debug: Entrypoint",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "debug"
+      ],
+      "port": 9229,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "outputCapture": "std",
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug: Current TS File",
       "args": [
         "${relativeFile}"
       ],
       "runtimeArgs": [
         "--require=ts-node/register",
+      ],
+      "sourceMaps": true,
+      "protocol": "inspector",
+      "outputCapture": "std",
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug: Current JS File",
+      "args": [
+        "${relativeFile}"
       ],
       "sourceMaps": true,
       "protocol": "inspector",
@@ -31,7 +57,8 @@
       "sourceMaps": true,
       "protocol": "inspector",
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "outputCapture": "std",
     }
   ]
 }

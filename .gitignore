@@ -2,8 +2,10 @@
 /dist
 /coverage
 /package-lock.json
+/yarn.lock
 /out
 /temp
 /log
-rester.dev.json
-rester.json
+/rester.yaml
+/rester.local.yaml
+/*.db
