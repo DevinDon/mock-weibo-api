@@ -1,6 +1,6 @@
-import { Controller } from '@rester/core';
+import { BaseController, Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
-import { SHOW_COMMENTS } from '../constants';
+import { SHOW_COMMENTS } from '../common/constants';
 import { StatusEntity } from '../status/status.entity';
 import { User } from '../users/user.model';
 import { CommentEntity } from './comment.entity';
@@ -34,7 +34,7 @@ export interface DeleteCommentParam {
 }
 
 @Controller()
-export class CommentController {
+export class CommentController extends BaseController {
 
   async selectCommentsByStatusID({ id, skip, take }: SelectCommentsParam) {
     // 返回最新的评论
@@ -48,7 +48,7 @@ export class CommentController {
       ...SHOW_COMMENTS,
       comments,
       status: await StatusEntity.findOne({ id }),
-      total_number: comments.length
+      total_number: comments.length,
     };
   }
 
@@ -60,7 +60,7 @@ export class CommentController {
       created_at: new Date().toString(),
       text: comment,
       user,
-      status: status as any
+      status: status as any,
     } as any;
     // insert comment
     await CommentEntity.insert(newComment);
@@ -74,7 +74,7 @@ export class CommentController {
     if (!status) { return { status: `status ${id} is not exist` }; }
     const replyComment = await CommentEntity.findOne(
       { id: cid },
-      { select: ['_id', 'id', 'content', 'created_at', 'text', 'user'] }
+      { select: ['_id', 'id', 'content', 'created_at', 'text', 'user'] },
     );
     if (!replyComment) { return { status: `comment ${cid} is not exist` }; }
     const newComment: Comment = {
@@ -83,7 +83,7 @@ export class CommentController {
       text: comment,
       reply_comment: replyComment,
       user,
-      status: status as any
+      status: status as any,
     } as any;
     // insert comment
     await CommentEntity.insert(newComment);
@@ -96,8 +96,8 @@ export class CommentController {
     const comment = await CommentEntity.findOne({
       where: {
         id: cid,
-        'user.id': user.id
-      }
+        'user.id': user.id,
+      },
     });
     if (!comment) {
       return { status: `comment ${cid} is not exist` };
