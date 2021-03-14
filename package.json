@@ -1,7 +1,7 @@
 {
-  "name": "template.rester",
+  "name": "weibo-api",
   "version": "0.13.1",
-  "description": "Rester Template.",
+  "description": "Weibo Rester API.",
   "main": "dist/main.js",
   "directories": {
     "doc": "docs",
@@ -36,7 +36,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@rester/core": "^0.13.19",
+    "@rester/core": "^0.13.20",
     "mongodb": "^3.6.4",
     "superagent": "^6.1.0"
   },
