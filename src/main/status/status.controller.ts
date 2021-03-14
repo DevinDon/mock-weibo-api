@@ -1,6 +1,6 @@
-import { Controller } from '@rester/core';
+import { BaseController, Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
-import { HOME_TIMELINE, PUBLIC_TIMELINE } from '../constants';
+import { HOME_TIMELINE, PUBLIC_TIMELINE } from '../common/constants';
 import { User } from '../users/user.model';
 import { StatusEntity } from './status.entity';
 import { Status } from './status.model';
@@ -19,7 +19,7 @@ export interface ParamInsertStatus {
 }
 
 @Controller()
-export class StatusController {
+export class StatusController extends BaseController {
 
   async insertStatus({ comment, user }: ParamInsertStatus) {
     const id = Date.now() + Math.random().toString().slice(2, 4);
@@ -36,7 +36,7 @@ export class StatusController {
         comments_count: 0,
         idstr: id,
         textLength: comment.length,
-        userType: -100
+        userType: -100,
       });
   }
 
@@ -54,7 +54,7 @@ export class StatusController {
     return {
       ...HOME_TIMELINE,
       statuses,
-      total_number: statuses.length
+      total_number: statuses.length,
     };
   }
 
@@ -62,7 +62,7 @@ export class StatusController {
     const cursor = getMongoRepository(StatusEntity)
       .aggregate([
         { $sample: { size: limit } },
-        { $sort: { date: -1 } }
+        { $sort: { date: -1 } },
       ]);
     const statuses: Status[] = [];
     for await (const status of cursor) {
@@ -71,7 +71,7 @@ export class StatusController {
     return {
       ...PUBLIC_TIMELINE,
       statuses,
-      total_number: statuses.length
+      total_number: statuses.length,
     };
   }
 
