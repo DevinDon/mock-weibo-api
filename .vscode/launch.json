@@ -15,7 +15,8 @@
         "--require=ts-node/register",
       ],
       "sourceMaps": true,
-      "protocol": "inspector"
+      "protocol": "inspector",
+      "outputCapture": "std",
     },
     {
       "type": "node",
