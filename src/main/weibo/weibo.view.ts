@@ -20,14 +20,13 @@ export class WeiboView extends BaseView {
 
   constructor() {
     super();
-    this.HTML.index = readFileSync(isProd() ? 'resources/index.html' : 'src/main/resources/index.html');
-    this.HTML.login = readFileSync(isProd() ? 'resources/login.html' : 'src/main/resources/login.html');
+    this.HTML.index = isProd() ? 'resources/index.html' : 'src/main/resources/index.html';
+    this.HTML.login = isProd() ? 'resources/login.html' : 'src/main/resources/login.html';
   }
 
   @GET()
   async index() {
     return new ResourceResponse({ file: this.HTML.index });
-
   }
 
   @GET('oauth2/authorize')
