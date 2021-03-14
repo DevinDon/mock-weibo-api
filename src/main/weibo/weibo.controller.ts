@@ -1,6 +1,6 @@
-import { Controller } from '@rester/core';
+import { BaseController, Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
-import { getToken } from '../constants';
+import { generateToken } from '../common/constants';
 import { UserEntity } from '../users/user.entity';
 import { User } from '../users/user.model';
 import { WeiboEntity } from './weibo.entity';
@@ -9,10 +9,10 @@ import { WeiboEntity } from './weibo.entity';
 // one, more
 
 @Controller()
-export class WeiboController {
+export class WeiboController extends BaseController {
 
   async getToken({ code }: { code: string }) {
-    const token = getToken();
+    const token = generateToken();
     const user: User = await getMongoRepository(UserEntity)
       .aggregate([{ $sample: { size: 1 } }])
       .project({ _id: false })
@@ -25,7 +25,7 @@ export class WeiboController {
       id: user.id,
       remind_in: Date.now() + 1000 * 3600 * 24 * 365,
       expires_in: Date.now() + 1000 * 3600 * 24 * 365,
-      isRealName: true
+      isRealName: true,
     };
   }
 
