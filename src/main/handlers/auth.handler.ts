@@ -5,6 +5,9 @@ import { UserEntity } from '../users/user.entity';
 export class AuthHandler extends BaseHandler {
 
   async handle(next: () => Promise<any>): Promise<any> {
+    if (this.request.method?.toUpperCase() === 'OPTIONS') {
+      return next();
+    }
     const token = this.request.headers['authorization']
       && this.request.headers['authorization'].slice(7);
     // no token, 403
