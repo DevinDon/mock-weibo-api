@@ -1,5 +1,5 @@
 import { BaseHandler, HTTP403Exception } from '@rester/core';
-import { UserEntity } from '../../users/user.entity';
+import { UserEntity } from '../../user/user.entity';
 import { WeiboEntity } from '../../weibo/weibo.entity';
 import { parseTokenFromRequest } from '../utils';
 

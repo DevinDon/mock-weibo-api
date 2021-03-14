@@ -8,7 +8,7 @@ import { concatResults, insertMany, Result, sleep } from '../common/utils';
 import { traversingCursorWithStep, traversingCursorWithStepToArray } from '../common/utils/cursor';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
-import { UserEntity } from '../users/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { WeiboEntity } from '../weibo/weibo.entity';
 
 export interface ParamInsertCommentsForStatuses {

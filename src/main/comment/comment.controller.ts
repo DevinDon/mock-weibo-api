@@ -2,7 +2,7 @@ import { BaseController, Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
 import { SHOW_COMMENTS } from '../common/constants';
 import { StatusEntity } from '../status/status.entity';
-import { User } from '../users/user.model';
+import { User } from '../user/user.model';
 import { CommentEntity } from './comment.entity';
 import { Comment } from './comment.model';
 

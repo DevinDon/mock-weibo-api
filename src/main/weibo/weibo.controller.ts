@@ -1,8 +1,8 @@
 import { BaseController, Controller } from '@rester/core';
 import { getMongoRepository } from 'typeorm';
 import { generateToken } from '../common/constants';
-import { UserEntity } from '../users/user.entity';
-import { User } from '../users/user.model';
+import { UserEntity } from '../user/user.entity';
+import { User } from '../user/user.model';
 import { WeiboEntity } from './weibo.entity';
 
 // insert, delete, update, select

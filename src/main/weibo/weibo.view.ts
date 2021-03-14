@@ -4,7 +4,7 @@ import { ServerResponse } from 'http';
 import { generateCode } from '../common/constants';
 import { AuthHandler } from '../common/handlers';
 import { isProd, isValidURL } from '../common/utils';
-import { User } from '../users/user.model';
+import { User } from '../user/user.model';
 import { WeiboController } from './weibo.controller';
 
 // add, remove, modify, find(condition), get(random)

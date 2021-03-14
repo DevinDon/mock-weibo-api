@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, Index, ObjectID, ObjectIdColumn } from 'typeorm';
-import { User } from '../users/user.model';
+import { User } from '../user/user.model';
 import { Comment, Status } from './comment.model';
 
 @Entity('comment')

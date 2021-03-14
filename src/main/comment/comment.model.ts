@@ -1,5 +1,5 @@
 import { ObjectID } from 'typeorm';
-import { User } from '../users/user.model';
+import { User } from '../user/user.model';
 
 export interface Comment {
 
