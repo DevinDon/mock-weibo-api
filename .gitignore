@@ -9,3 +9,4 @@
 /rester.yaml
 /rester.local.yaml
 /*.db
+/**/*.log

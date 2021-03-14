@@ -1,99 +1,173 @@
-# Rester Template
+# Weibo API
 
-Rester Template.
+一个模拟的微博 API，实现了一部分可能需要的功能。
 
-# Rester Config
+部署在 `https://demo.don.red/weibo/api` 上，模拟路径与原路径相同。
 
-## MongoDB
+> 本项目仅供学习使用，如有侵权，请[联系作者](mailto:I.INF@Outlook.com)。
 
-> MongoDB as default database.
+## Usage
 
-```json
-{
-  "debug": true,
-  "databases": [
-    {
-      "name": "default",
-      "type": "mongodb",
-      "url": "mongodb://username:password@host.com:27017/database",
-      "authSource": "admin",
-      "logging": true,
-      "synchronize": true,
-      "entities": [
-        "src/main/**/*.entity.*"
-      ]
-    }
-  ]
-}
-```
+将请求地址中的 `https://api.weibo.com` 替换为 `https://demo.don.red/weibo/api` 即可，如：
 
-## SQLite
+**替换前：**
 
-```json
-{
-  "databases": [
-    {
-      "name": "default",
-      "type": "sqlite",
-      "database": "./sqlite.db",
-      "entities": [
-        "**/*.entity.js"
-      ],
-      "logging": false,
-      "synchronize": true
-    }
-  ]
-}
-```
+[`https://api.weibo.com/2/statuses/public_timeline.json`](https://api.weibo.com/2/statuses/public_timeline.json)
 
-## PostgreSQL
+**替换后：**
+[`https://demo.don.red/weibo/api/2/statuses/public_timeline.json`](https://demo.don.red/weibo/api/2/statuses/public_timeline.json)
 
-```json
-{
-  "databases": [
-    {
-      "name": "default",
-      "type": "mongodb",
-      "database": "dev",
-      "host": "localhost",
-      "port": "27017",
-      "logging": true,
-      "synchronize": true
-    }
-  ]
-}
-```
+## Contents
 
-## MySQL
+[TOC]
 
-```json
-{
-  "databases": [
-    {
-      "name": "default",
-      "type": "mysql",
-      "host": "localhost",
-      "port": 3306,
-      "username": "test",
-      "password": "test",
-      "database": "test",
-      "synchronize": true,
-      "logging": false,
-      "entities": [
-        "src/entity/**/*.ts"
-      ],
-      "migrations": [
-        "src/migration/**/*.ts"
-      ],
-      "subscribers": [
-        "src/subscriber/**/*.ts"
-      ]
-    }
-  ]
-}
-```
+## APIs
 
-# [THE MIT LICENSE](https://raw.githubusercontent.com/DevinDon/license/master/THE%20MIT%20LICENSE)
+> 提示：请在所有请求头中加入 `Authorization: OAuth2 ${token}` 字段，其中的 `token` 可以通过 [Authorization > Token 接口](#Token)获取。
+
+### Authorization
+
+#### Code
+
+> 模拟登录界面，用户可以跳转到本页实现模拟登录，然后携带 `code` 跳转回 App 内的登录处理页面。
+
+| 请求说明 | 获取用户 Code，用于换取 Token                                                                                     |
+| -------- | ----------------------------------------------------------------------------------------------------------------- |
+| 请求方式 | GET                                                                                                               |
+| 请求路径 | oauth2/authorize                                                                                                  |
+| 请求参数 | `redirect_uri` 授权回调地址，必填                                                                                 |
+|          | 数据格式：路径参数                                                                                                |
+| 返回内容 | 302 跳转至 redirect_uri 并携带路径参数 code                                                                       |
+| 预览     | [点击预览](https://demo.don.red/weibo/api/oauth2/authorize?redirect_uri=https%3A%2F%2Fdemo.don.red%2Fweibo%2Fapi) |
+
+#### Token
+
+| 请求说明 | 获取 Token                                           |
+| -------- | ---------------------------------------------------- |
+| 请求方式 | POST                                                 |
+| 请求路径 | oauth2/access_token                                  |
+| 请求参数 | `code` 用户 Code，必填                               |
+|          | 数据格式：请求体 JSON / Form Data / Form URL Encoded |
+| 返回内容 | `{ access_token: 'token' }`                          |
+
+#### Get UID
+
+| 请求说明 | 获取当前用户的 UID     |
+| -------- | ---------------------- |
+| 请求方式 | GET                    |
+| 请求路径 | 2/account/get_uid.json |
+| 请求参数 |                        |
+| 返回内容 | `{ uid: 1234567 }`     |
+
+### Status
+
+#### Public Timeline
+
+| 请求说明 | 返回最新的公共微博                                                        |
+| -------- | ------------------------------------------------------------------------- |
+| 请求方式 | GET                                                                       |
+| 请求路径 | 2/statuses/public_timeline.json                                           |
+| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20，最大 200                     |
+|          | `page` 分页，可选，默认为 1                                               |
+|          | 数据格式：路径参数                                                        |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/public_timeline)  |
+| 预览     | [点击预览](http://demo.don.red/weibo/api/2/statuses/public_timeline.json) |
+
+#### Home Timeline
+
+| 请求说明 | 获取当前登录用户及其所关注（授权）用户的最新微博                        |
+| -------- | ----------------------------------------------------------------------- |
+| 请求方式 | GET                                                                     |
+| 请求路径 | 2/statuses/home_timeline.json                                           |
+| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20，最大 200                   |
+|          | `page` 分页，可选，默认为 1                                             |
+|          | 数据格式：路径参数                                                      |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/home_timeline)  |
+| 预览     | [点击预览](http://demo.don.red/weibo/api/2/statuses/home_timeline.json) |
+
+#### Show Status
+
+| 请求说明 | 根据微博 ID 返回某条微博内容                                                       |
+| -------- | ---------------------------------------------------------------------------------- |
+| 请求方式 | GET                                                                                |
+| 请求路径 | 2/statuses/show.json                                                               |
+| 请求参数 | `id` 指定的微博 ID                                                                 |
+|          | 数据格式：路径参数                                                                 |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/show)                      |
+| 预览     | [点击预览](https://demo.don.red/weibo/api/2/statuses/show.json?id=160126590171282) |
+
+### Comment
+
+#### Create Comment
+
+| 请求说明 | 评论某条微博                                                    |
+| -------- | --------------------------------------------------------------- |
+| 请求方式 | POST                                                            |
+| 请求路径 | 2/comments/create.json                                          |
+| 请求参数 | 放置在请求体中：`id` 需要评论的微博 ID                          |
+|          | `comment` 评论内容，最多 140 字，超出会被截取                   |
+|          | 数据格式：请求体 JSON / Form Data / Form URL Encoded            |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/create) |
+
+#### Reply Comment
+
+| 请求说明 | 回复某条评论                                                   |
+| -------- | -------------------------------------------------------------- |
+| 请求方式 | POST                                                           |
+| 请求路径 | 2/comments/reply.json                                          |
+| 请求参数 | `id` 对应的微博 ID                                             |
+|          | `cid` 需要回复的微博 ID                                        |
+|          | `comment` 评论内容，最多 140 字，超出会被截取                  |
+|          | 数据格式：请求体 JSON / Form Data / Form URL Encoded           |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/reply) |
+
+#### Destroy Comment
+
+| 请求说明 | 删除某条评论，仅限当前用户                                       |
+| -------- | ---------------------------------------------------------------- |
+| 请求方式 | POST                                                             |
+| 请求路径 | 2/comments/destroy.json                                          |
+| 请求参数 | `cid` 需要删除的评论 ID                                          |
+|          | 数据格式：请求体 JSON / Form Data / Form URL Encoded             |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/destroy) |
+
+#### Show Comments
+
+| 请求说明 | 根据微博 ID 返回某条微博的评论列表                            |
+| -------- | ------------------------------------------------------------- |
+| 请求方式 | GET                                                           |
+| 请求路径 | 2/comments/show.json                                          |
+| 请求参数 | `id` 指定的微博 ID                                            |
+|          | `count` 单页返回的记录条数，可选，默认为 20，最大 200         |
+|          | `page` 分页，可选，默认为 1                                   |
+|          | 数据格式：路径参数                                            |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/comments/show) |
+
+### User
+
+#### Show User
+
+| 请求说明 | 根据用户 ID 返回用户信息                                   |
+| -------- | ---------------------------------------------------------- |
+| 请求方式 | GET                                                        |
+| 请求路径 | 2/users/show.json                                          |
+| 请求参数 | `uid` 指定的用户 ID                                        |
+|          | 数据格式：路径参数                                         |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/users/show) |
+
+### 其他接口正在筹划中
+
+敬请期待。
+
+## Contact
+
+[GitHub: Weibo API](https://github.com/DevinDon/weibo-api)
+
+[Email: I.INF@Outlook.com](mailto:I.INF@Outlook.com)
+
+[Blog: What The Rooftop](https://blog.don.red)
+
+## [THE MIT LICENSE](https://raw.githubusercontent.com/DevinDon/license/master/THE%20MIT%20LICENSE)
 
 Copyright © 2018+ Devin Don
 
