@@ -1,11 +1,11 @@
-import { Controller } from '@rester/core';
+import { BaseController, Controller } from '@rester/core';
 import { TinyurlEntity } from './tinyurl.entity';
 
 // insert, delete, update, select
 // one, more
 
 @Controller()
-export class TinyurlController {
+export class TinyurlController extends BaseController {
 
   private reg = /http:\/\/demo.don.red\/tinyurl\/api\/s\/(.*)/;
 
@@ -29,7 +29,7 @@ export class TinyurlController {
         await TinyurlEntity.insert({
           origin: url,
           id,
-          date: new Date()
+          date: new Date(),
         });
       }
 

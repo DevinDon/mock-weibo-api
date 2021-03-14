@@ -1,4 +1,4 @@
-import { GET, HTTP400Exception, HTTPResponse, Inject, PathVariable, POST, RequestBody, View } from '@rester/core';
+import { BaseView, GET, HTTP400Exception, HTTPResponse, Inject, PathVariable, POST, RequestBody, View } from '@rester/core';
 import { ServerResponse } from 'http';
 import { TinyurlController } from './tinyurl.controller';
 
@@ -6,14 +6,14 @@ import { TinyurlController } from './tinyurl.controller';
 // one, more
 
 @View('tinyurl')
-export class TinyurlView {
+export class TinyurlView extends BaseView {
 
   @Inject()
   private controller!: TinyurlController;
 
   @POST()
   async index(
-    @RequestBody() { url }: { url: string } = {} as any
+    @RequestBody() { url }: { url: string } = {} as any,
   ) {
     if (!url) {
       throw new HTTP400Exception('param url is required');
@@ -24,7 +24,7 @@ export class TinyurlView {
   @GET('s/{{id}}')
   async redirect(
     @PathVariable('id') id: string,
-    @HTTPResponse() response: ServerResponse
+    @HTTPResponse() response: ServerResponse,
   ) {
     const url = await this.controller.idToURL({ id });
     response.statusCode = 302;
