@@ -1,5 +1,5 @@
-import { GET, Handler, HTTP400Exception, Inject, PathQuery, PUT, RequestBody, View } from '@rester/core';
-import { ManageAuthHandler } from '../handlers/manage-auth.handler';
+import { BaseView, GET, Handler, HTTP400Exception, Inject, PathQuery, PUT, RequestBody, View } from '@rester/core';
+import { ManageAuthHandler } from '../common/handlers';
 import { ManageController } from './manage.controller';
 
 // add, remove, modify, find(condition), get(random)
@@ -7,14 +7,14 @@ import { ManageController } from './manage.controller';
 
 @View('manage')
 @Handler(ManageAuthHandler)
-export class ManageView {
+export class ManageView extends BaseView {
 
   @Inject()
   private controller!: ManageController;
 
   @PUT('comment')
   async fetchCommentsByStatusIDs(
-    @RequestBody() { ids }: { ids: number[] } = { ids: [] }
+    @RequestBody() { ids }: { ids: number[] } = { ids: [] },
   ) {
     if (!ids || !ids.length) { throw new HTTP400Exception('request body ids is required'); }
     ids = ids.map(id => +id).filter(id => id);
@@ -33,7 +33,7 @@ export class ManageView {
 
   @PUT('status')
   async fetchNewStatusesByIDs(
-    @RequestBody() { ids }: { ids: number[] } = { ids: [] }
+    @RequestBody() { ids }: { ids: number[] } = { ids: [] },
   ) {
     if (!ids || !ids.length) { throw new HTTP400Exception('request body ids is required'); }
     return this.controller.insertNewStatusesByIDs(ids);
@@ -56,7 +56,7 @@ export class ManageView {
 
   @PUT('token')
   async updateAccessToken(
-    @PathQuery('token') token: string
+    @PathQuery('token') token: string,
   ) {
     if (!token) { throw new HTTP400Exception('param `token` is required'); }
     this.controller.token = token;
