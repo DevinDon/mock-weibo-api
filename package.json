@@ -61,10 +61,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DevinDon/template.git"
+    "url": "git+https://github.com/DevinDon/weibo-api.git"
   },
   "bugs": {
-    "url": "https://github.com/DevinDon/template/issues"
+    "url": "https://github.com/DevinDon/weibo-api/issues"
   },
-  "homepage": "https://github.com/DevinDon/template/tree/typescript"
+  "homepage": "https://github.com/DevinDon/weibo-api"
 }
