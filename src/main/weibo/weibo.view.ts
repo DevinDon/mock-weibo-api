@@ -1,9 +1,8 @@
-import { BaseView, GET, Handler, HandlerZone, HTTP400Exception, HTTPResponse, Inject, Part, partsToObject, PathQuery, POST, RequestBody, ResourceResponse, View } from '@rester/core';
-import { readFileSync } from 'fs';
+import { BaseView, GET, Handler, HandlerZone, HTTP400Exception, HTTPResponse, Inject, isProd, Part, partsToObject, PathQuery, POST, RequestBody, ResourceResponse, View } from '@rester/core';
 import { ServerResponse } from 'http';
 import { generateCode } from '../common/constants';
 import { AuthHandler } from '../common/handlers';
-import { isProd, isValidURL } from '../common/utils';
+import { isValidURL } from '../common/utils';
 import { User } from '../user/user.model';
 import { WeiboController } from './weibo.controller';
 
