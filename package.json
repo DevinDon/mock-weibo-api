@@ -36,7 +36,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@rester/core": "^0.13.20",
+    "@rester/core": "^0.13.21",
     "mongodb": "^3.6.4",
     "superagent": "^6.1.0"
   },
@@ -56,7 +56,7 @@
     "ts-loader": "8.0.18",
     "ts-node": "9.1.1",
     "typescript": "4.2.3",
-    "webpack": "5.25.0",
+    "webpack": "5.25.1",
     "webpack-cli": "4.5.0"
   },
   "repository": {
