@@ -19,7 +19,6 @@ export class WeiboView extends BaseView {
 
   constructor() {
     super();
-    console.log(isProd(), process.env.NODE_ENV);
     this.HTML.index = isProd() ? 'resources/index.html' : 'src/main/resources/index.html';
     this.HTML.login = isProd() ? 'resources/login.html' : 'src/main/resources/login.html';
   }
