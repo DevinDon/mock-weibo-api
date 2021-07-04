@@ -1,5 +1,5 @@
 {
-  "name": "weibo-api",
+  "name": "weibo-rester",
   "version": "0.13.1",
   "description": "Weibo Rester API.",
   "main": "dist/main.js",
