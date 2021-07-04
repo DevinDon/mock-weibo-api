@@ -62,7 +62,8 @@ export class CommentEntity extends MongoEntity<Comment> implements Comment {
 
   async selectCommentsByStatusID({ id, skip, take }: SelectCommentsParam) {
     // 返回最新的评论
-    const comments: Comment[] = await this.collection.aggregate()
+    const comments: Comment[] = await this.collection
+      .find({ 'status.id': id })
       .sort({ created_at: -1 })
       .skip(skip)
       .limit(take)

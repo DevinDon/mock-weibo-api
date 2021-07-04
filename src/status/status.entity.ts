@@ -226,7 +226,8 @@ export class StatusEntity extends MongoEntity<Status> implements Status {
 
   async selectStatusesWithHomeTimeline({ skip, take: limit }: PageParam) {
     // 获取最新的微博
-    const cursor = this.collection.aggregate()
+    const cursor = this.collection
+      .find()
       .sort({ created_at: -1 })
       .skip(skip)
       .limit(limit);
