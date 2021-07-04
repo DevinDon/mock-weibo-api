@@ -43,8 +43,7 @@
     "@rester/orm": "0.1.12",
     "class-validator": "0.13.1",
     "node-fetch": "2.6.1",
-    "saslprep": "1.0.3",
-    "superagent": "6.1.0"
+    "saslprep": "1.0.3"
   },
   "devDependencies": {
     "@types/jasmine": "3.7.7",

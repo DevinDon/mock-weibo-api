@@ -3,6 +3,7 @@ import { AccessModule } from './access';
 import { AphorismModule } from './aphorism';
 import { CommentModule } from './comment';
 import { AccessHandler } from './common/handlers';
+import { ManageModule } from './manage';
 import { StatusModule } from './status';
 import { UserModule } from './user';
 import { WeiboModule } from './weibo';
@@ -16,6 +17,7 @@ const rester = new Rester({
     CommentModule,
     StatusModule,
     WeiboModule,
+    ManageModule,
   ],
 });
 
