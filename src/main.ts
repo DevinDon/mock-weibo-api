@@ -9,7 +9,7 @@ import { UserModule } from './user';
 import { WeiboModule } from './weibo';
 
 const rester = new Rester({
-  handlers: [AccessHandler, CORSHandler, ...DEFAULT_HANDLERS],
+  handlers: [AccessHandler, ...DEFAULT_HANDLERS, CORSHandler],
   modules: [
     AccessModule,
     AphorismModule,
