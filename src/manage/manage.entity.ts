@@ -56,7 +56,7 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
   private async fetchCommentsByStatusID(id: number): Promise<Comment[] | false> {
     this.logger.debug(`Fetch comments by status ID ${id}`);
     return fetch(
-      'https://api.weibo.com/2/comments/show.json'
+      'https://api.weibo.com/2/comments/show.json?'
       +
       new URLSearchParams({ access_token: this.token, id: `${id}` }),
     )
@@ -75,7 +75,7 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
     let result: Comment[] = [];
     for (let i = 1; i < 100; i++) {
       result = await fetch(
-        'https://api.weibo.com/2/comments/show.json'
+        'https://api.weibo.com/2/comments/show.json?'
         +
         new URLSearchParams({ access_token: this.token, id: `${id}`, page: `${i}`, count: '200' }),
       )
@@ -199,13 +199,18 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
   async insertNewStatuses() {
     this.logger.debug('Fetch new statuses');
     const status = {
-      home: await fetch('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200' + new URLSearchParams({ access_token: this.token }))
+      home: await fetch('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200&' + new URLSearchParams({ access_token: this.token }))
+        .then(response => {
+          this.logger.debug(response.status);
+          return response;
+        })
         .then(response => response.json())
         .then(response => response.statuses),
-      public: await fetch('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200' + new URLSearchParams({ access_token: this.token }))
+      public: await fetch('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200&' + new URLSearchParams({ access_token: this.token }))
         .then(response => response.json())
         .then(response => response.statuses),
     };
+    this.logger.debug(JSON.stringify(status), 'https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200&' + new URLSearchParams({ access_token: this.token }));
     const results = {
       home: await insertMany(status.home, this.getStatusEntity()),
       public: await insertMany(status.public, this.getStatusEntity()),
@@ -219,9 +224,15 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
     this.logger.debug(`Fetch statuses by IDs ${ids}`);
     const pending = ids.map(
       id => fetch('https://api.weibo.com/2/statuses/show.json?' + new URLSearchParams({ access_token: this.token, id: `${id}` }))
+        .then(response => {
+          this.logger.debug('https://api.weibo.com/2/statuses/show.json?' + new URLSearchParams({ access_token: this.token, id: `${id}` }));
+          return response;
+        })
+        .then(response => response.json())
         .catch((reason: any) => this.logger.debug(`Fetch status ${id} failed, ${JSON.stringify(reason)}`)),
     );
     const statuses: Status[] = (await Promise.all(pending)).filter(status => status) as any;
+    this.logger.debug(JSON.stringify(statuses));
     const result = await insertMany(statuses, this.getStatusEntity());
     this.logger.info(`Fetch new statuses: ${result.success} / ${result.total}`);
     return result;

@@ -1,3 +1,4 @@
+import { HTTP400Exception } from '@rester/core';
 import { Column, Entity, getEntity, MongoEntity, ObjectID, PaginationParam } from '@rester/orm';
 import { generateToken } from '../common/constants';
 import { UserEntity } from '../user/user.entity';
@@ -26,11 +27,14 @@ export class WeiboEntity extends MongoEntity<Weibo> implements Weibo {
 
   async getToken({ code }: { code: string }) {
     const token = generateToken();
-    const user: User = await this.getUserEntity().collection
+    const user: User | null = await this.getUserEntity().collection
       .aggregate([{ $sample: { size: 1 } }])
       .project({ _id: false })
       .limit(1)
-      .next() as User;
+      .next();
+    if (!user) {
+      throw new HTTP400Exception('User id is not exist in body');
+    }
     await this.collection.insertOne({ id: user.id, token });
     return {
       access_token: token,
