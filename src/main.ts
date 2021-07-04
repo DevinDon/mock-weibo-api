@@ -1,4 +1,4 @@
-import { DEFAULT_HANDLERS, Rester } from '@rester/core';
+import { CORSHandler, DEFAULT_HANDLERS, Rester } from '@rester/core';
 import { AccessModule } from './access';
 import { AphorismModule } from './aphorism';
 import { CommentModule } from './comment';
@@ -9,7 +9,7 @@ import { UserModule } from './user';
 import { WeiboModule } from './weibo';
 
 const rester = new Rester({
-  handlers: [AccessHandler, ...DEFAULT_HANDLERS],
+  handlers: [AccessHandler, CORSHandler, ...DEFAULT_HANDLERS],
   modules: [
     AccessModule,
     AphorismModule,
