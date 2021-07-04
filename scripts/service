@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+SERVICE=${1}
+ACTION=${2}
+
+if [ -z "$SERVICE" ]; then
+  echo "No service startup, please input service name."
+  exit 0
+fi
+
+if [ "${ACTION}" = "up" ]; then
+  docker-compose -f scripts/dockers/${SERVICE}/docker-compose.yaml up ${@:3}
+else
+  docker-compose -f scripts/dockers/${SERVICE}/docker-compose.yaml down ${@:3}
+  docker ps -a | grep ${SERVICE} | awk '{ print $1 }' | xargs docker rm -f
+  docker volume ls | grep ${SERVICE} | awk '{ print $2 }' | xargs docker volume rm
+fi

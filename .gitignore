@@ -5,8 +5,6 @@
 /yarn.lock
 /out
 /temp
-/log
+/logs
 /rester.yaml
 /rester.local.yaml
-/*.db
-/**/*.log

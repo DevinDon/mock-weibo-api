@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+echo "💡 You should start your server first."
+
+curl -s localhost:8080 > /dev/null
+
+if [ "$?" != "0" ]; then
+  echo "🧨 You should start your server first & listening on localhost:8080!"
+  exit 1
+fi
+
+jasmine \
+  --config=jasmine.json \
+  --reporter=jasmine-console-reporter \
+  --require=ts-node/register

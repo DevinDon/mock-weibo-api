@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -e
+
+# build with tsc
+tsc --module es2020 --outDir out/
+
+# build with esbuild
+if [ "${MODE}" = "DEV" ]; then
+  esbuild \
+  out/main.js \
+  --bundle \
+  --platform=node \
+  --target=es2020,node16 \
+  --outfile=dist/bundle.dev.js \
+  --sourcemap=inline
+  if [ -f "rester.local.yaml" ]; then
+    cp rester.local.yaml dist/rester.local.yaml
+  fi
+else
+  esbuild \
+  out/main.js \
+  --bundle \
+  --platform=node \
+  --target=es2020,node16 \
+  --outfile=dist/bundle.js \
+  --minify
+fi
+
+# clean tsc output dir
+rm -rf out/
+
+# copy resources
+cp rester.yaml dist/rester.yaml
+if [ -d "src/resources/" ]; then
+  cp -r src/resources/ dist/
+fi

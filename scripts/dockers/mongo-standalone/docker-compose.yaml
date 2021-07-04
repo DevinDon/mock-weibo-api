@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  rester-mongo-standalone:
+    image: mongo:4
+    container_name: rester-mongo-standalone
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "rester-dev"
+      MONGO_INITDB_ROOT_PASSWORD: "rester-dev"
+    ports:
+      - "27017:27017"
+    networks:
+      - rester-dev
+    volumes:
+      - "rester-mongo-standalone:/data/db"
+
+networks:
+  rester-dev:
+
+volumes:
+  rester-mongo-standalone:

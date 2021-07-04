@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  rester-redis-standalone:
+    image: redis:6-alpine
+    container_name: rester-redis-standalone
+    command: ["redis-server", "--requirepass", "'rester-dev'", "--notify-keyspace-events 'Ex'"]
+    ports:
+      - "6379:6379"
+    networks:
+      - rester-dev
+    volumes:
+      - "rester-redis-standalone:/data"
+
+networks:
+  rester-dev:
+
+volumes:
+  rester-redis-standalone:

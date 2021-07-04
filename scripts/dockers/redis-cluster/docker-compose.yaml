@@ -1,0 +1,110 @@
+version: "3.7"
+
+services:
+  rester-redis-001:
+    image: redis:6-alpine
+    container_name: rester-redis-001
+    command: ["/entrypoint.sh"]
+    environment:
+      MAIN: "true"
+      PORT: 7001
+      HOST_IP: "0.0.0.0"
+    ports:
+      - "7001:7001"
+      - "17001:17001"
+    networks:
+      - rester-dev
+    volumes:
+      - "./entrypoint.sh:/entrypoint.sh"
+      - "rester-redis-001:/data"
+
+  rester-redis-002:
+    image: redis:6-alpine
+    container_name: rester-redis-002
+    command: ["/entrypoint.sh"]
+    environment:
+      PORT: 7002
+      HOST_IP: "0.0.0.0"
+    ports:
+      - "7002:7002"
+      - "17002:17002"
+    networks:
+      - rester-dev
+    volumes:
+      - "./entrypoint.sh:/entrypoint.sh"
+      - "rester-redis-002:/data"
+
+  rester-redis-003:
+    image: redis:6-alpine
+    container_name: rester-redis-003
+    command: ["/entrypoint.sh"]
+    environment:
+      PORT: 7003
+      HOST_IP: "0.0.0.0"
+    ports:
+      - "7003:7003"
+      - "17003:17003"
+    networks:
+      - rester-dev
+    volumes:
+      - "./entrypoint.sh:/entrypoint.sh"
+      - "rester-redis-003:/data"
+
+  rester-redis-004:
+    image: redis:6-alpine
+    container_name: rester-redis-004
+    command: ["/entrypoint.sh"]
+    environment:
+      PORT: 7004
+      HOST_IP: "0.0.0.0"
+    ports:
+      - "7004:7004"
+      - "17004:17004"
+    networks:
+      - rester-dev
+    volumes:
+      - "./entrypoint.sh:/entrypoint.sh"
+      - "rester-redis-004:/data"
+
+  rester-redis-005:
+    image: redis:6-alpine
+    container_name: rester-redis-005
+    command: ["/entrypoint.sh"]
+    environment:
+      PORT: 7005
+      HOST_IP: "0.0.0.0"
+    ports:
+      - "7005:7005"
+      - "17005:17005"
+    networks:
+      - rester-dev
+    volumes:
+      - "./entrypoint.sh:/entrypoint.sh"
+      - "rester-redis-005:/data"
+
+  rester-redis-006:
+    image: redis:6-alpine
+    container_name: rester-redis-006
+    command: ["/entrypoint.sh"]
+    environment:
+      PORT: 7006
+      HOST_IP: "0.0.0.0"
+    ports:
+      - "7006:7006"
+      - "17006:17006"
+    networks:
+      - rester-dev
+    volumes:
+      - "./entrypoint.sh:/entrypoint.sh"
+      - "rester-redis-006:/data"
+
+networks:
+  rester-dev:
+
+volumes:
+  rester-redis-001:
+  rester-redis-002:
+  rester-redis-003:
+  rester-redis-004:
+  rester-redis-005:
+  rester-redis-006:

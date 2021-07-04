@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+MODE=DEV node -r ts-node/register ${@} src/main.ts

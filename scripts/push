@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [ ! -n "${1}" ];
+then
+  echo "Error: Image name cannot be empty"
+  exit 1
+else
+  IMAGE=${1}
+fi
+
+cp scripts/dockers/Dockerfile dist/Dockerfile
+cd dist
+docker build -t ${IMAGE} .
+docker push ${IMAGE}

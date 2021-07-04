@@ -1,0 +1,30 @@
+addresses:
+  - host: 0.0.0.0
+    port: 8080
+    protocol: http
+
+databases:
+  - name: default
+    type: mongodb
+    host: localhost
+    port: 27017
+    database: rester-dev
+    username: rester-dev
+    password: rester-dev
+    authSource: admin
+    logger: debug
+    sync: true
+
+handler-pool:
+  max: 1024
+
+logger:
+  level: all
+  trace: true
+  logout: logs/out.log
+  logerr: logs/err.log
+
+queue:
+  host: localhost
+  port: 6379
+  password: rester-dev
