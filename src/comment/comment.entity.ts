@@ -1,7 +1,8 @@
-import { Column, Entity, MongoEntity, ObjectID, PaginationParam } from '@rester/orm';
+import { Column, Entity, getEntity, MongoEntity, ObjectID, PaginationParam } from '@rester/orm';
 import { SHOW_COMMENTS } from '../common/constants';
+import { StatusEntity } from '../status/status.entity';
 import { User } from '../user/user.model';
-import { Comment, CommentID, DeleteCommentParam, InsertCommentForCommentParam, InsertCommentForStatusParam, SelectCommentsParam, Status } from './comment.model';
+import { Comment, DeleteCommentParam, InsertCommentForCommentParam, InsertCommentForStatusParam, SelectCommentsParam, Status } from './comment.model';
 
 @Entity({ name: 'comment' })
 export class CommentEntity extends MongoEntity<Comment> implements Comment {
@@ -55,28 +56,8 @@ export class CommentEntity extends MongoEntity<Comment> implements Comment {
     return { list: await this.collection.aggregate([{ $sample: { size: take } }]).toArray() };
   }
 
-  async insertOne(comment: Comment) {
-    const id = await this.collection
-      .insertOne(comment)
-      .then(result => result.insertedId);
-    return this.collection.findOne({ _id: new ObjectID(id) });
-  }
-
-  async deleteOne(id: CommentID) {
-    await this.collection.deleteOne({ _id: new ObjectID(id) });
-    return [id];
-  }
-
-  async updateOne(id: CommentID, comment: Partial<Comment>) {
-    await this.collection.updateOne(
-      { _id: new ObjectID(id) },
-      { $set: comment },
-    );
-    return this.collection.findOne({ _id: new ObjectID(id) });
-  }
-
-  async findOne(id: CommentID) {
-    return this.collection.findOne({ _id: new ObjectID(id) });
+  getStatusEntity(): StatusEntity {
+    return getEntity(StatusEntity);
   }
 
   async selectCommentsByStatusID({ id, skip, take }: SelectCommentsParam) {
@@ -89,13 +70,13 @@ export class CommentEntity extends MongoEntity<Comment> implements Comment {
     return {
       ...SHOW_COMMENTS,
       comments,
-      status: await StatusEntity.findOne({ id }),
+      status: await this.getStatusEntity().collection.findOne({ id }),
       total_number: comments.length,
     };
   }
 
   async insertCommentByStatusID({ id, comment, user }: InsertCommentForStatusParam) {
-    const status = await StatusEntity.findOne({ id });
+    const status = await this.getStatusEntity().collection.findOne({ id });
     if (!status) { return { status: `status ${id} is not exist` }; }
     const newComment: Comment = {
       id: Date.now(),
@@ -105,14 +86,14 @@ export class CommentEntity extends MongoEntity<Comment> implements Comment {
       status: status as any,
     } as any;
     // insert comment
-    await this.insertOne(newComment);
+    await this.collection.insertOne(newComment);
     // update count of status comment
-    await updateOne({ id }, { $inc: { comments_count: 1 } });
+    await this.getStatusEntity().collection.updateOne({ id }, { $inc: { comments_count: 1 } });
     return newComment;
   }
 
   async insertCommentByCommentID({ id, cid, comment, user }: InsertCommentForCommentParam) {
-    const status = await this.collection.findOne({ id });
+    const status = await this.getStatusEntity().collection.findOne({ id });
     if (!status) { return { status: `status ${id} is not exist` }; }
     const replyComment = await this.collection.findOne(
       { id: cid },
@@ -128,9 +109,9 @@ export class CommentEntity extends MongoEntity<Comment> implements Comment {
       status: status as any,
     } as any;
     // insert comment
-    await this.insertOne(newComment);
+    await this.collection.insertOne(newComment);
     // update count of status
-    await updateOne({ id }, { $inc: { comments_count: 1 } });
+    await this.getStatusEntity().collection.updateOne({ id }, { $inc: { comments_count: 1 } });
     return newComment;
   }
 
@@ -144,9 +125,9 @@ export class CommentEntity extends MongoEntity<Comment> implements Comment {
     if (!comment) {
       return { status: `comment ${cid} is not exist` };
     } else {
-      const result = this.deleteOne(cid);
+      const result = this.collection.deleteOne({ id: cid });
       // update count of status
-      await updateOne({ id: comment.status.id }, { $inc: { comments_count: -1 } });
+      await this.getStatusEntity().collection.updateOne({ id: comment.status.id }, { $inc: { comments_count: -1 } });
       return result;
     }
   }
