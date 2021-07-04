@@ -7,10 +7,10 @@ export class UserEntity extends MongoEntity<User> implements User {
   @Column()
   _id!: ObjectID;
 
-  @Column({ unique: true })
+  @Column({ index: true, unique: true })
   id!: number;
 
-  @Column()
+  @Column({ index: true, unique: true })
   idstr!: string;
 
   @Column()

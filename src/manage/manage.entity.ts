@@ -1,15 +1,15 @@
 import { logger, Logger } from '@rester/logger';
 import { Column, Entity, getEntity, MongoEntity, ObjectID, PaginationParam } from '@rester/orm';
-import { AggregationCursor } from 'mongodb';
 import fetch from 'node-fetch';
 import { URLSearchParams } from 'url';
 import { AccessEntity } from '../access/access.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { Comment } from '../comment/comment.model';
-import { concatResults, insertMany, Result, sleep, traversingCursorWithStep } from '../common/utils';
+import { concatResults, insertMany, Result, sleep, traversingCursorWithStep, traversingCursorWithStepToArray } from '../common/utils';
 import { StatusEntity } from '../status/status.entity';
 import { Status } from '../status/status.model';
 import { UserEntity } from '../user/user.entity';
+import { User } from '../user/user.model';
 import { Manage, ParamFetchCommentsResult, ParamInsertCommentsForStatuses, Statistic } from './manage.model';
 
 @Entity({ name: 'manage' })
@@ -117,7 +117,7 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
   ) {
     this.logger.debug(`Fetch comments for ${overwrite ? 'all' : 'new'} statuses`);
     const ids = (await this.getCommentEntity().collection
-      .aggregate()
+      .find()
       .project({ _id: false, 'status.id': true })
       .map((v: Comment) => v?.status?.id)
       .filter((v: number | undefined) => v)
@@ -127,7 +127,7 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
     const results: Result[] = [];
     await traversingCursorWithStepToArray<Status>({
       createCursor: () => this.getStatusEntity().collection
-        .aggregate()
+        .find()
         .project({ _id: false, id: true, comments_count: true })
         .sort({ $natural: reverse ? -1 : 1 }),
       loop: async array => {
@@ -155,7 +155,7 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
           }
 
           // got status
-          this.logger.debug(`Got status: ${status.id}`);
+          this.logger.debug(`Got status: ${status.id}, comment count: ${status.comments_count}`);
 
           /** fetched comments */
           const { comments, next } = await this.fetchAllCommentsByStatusID(status.id);
@@ -181,7 +181,7 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
             // because some comments maybe delete from server but save on local
             const count = await this.getCommentEntity().collection.count({ 'status.id': status.id });
             this.logger.debug(`Update comments count ${status.id}: ${count}`);
-            await this.getStatusEntity().collection.update({ id: status.id }, { comments_count: count });
+            await this.getStatusEntity().collection.updateOne({ id: status.id }, { $set: { comments_count: count } });
           }
 
           // slowly, random delay 5s +- 10s
@@ -200,17 +200,12 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
     this.logger.debug('Fetch new statuses');
     const status = {
       home: await fetch('https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200&' + new URLSearchParams({ access_token: this.token }))
-        .then(response => {
-          this.logger.debug(response.status);
-          return response;
-        })
         .then(response => response.json())
         .then(response => response.statuses),
       public: await fetch('https://api.weibo.com/2/statuses/public_timeline.json?&page=1&count=200&' + new URLSearchParams({ access_token: this.token }))
         .then(response => response.json())
         .then(response => response.statuses),
     };
-    this.logger.debug(JSON.stringify(status), 'https://api.weibo.com/2/statuses/home_timeline.json?&page=1&count=200&' + new URLSearchParams({ access_token: this.token }));
     const results = {
       home: await insertMany(status.home, this.getStatusEntity()),
       public: await insertMany(status.public, this.getStatusEntity()),
@@ -224,15 +219,10 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
     this.logger.debug(`Fetch statuses by IDs ${ids}`);
     const pending = ids.map(
       id => fetch('https://api.weibo.com/2/statuses/show.json?' + new URLSearchParams({ access_token: this.token, id: `${id}` }))
-        .then(response => {
-          this.logger.debug('https://api.weibo.com/2/statuses/show.json?' + new URLSearchParams({ access_token: this.token, id: `${id}` }));
-          return response;
-        })
         .then(response => response.json())
         .catch((reason: any) => this.logger.debug(`Fetch status ${id} failed, ${JSON.stringify(reason)}`)),
     );
     const statuses: Status[] = (await Promise.all(pending)).filter(status => status) as any;
-    this.logger.debug(JSON.stringify(statuses));
     const result = await insertMany(statuses, this.getStatusEntity());
     this.logger.info(`Fetch new statuses: ${result.success} / ${result.total}`);
     return result;
@@ -241,11 +231,13 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
   async insertUsersFromComments() {
     this.logger.debug('Fetch users from comments');
     const results: Result[] = [];
-    await traversingCursorWithStepToArray<Comment>({
+    const logs = await this.getStatusEntity().collection
+      .find().toArray();
+    await traversingCursorWithStepToArray<User>({
       createCursor: () => this.getCommentEntity().collection
-        .aggregate()
+        .find()
         .project({ _id: false, user: true })
-        .map((comment: Comment) => comment.user) as any,
+        .map((comment: Comment) => comment.user),
       loop: async array => {
         results.push(await insertMany(array, this.getUserEntity()));
       },
@@ -258,11 +250,13 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
   async insertUsersFromStatuses() {
     this.logger.debug('Fetch users from statuses');
     const results: Result[] = [];
-    await traversingCursorWithStepToArray<Status>({
+    const logs = await this.getStatusEntity().collection
+      .find().toArray();
+    await traversingCursorWithStepToArray<User>({
       createCursor: () => this.getStatusEntity().collection
-        .aggregate()
+        .find()
         .project({ _id: false, user: true })
-        .map((status: Status) => status.user) as any,
+        .map((status: Status) => status.user),
       loop: async array => {
         results.push(await insertMany(array, this.getUserEntity()));
       },
@@ -281,7 +275,7 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
   async updateFormatAccessLog() {
     const result: { total: number, addresses: string[] } = { total: 0, addresses: [] };
     await traversingCursorWithStep({
-      createCursor: () => this.getAccessEntity().collection.aggregate().sort({ _id: -1 }),
+      createCursor: () => this.getAccessEntity().collection.find().sort({ _id: -1 }),
       loop: async cursor => {
         while (await cursor.hasNext()) {
           const access: AccessEntity = await cursor.next() as AccessEntity;
@@ -316,6 +310,3 @@ export class ManageEntity extends MongoEntity<Manage> implements Manage {
 }
 
 export type ManageCollection = ManageEntity['collection'];
-function traversingCursorWithStepToArray<T>(arg0: { createCursor: () => AggregationCursor<Status>; loop: (array: any) => Promise<void>; }) {
-  throw new Error('Function not implemented.');
-}

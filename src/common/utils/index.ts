@@ -69,23 +69,34 @@ export async function insertMany<T, E extends MongoEntity<any>>(
   data: T[],
   entity: E,
 ): Promise<Result> {
-  const result: any = await entity.collection
+  if (!data || data.length === 0) {
+    return { total: 0, success: 0, failed: 0 };
+  }
+  return entity.collection
     .insertMany(data, { ordered: false })
-    .then(r => r.result)
-    .catch(error => error.result?.result);
-  return result
-    ? {
-      total: result.insertedIds.length,
-      success: result.nInserted,
-      failed: result.writeErrors.length,
-      // details: result.insertedIds
-    }
-    : {
-      total: 0,
-      success: 0,
-      failed: 0,
-      // details: []
-    };
+    .then(result => {
+      return {
+        total: result.result.n,
+        success: result.insertedCount,
+        failed: 0,
+      };
+    })
+    .catch(error => {
+      try {
+        const raw = error.result.result;
+        return {
+          total: raw.insertedIds.length,
+          success: raw.nInserted,
+          failed: raw.writeErrors.length,
+        };
+      } catch (error) {
+        return {
+          total: data.length,
+          success: 0,
+          failed: 0,
+        };
+      }
+    });
 }
 
 export function concatResults(...results: Result[]): Result {
@@ -158,10 +169,11 @@ export async function traversingCursorWithStepToArray<T = any, F = any>(
   while (skip <= count) {
     /** cursor skip & limit */
     const cursor = createCursor().skip(skip).limit(step);
+    const array = await cursor.toArray();
     // add skip
     skip += step;
     // logic
-    await loop(await cursor.toArray());
+    await loop(array);
     // close cursor
     cursor.close();
     // all done
