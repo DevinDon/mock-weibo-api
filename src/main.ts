@@ -2,10 +2,11 @@ import { DEFAULT_HANDLERS, Rester } from '@rester/core';
 import { AccessModule } from './access';
 import { AphorismModule } from './aphorism';
 import { AccessHandler } from './common/handlers';
+import { UserModule } from './user';
 
 const rester = new Rester({
   handlers: [AccessHandler, ...DEFAULT_HANDLERS],
-  modules: [AccessModule, AphorismModule],
+  modules: [AccessModule, AphorismModule, UserModule],
 });
 
 rester.bootstrap();
