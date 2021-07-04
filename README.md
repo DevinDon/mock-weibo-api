@@ -2,20 +2,20 @@
 
 一个模拟的微博 API，实现了一部分可能需要的功能。
 
-部署在 `https://demo.don.red/weibo/api` 上，模拟路径与原路径相同。
+部署在 `https://api.weibo.devin.red` 上，模拟路径与原路径相同。
 
-> 本项目仅供学习使用，如有侵权，请[联系作者](mailto:I.INF@Outlook.com)。
+> 本项目仅供学习使用，如有侵权，请[联系作者](mailto:i.inf@outlook.com)。
 
 ## Usage
 
-将请求地址中的 `https://api.weibo.com` 替换为 `https://demo.don.red/weibo/api` 即可，如：
+将请求地址中的 `https://api.weibo.com` 替换为 `https://api.weibo.devin.red` 即可，如：
 
 **替换前：**
 
 [`https://api.weibo.com/2/statuses/public_timeline.json`](https://api.weibo.com/2/statuses/public_timeline.json)
 
 **替换后：**
-[`https://demo.don.red/weibo/api/2/statuses/public_timeline.json`](https://demo.don.red/weibo/api/2/statuses/public_timeline.json)
+[`https://api.weibo.devin.red/2/statuses/public_timeline.json`](https://api.weibo.devin.red/2/statuses/public_timeline.json)
 
 ## Contents
 
@@ -31,14 +31,14 @@
 
 > 模拟登录界面，用户可以跳转到本页实现模拟登录，然后携带 `code` 跳转回 App 内的登录处理页面。
 
-| 请求说明 | 获取用户 Code，用于换取 Token                                                                                     |
-| -------- | ----------------------------------------------------------------------------------------------------------------- |
-| 请求方式 | GET                                                                                                               |
-| 请求路径 | oauth2/authorize                                                                                                  |
-| 请求参数 | `redirect_uri` 授权回调地址，必填                                                                                 |
-|          | 数据格式：路径参数                                                                                                |
-| 返回内容 | 302 跳转至 redirect_uri 并携带路径参数 code                                                                       |
-| 预览     | [点击预览](https://demo.don.red/weibo/api/oauth2/authorize?redirect_uri=https%3A%2F%2Fdemo.don.red%2Fweibo%2Fapi) |
+| 请求说明 | 获取用户 Code，用于换取 Token                                                                                  |
+| -------- | -------------------------------------------------------------------------------------------------------------- |
+| 请求方式 | GET                                                                                                            |
+| 请求路径 | oauth2/authorize                                                                                               |
+| 请求参数 | `redirect_uri` 授权回调地址，必填                                                                              |
+|          | 数据格式：路径参数                                                                                             |
+| 返回内容 | 302 跳转至 redirect_uri 并携带路径参数 code                                                                    |
+| 预览     | [点击预览](https://api.weibo.devin.red/oauth2/authorize?redirect_uri=https%3A%2F%2Fdemo.don.red%2Fweibo%2Fapi) |
 
 #### Token
 
@@ -63,38 +63,38 @@
 
 #### Public Timeline
 
-| 请求说明 | 返回最新的公共微博                                                        |
-| -------- | ------------------------------------------------------------------------- |
-| 请求方式 | GET                                                                       |
-| 请求路径 | 2/statuses/public_timeline.json                                           |
-| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20，最大 200                     |
-|          | `page` 分页，可选，默认为 1                                               |
-|          | 数据格式：路径参数                                                        |
-| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/public_timeline)  |
-| 预览     | [点击预览](http://demo.don.red/weibo/api/2/statuses/public_timeline.json) |
+| 请求说明 | 返回最新的公共微博                                                       |
+| -------- | ------------------------------------------------------------------------ |
+| 请求方式 | GET                                                                      |
+| 请求路径 | 2/statuses/public_timeline.json                                          |
+| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20，最大 200                    |
+|          | `page` 分页，可选，默认为 1                                              |
+|          | 数据格式：路径参数                                                       |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/public_timeline) |
+| 预览     | [点击预览](http://api.weibo.devin.red/2/statuses/public_timeline.json)   |
 
 #### Home Timeline
 
-| 请求说明 | 获取当前登录用户及其所关注（授权）用户的最新微博                        |
-| -------- | ----------------------------------------------------------------------- |
-| 请求方式 | GET                                                                     |
-| 请求路径 | 2/statuses/home_timeline.json                                           |
-| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20，最大 200                   |
-|          | `page` 分页，可选，默认为 1                                             |
-|          | 数据格式：路径参数                                                      |
-| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/home_timeline)  |
-| 预览     | [点击预览](http://demo.don.red/weibo/api/2/statuses/home_timeline.json) |
+| 请求说明 | 获取当前登录用户及其所关注（授权）用户的最新微博                       |
+| -------- | ---------------------------------------------------------------------- |
+| 请求方式 | GET                                                                    |
+| 请求路径 | 2/statuses/home_timeline.json                                          |
+| 请求参数 | `count` 单页返回的记录条数，可选，默认为 20，最大 200                  |
+|          | `page` 分页，可选，默认为 1                                            |
+|          | 数据格式：路径参数                                                     |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/home_timeline) |
+| 预览     | [点击预览](http://api.weibo.devin.red/2/statuses/home_timeline.json)   |
 
 #### Show Status
 
-| 请求说明 | 根据微博 ID 返回某条微博内容                                                       |
-| -------- | ---------------------------------------------------------------------------------- |
-| 请求方式 | GET                                                                                |
-| 请求路径 | 2/statuses/show.json                                                               |
-| 请求参数 | `id` 指定的微博 ID                                                                 |
-|          | 数据格式：路径参数                                                                 |
-| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/show)                      |
-| 预览     | [点击预览](https://demo.don.red/weibo/api/2/statuses/show.json?id=160126590171282) |
+| 请求说明 | 根据微博 ID 返回某条微博内容                                                    |
+| -------- | ------------------------------------------------------------------------------- |
+| 请求方式 | GET                                                                             |
+| 请求路径 | 2/statuses/show.json                                                            |
+| 请求参数 | `id` 指定的微博 ID                                                              |
+|          | 数据格式：路径参数                                                              |
+| 返回内容 | 见[微博开放平台](https://open.weibo.com/wiki/2/statuses/show)                   |
+| 预览     | [点击预览](https://api.weibo.devin.red/2/statuses/show.json?id=160126590171282) |
 
 ### Comment
 
@@ -161,11 +161,11 @@
 
 ## Contact
 
-[GitHub: Weibo API](https://github.com/DevinDon/weibo-api)
+[GitHub: Weibo Rester](https://github.com/DevinDon/weibo-rester)
 
-[Email: I.INF@Outlook.com](mailto:I.INF@Outlook.com)
+[Email: i.inf@outlook.com](mailto:i.inf@outlook.com)
 
-[Blog: What The Rooftop](https://blog.don.red)
+[Blog: What the Rooftop](https://blog.don.red)
 
 ## [THE MIT LICENSE](https://raw.githubusercontent.com/DevinDon/license/master/THE%20MIT%20LICENSE)
 
